@@ -1,2 +1,3 @@
 # jordankasper.com
-Static site for me
+
+This is my static homepage.

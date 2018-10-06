@@ -1,0 +1,29 @@
+{
+  "name": "jordankasper.com",
+  "private": true,
+  "version": "3.0.0",
+  "description": "Static homepage for me",
+  "scripts": {
+    "clean": "rm -rf build/",
+    "build": "npx metalsmith"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakerella/jordankasper.com.git"
+  },
+  "author": "Jordan Kasper",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jakerella/jordankasper.com/issues"
+  },
+  "homepage": "https://github.com/jakerella/jordankasper.com#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "handlebars": "^4.0.12",
+    "jstransformer-handlebars": "^1.1.0",
+    "jstransformer-markdown": "^1.2.1",
+    "metalsmith": "^2.3.0",
+    "metalsmith-layouts": "^2.2.0",
+    "metalsmith-markdown": "^1.0.1"
+  }
+}

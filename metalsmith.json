@@ -1,0 +1,16 @@
+{
+  "source": "source",
+  "destination": "build",
+  "metadata": {
+    "title": "Jordan Kasper",
+    "description": "So long and thanks for all the fish.",
+    "url": "https://jordankasper.com"
+  },
+  "plugins": {
+    "metalsmith-markdown": {},
+    "metalsmith-layouts": {
+      "directory": "layouts",
+      "default": "default.hbs"
+    }
+  }
+}
