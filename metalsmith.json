@@ -1,5 +1,5 @@
 {
-  "source": "source",
+  "source": "content",
   "destination": "build",
   "metadata": {
     "title": "Jordan Kasper",
@@ -11,6 +11,20 @@
     "metalsmith-layouts": {
       "directory": "layouts",
       "default": "default.hbs"
+    },
+    "metalsmith-collections": {
+      "posts": {
+        "pattern": "content/posts/*.md",
+        "sortBy": "date",
+        "reverse": true
+      }
+    },
+    "metalsmith-permalinks": {
+      "pattern": ":title",
+      "linksets": [{
+          "match": { "collection": "posts" },
+          "pattern": ":title"
+      }]
     }
   }
 }
