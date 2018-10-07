@@ -7,11 +7,7 @@
     "url": "https://jordankasper.com"
   },
   "plugins": {
-    "metalsmith-markdown": {},
-    "metalsmith-layouts": {
-      "directory": "layouts",
-      "default": "default.hbs"
-    },
+    "metalsmith-debug": {},
     "metalsmith-collections": {
       "posts": {
         "pattern": "content/posts/*.md",
@@ -19,12 +15,17 @@
         "reverse": true
       }
     },
+    "metalsmith-markdown": {},
     "metalsmith-permalinks": {
       "pattern": ":title",
       "linksets": [{
           "match": { "collection": "posts" },
           "pattern": ":title"
       }]
+    },
+    "metalsmith-layouts": {
+      "directory": "layouts",
+      "default": "default.hbs"
     }
   }
 }

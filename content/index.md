@@ -1,7 +1,4 @@
 ---
-layout: default.hbs
+layout: posts.hbs
+subtitle: So long, and thanks for all the fish.
 ---
-
-## So long, and thanks for all the fish.
-
-This is a [nice start](/) to a static site.

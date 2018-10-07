@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        <meta charset='utf-8'>
+        <title>{{ title }}</title>
+        <meta name="description" content="{{ description }}">
+    </head>
+
+    <body>
+        <header>
+            <h1><a href='{{ url }}'>{{ title }}</a></h1>
+        </header>
+
+        <main>
+
+            <h2>{{ subtitle }}</h2>
+
+            {{#each posts}}
+                <article>
+                    <h3><a href='/{{ path }}'>{{ title }}</a></h3>
+                    <p>{{ path }} ({{ date }})</p>
+                </article>
+            {{/each}}
+
+        </main>
+
+        <footer>
+          <p>&copy; Jordan Kasper 2018</p>
+        </footer>
+    </body>
+</html>
