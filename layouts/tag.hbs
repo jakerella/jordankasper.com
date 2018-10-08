@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang='en'>
     <head>
         <meta charset='utf-8'>
-        <title>{{ site }}</title>
+        <title>{{ site }} - Posts tagged with {{ tag }}</title>
         <meta name="description" content="{{ description }}">
     </head>
 
@@ -13,12 +14,17 @@
 
         <main>
 
-            <h2>{{ tagline }}</h2>
+            <h2>Posts in {{ tag }}</h2>
 
-            {{#each posts}}
+            {{#each pagination.files}}
                 <article>
-                    <h3><a href='/{{ path }}'>{{ title }}</a></h3>
-                    <p>{{ path }} ({{ date }})</p>
+                    <h3><date>{{ date }}</date><a href='/{{ path }}'>{{ title }}</a></h3>
+                    <p>
+                        Other tags:
+                        {{#each tags}}
+                            <a href='/tag/{{ slug }}'>{{ name }}</a>
+                        {{/each}}
+                    </p>
                 </article>
             {{/each}}
 

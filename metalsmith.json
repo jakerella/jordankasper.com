@@ -2,7 +2,7 @@
   "source": "content",
   "destination": "build",
   "metadata": {
-    "title": "Jordan Kasper",
+    "site": "Jordan Kasper",
     "description": "So long and thanks for all the fish.",
     "url": "https://jordankasper.com"
   },
@@ -23,9 +23,14 @@
           "pattern": ":title"
       }]
     },
+    "metalsmith-tags": {
+      "handle": "tags",
+      "path": "tag/:tag/index.html",
+      "layout": "tag.hbs"
+    },
     "metalsmith-layouts": {
       "directory": "layouts",
-      "default": "default.hbs"
+      "default": "post.hbs"
     }
   }
 }

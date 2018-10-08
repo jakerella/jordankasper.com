@@ -2,6 +2,7 @@
 title: Hello World
 collection: posts
 date: 2018-10-05
+tags: intro, code, global
 ---
 
 ## Hello World
