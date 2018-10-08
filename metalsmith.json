@@ -33,6 +33,9 @@
       "outputDir": "css/",
       "outputStyle": "compact"
     },
+    "metalsmith-discover-partials": {
+      "directory": "layouts/partials"
+    },
     "metalsmith-layouts": {
       "directory": "layouts",
       "default": "post.hbs"
