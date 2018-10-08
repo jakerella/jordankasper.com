@@ -28,9 +28,18 @@
       "path": "tag/:tag/index.html",
       "layout": "tag.hbs"
     },
+    "metalsmith-sass": {
+      "files": ["./sass/main.scss"],
+      "outputDir": "css/",
+      "outputStyle": "compact"
+    },
     "metalsmith-layouts": {
       "directory": "layouts",
       "default": "post.hbs"
+    },
+    "metalsmith-assets": {
+      "source": "./assets",
+      "destination": "./"
     }
   }
 }
