@@ -4,26 +4,34 @@
         {{> head }}
     </head>
 
-    <body>
-        <header>
-            <h1><a href='{{ url }}'>{{ site }}</a></h1>
-        </header>
+    <body class='off-canvas-contain'>
+        {{> header }}
 
-        <main>
+        <section class='main-body row'>
+            <section class='main-content recent-posts sm-12 md-9'>
+                <a href='/rss' class='rss'><i class='icon-rss-squared'></i></a>
 
-            <h2>{{ tagline }}</h2>
+                {{#each posts}}
+                    <article>
+                        <h3><a href='/{{ path }}'>{{ title }}</a></h3>
+                        <p>{{ path }} ({{ date }})</p>
+                    </article>
+                {{/each}}
+            </section>
 
-            {{#each posts}}
-                <article>
-                    <h3><a href='/{{ path }}'>{{ title }}</a></h3>
-                    <p>{{ path }} ({{ date }})</p>
-                </article>
-            {{/each}}
+            <aside class='sidebar speaking sm-12 md-3'>
+                <h2>Upcoming Events</h2>
+            </aside>
 
-        </main>
+            <nav class='paging'>
 
-        <footer>
-          <p>&copy; Jordan Kasper 2018</p>
-        </footer>
+            </nav>
+        </section>
+
+        {{> footer }}
+
+        <script src='//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+        <script src='//cdn.rawgit.com/trevanhetzel/barekit/master/js/barekit.min.js'></script>
+        <script src='/js/jk.js'></script>
     </body>
 </html>
