@@ -12,9 +12,9 @@
   "watch": {
     "build": {
       "patterns": [
-        "assets/*.*",
-        "content/*.*",
-        "layouts/*.*"
+        "assets/**/*.*",
+        "content/**/*.*",
+        "layouts/**/*.*"
       ],
       "delay": 1000
     }
