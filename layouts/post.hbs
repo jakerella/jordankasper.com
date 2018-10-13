@@ -4,27 +4,66 @@
         {{> head windowsubtitle=title }}
     </head>
 
-    <body>
-        <header>
-            <h1><a href='{{ url }}'>{{ site }}</a></h1>
-        </header>
+    <body class='off-canvas-contain'>
+        {{> header }}
 
-        <main>
+        <section class='main-body row'>
+            <section class='main-content blog-post sm-12 md-9'>
 
-            {{{ contents }}}
+                {{{ contents }}}
 
-            <footer>
-                <p>
-                    Tags:
-                    {{#each tags}}
-                        <a href='/tag/{{ slug }}'>{{ name }}</a>
-                    {{/each}}
-                </p>
-            </footer>
-        </main>
+                <footer>
+                    <p>
+                        Tags:
+                        {{#each tags}}
+                            <a href='/tag/{{ slug }}'>{{ name }}</a>
+                        {{/each}}
+                    </p>
+                </footer>
 
-        <footer>
-          <p>&copy; Jordan Kasper 2018</p>
-        </footer>
+                <div class='sharing'>
+                    <p>
+                        Share the love:
+                        <a href='https://twitter.com/home?status=Check%20out%20this%20post%20by%20@jakerella:%20{{ title }}%20http://jordankasper.com/{{ slug }}' target='_blank'>
+                            <i class='icon-twitter'></i>
+                        </a>
+                        <a href='https://www.linkedin.com/shareArticle?mini=true&title=Blog%20post%20by%20Jordan%20Kasper:%20{{ title }}&summary=&source=&url=http://jordankasper.com/{{ slug }}' target='_blank'>
+                            <i class='icon-linkedin'></i>
+                        </a>
+                        <a href='https://www.facebook.com/sharer/sharer.php?u=http://jordankasper.com/{{ slug }}' target='_blank'>
+                            <i class='icon-facebook-squared'></i>
+                        </a>
+                        <a href='/rss'>
+                            <i class='icon-rss-squared'></i>
+                        </a>
+                    </p>
+                </div>
+
+                <div id='disqus_thread'></div>
+                <noscript>
+                    <p>Please enable JavaScript to view and post comments.</p>
+                </noscript>
+
+            </section>
+
+            {{> sidebar}}
+        </section>
+
+        {{> footer }}
+
+        <script src='//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+        <script src='//cdn.rawgit.com/trevanhetzel/barekit/master/js/barekit.min.js'></script>
+        <script src='/js/jk.js'></script>
+
+        <script>
+        // Disqus config & startup
+        (function() {
+            if (!/localhost/.test(location.hostname)) {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//jordankasper.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            }
+        })();
+        </script>
     </body>
 </html>
