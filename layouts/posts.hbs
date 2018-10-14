@@ -4,7 +4,7 @@
         {{> head }}
     </head>
 
-    <body class='off-canvas-contain'>
+    <body data-slug='{{#if path}}{{ path }}{{else}}home{{/if}}' class='off-canvas-contain'>
         {{> header }}
 
         <section class='main-body row'>
@@ -14,7 +14,7 @@
                 {{#each posts}}
                     <article>
                         <h3><a href='/{{ path }}'>{{ title }}</a></h3>
-                        <p>{{ path }} ({{ date }})</p>
+                        <p>{{ excerpt }}</p>
                     </article>
                 {{/each}}
             </section>

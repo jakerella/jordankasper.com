@@ -16,6 +16,10 @@
       }
     },
     "metalsmith-markdown": {},
+    "metalsmith-better-excerpts": {
+      "stripTags": true,
+      "pruneLength": 500
+    },
     "metalsmith-permalinks": {
       "pattern": ":title",
       "linksets": [{
@@ -41,6 +45,7 @@
         }
       ]
     },
+
     "metalsmith-discover-partials": {
       "directory": "layouts/partials"
     },
