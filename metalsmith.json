@@ -8,6 +8,11 @@
   },
   "plugins": {
     "metalsmith-debug": {},
+    "metalsmith-sass": {
+      "files": ["sass/main.scss"],
+      "outputDir": "css/",
+      "outputStyle": "compact"
+    },
     "metalsmith-collections": {
       "posts": {
         "pattern": "content/posts/*.md",
@@ -33,11 +38,6 @@
       "layout": "tag.hbs",
       "sortBy": "date",
       "reverse": true
-    },
-    "metalsmith-sass": {
-      "files": ["./sass/main.scss"],
-      "outputDir": "css/",
-      "outputStyle": "compact"
     },
     "metalsmith-date-formatter": {
       "dates": [
