@@ -41,7 +41,7 @@
       "dates": [
         {
             "key": "date",
-            "format": "MMMM d, YYYY"
+            "format": "MMMM D, YYYY"
         }
       ]
     },
