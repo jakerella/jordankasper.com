@@ -33,6 +33,14 @@
       "outputDir": "css/",
       "outputStyle": "compact"
     },
+    "metalsmith-date-formatter": {
+      "dates": [
+        {
+            "key": "date",
+            "format": "MMMM d, YYYY"
+        }
+      ]
+    },
     "metalsmith-discover-partials": {
       "directory": "layouts/partials"
     },

@@ -14,35 +14,33 @@
 
                 {{{ contents }}}
 
-                <footer>
-                    <p class='publish-time'>
-                        <i class='icon-calendar'></i>Published on <date>{{ date }}</date>
-                    </p>
-                    <p>
-                        Tagged with
-                        <span class='tag-list'>
-                            {{#each tags as |tag i|}}{{#if i}}, {{/if}}<a href='/tag/{{ tag.slug }}'>{{ tag.name }}</a>{{/each}}
-                        </span>
-                    </p>
+                <p class='publish-time'>
+                    <i class='icon-calendar'></i>Published on <date>{{ date }}</date>
+                </p>
+                <p class='post-tags'>
+                    Tagged with
+                    <span class='tag-list'>
+                        {{#each tags as |tag i|}}{{#if i}}, {{/if}}<a href='/tag/{{ tag.slug }}'>{{ tag.name }}</a>{{/each}}
+                    </span>
+                </p>
 
-                    <aside class='sharing'>
-                        <p>
-                            Share the love:
-                            <a href='https://twitter.com/home?status=Check%20out%20this%20post%20by%20@jakerella:%20{{ title }}%20https://jordankasper.com/{{ path }}' target='_blank'>
-                                <i class='icon-twitter'></i>
-                            </a>
-                            <a href='https://www.linkedin.com/shareArticle?mini=true&title=Blog%20post%20by%20Jordan%20Kasper:%20{{ title }}&summary=&source=&url=https://jordankasper.com/{{ path }}' target='_blank'>
-                                <i class='icon-linkedin'></i>
-                            </a>
-                            <a href='https://www.facebook.com/sharer/sharer.php?u=https://jordankasper.com/{{ path }}' target='_blank'>
-                                <i class='icon-facebook-squared'></i>
-                            </a>
-                            <a href='/rss'>
-                                <i class='icon-rss-squared'></i>
-                            </a>
-                        </p>
-                    </aside>
-                </footer>
+                <aside class='sharing'>
+                    <p>
+                        Share the love:
+                        <a href='https://twitter.com/home?status=Check%20out%20this%20post%20by%20@jakerella:%20{{ title }}%20https://jordankasper.com/{{ path }}' target='_blank'>
+                            <i class='icon-twitter'></i>
+                        </a>
+                        <a href='https://www.linkedin.com/shareArticle?mini=true&title=Blog%20post%20by%20Jordan%20Kasper:%20{{ title }}&summary=&source=&url=https://jordankasper.com/{{ path }}' target='_blank'>
+                            <i class='icon-linkedin'></i>
+                        </a>
+                        <a href='https://www.facebook.com/sharer/sharer.php?u=https://jordankasper.com/{{ path }}' target='_blank'>
+                            <i class='icon-facebook-squared'></i>
+                        </a>
+                        <a href='/rss'>
+                            <i class='icon-rss-squared'></i>
+                        </a>
+                    </p>
+                </aside>
 
                 <section id='disqus_thread'></section>
                 <noscript>
