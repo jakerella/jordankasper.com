@@ -30,7 +30,9 @@
     "metalsmith-tags": {
       "handle": "tags",
       "path": "tag/:tag/index.html",
-      "layout": "tag.hbs"
+      "layout": "tag.hbs",
+      "sortBy": "date",
+      "reverse": true
     },
     "metalsmith-sass": {
       "files": ["./sass/main.scss"],
