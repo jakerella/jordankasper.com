@@ -39,6 +39,9 @@
       "sortBy": "date",
       "reverse": true
     },
+    "./helpers/tagcloud": {
+      "key": "tags"
+    },
     "metalsmith-date-formatter": {
       "dates": [
         {
@@ -47,7 +50,6 @@
         }
       ]
     },
-
     "metalsmith-discover-partials": {
       "directory": "layouts/partials"
     },
