@@ -1,35 +1,40 @@
-
 <!DOCTYPE html>
 <html lang='en'>
     <head>
         {{> head windowsubtitle="Tagged posts" }}
     </head>
 
-    <body>
-        <header>
-            <h1><a href='{{ url }}'>{{ site }}</a></h1>
-        </header>
+    <body data-slug='{{#if path}}{{ path }}{{else}}home{{/if}}' class='off-canvas-contain'>
+        {{> header }}
 
-        <main>
+        <section class='main-body row'>
+            <article class='main-content posts-by-tag sm-12 md-9'>
 
-            <h2>Posts in {{ tag }}</h2>
+                <h2>Posts in <span class='tag-name'>{{ tag }}</span></h2>
 
-            {{#each pagination.files}}
-                <article>
-                    <h3><date>{{ date }}</date><a href='/{{ path }}'>{{ title }}</a></h3>
-                    <p>
-                        Other tags:
-                        {{#each tags}}
-                            <a href='/tag/{{ slug }}'>{{ name }}</a>
-                        {{/each}}
-                    </p>
-                </article>
-            {{/each}}
+                <ol>
+                {{#each pagination.files}}
+                    <li class='post'>
+                        <time>{{ date }}</time>
+                        <h3><a href='/{{path}}'>{{ title }}</a></h3>
+                        <aside class='tags'>
+                            <p>All Tags:</p>
+                            <ul>
+                                {{#each tags}}
+                                    <li><a href='/tag/{{ slug }}'>{{ name }}</a></li>
+                                {{/each}}
+                            </ul>
+                        </aside>
+                    </li>
+                {{/each}}
+                </ol>
+            </article>
 
-        </main>
+            {{> sidebar }}
+        </section>
 
-        <footer>
-          <p>&copy; Jordan Kasper 2018</p>
-        </footer>
+        {{> footer }}
+
+        {{> scripts }}
     </body>
 </html>
