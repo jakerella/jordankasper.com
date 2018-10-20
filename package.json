@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf build/",
     "build": "npx metalsmith",
-    "debug": "DEBUG=metalsmith:metdata,metalsmith:source,metalsmith:destination,metalsmith-tagcloud,metalsmith-events,metalsmith-recent-posts,metalsmith-collections,metalsmith-permalinks,metalsmith-markdown,metalsmith-layouts,metalsmith-excerpts,metalsmith-tags,metalsmith-sass,metalsmith-assets npx metalsmith",
+    "debug": "DEBUG=metalsmith:metdata,metalsmith:source,metalsmith:destination,metalsmith-tagcloud,metalsmith-events,metalsmith-recent-posts,metalsmith-rss,metalsmith-collections,metalsmith-permalinks,metalsmith-markdown,metalsmith-layouts,metalsmith-excerpts,metalsmith-tags,metalsmith-sass,metalsmith-assets npx metalsmith",
     "watch": "npm-watch build"
   },
   "watch": {
@@ -46,6 +46,7 @@
     "metalsmith-permalinks": "^1.0.0",
     "metalsmith-sass": "^1.5.1",
     "metalsmith-tags": "^2.0.0",
-    "npm-watch": "^0.4.0"
+    "npm-watch": "^0.4.0",
+    "rss": "^1.2.2"
   }
 }

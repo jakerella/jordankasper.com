@@ -3,6 +3,7 @@
   "destination": "build",
   "metadata": {
     "site": "Jordan Kasper",
+    "author": "Jordan Kasper",
     "description": "So long and thanks for all the fish.",
     "url": "https://jordankasper.com"
   },
@@ -44,6 +45,7 @@
     },
     "./helpers/events": {},
     "./helpers/recent-posts": {},
+    "./helpers/rss": {},
     "metalsmith-date-formatter": {
       "dates": [
         {
