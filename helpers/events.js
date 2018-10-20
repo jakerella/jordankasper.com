@@ -1,4 +1,5 @@
 
+const moment = require('moment');
 const debug = require('debug')('metalsmith-events');
 const events = require('./events.json').events;
 
@@ -19,6 +20,7 @@ module.exports = function tagcloud(opts){
 
     events.forEach(function(event) {
       event.timestamp = (new Date(event.date)).getTime();
+      event.monthDate = moment(event.timestamp).format('MMM Y');
     });
     events
       .filter(function(event) {
