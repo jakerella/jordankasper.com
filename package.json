@@ -2,6 +2,9 @@
   "name": "jordankasper.com",
   "private": true,
   "version": "3.0.0",
+  "engines": {
+    "node" : "10.9.0"
+},
   "description": "Static homepage for me",
   "scripts": {
     "clean": "rm -rf build/",
