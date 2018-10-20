@@ -43,6 +43,7 @@
       "key": "tags"
     },
     "./helpers/events": {},
+    "./helpers/recent-posts": {},
     "metalsmith-date-formatter": {
       "dates": [
         {

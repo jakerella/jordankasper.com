@@ -11,10 +11,12 @@
     <section class='recent-posts'>
         <h2>Recent Posts</h2>
 
-        <article>
-            <p class='published-on'><i class='icon-calendar'></i>11/3/2017</p>
-            <h3><a href='/understanding-super-in-javascript'>Understanding Super In Javascript</a></h3>
-        </article>
+        {{#each recentPosts}}
+            <article>
+                <p class='published-on'><i class='icon-calendar'></i>{{ shortDate }}</p>
+                <h3><a href='/{{ path }}'>{{ title }}</a></h3>
+            </article>
+        {{/each}}
     </section>
 
     <section class='tags'>
