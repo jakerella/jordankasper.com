@@ -45,7 +45,6 @@
     },
     "./helpers/events": {},
     "./helpers/recent-posts": {},
-    "./helpers/rss": {},
     "metalsmith-date-formatter": {
       "dates": [
         {
@@ -64,6 +63,7 @@
     "metalsmith-assets": {
       "source": "./assets",
       "destination": "./"
-    }
+    },
+    "./helpers/rss": {}
   }
 }

@@ -1,5 +1,6 @@
 
 const fs = require('fs');
+const path = require('path');
 const RSS = require('rss');
 const moment = require('moment');
 const debug = require('debug')('metalsmith-rss');
@@ -38,7 +39,7 @@ module.exports = function tagcloud(opts){
       });
     });
 
-    const location = `${__dirname}/../build/rss`;
+    const location = path.join(__dirname, '..', 'build', 'rss');
     const xml = feed.xml({indent: true});
 
     debug('Writing blog post XML to %s', location);
