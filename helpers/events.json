@@ -1,0 +1,810 @@
+{
+    "events": [
+        {
+            "name": "JavaScript Summit",
+            "url": "http://jssummit.com",
+            "location": "(Virtual)",
+            "date": "Nov 19 2014",
+            "topics": [
+                "Mocking Ajax Requests"
+            ]
+        },
+        {
+            "name": "True North PHP",
+            "url": "http://truenorthphp.ca",
+            "location": "Toronto, Canada",
+            "date": "Nov 6 2014",
+            "topics": [
+                "JavaScript Testing (Tutorial)",
+                "Object Oriented JavaScript"
+            ]
+        },
+        {
+            "name": "DevLink",
+            "url": "http://devlink.net",
+            "location": "Chattanooga, TN",
+            "date": "Aug 26 2014",
+            "topics": [
+                "Web Developer's Workflow",
+                "Remote Working",
+                "Native Windows 8 Apps with WinJS"
+            ]
+        },
+        {
+            "name": "Codestock",
+            "url": "http://codestock.org",
+            "location": "Knoxville, TN",
+            "date": "Jul 12 2014",
+            "topics": [
+                "Object Oriented JavaScript",
+                "Advanced Git"
+            ]
+        },
+        {
+            "name": "DrupalCon",
+            "url": "https://austin2014.drupal.org",
+            "location": "Austin, TX",
+            "date": "Jun 3 2014",
+            "topics": [
+                "JavaScript Testing"
+            ]
+        },
+        {
+            "name": "Dutch PHP",
+            "url": "http://www.phpconference.nl",
+            "location": "Amsterdam, Netherlands",
+            "date": "Jun 28 2014",
+            "topics": [
+                "JavaScript Testing Tutorial"
+            ]
+        },
+        {
+            "name": "jQuery UK",
+            "url": "http://jqueryuk.com/2014",
+            "location": "Oxford, England",
+            "date": "May 15 2014",
+            "topics": [
+                "Web Developer's Workflow"
+            ]
+        },
+        {
+            "name": "NashJS",
+            "url": "http://nashjs.org",
+            "location": "Nashville, TN",
+            "date": "Apr 9 2014",
+            "topics": [
+                "Native Windows 8 Apps with WinJS"
+            ]
+        },
+        {
+            "name": "Confoo",
+            "url": "http://confoo.ca/en/2014/sessions",
+            "location": "Monteral, Canada",
+            "date": "Feb 27 2014",
+            "topics": [
+                "JavaScript Testing",
+                "Object Oriented JavaScript"
+            ]
+        },
+        {
+            "name": "SunshinePHP",
+            "url": "http://2014.sunshinephp.com",
+            "location": "Miami, FL",
+            "date": "Feb 7 2014",
+            "topics": [
+                "JavaScript Testing"
+            ]
+        },
+        {
+            "name": "ZendCon",
+            "url": "http://zendcon.com",
+            "location": "San Jose, CA",
+            "date": "Oct 8 2013",
+            "topics": [
+                "Object Oriented JavaScript"
+            ]
+        },
+        {
+            "name": "NashJS",
+            "url": "http://nashjs.org",
+            "location": "Nashville, TN",
+            "date": "Sep 11 2013",
+            "topics": [
+                "JavaScript Testing"
+            ]
+        },
+        {
+            "name": "HackMemphis",
+            "url": "http://hackmemphis.com",
+            "location": "Memphis, TN",
+            "date": "Sep 14 2013",
+            "topics": []
+        },
+        {
+            "name": "DevLink",
+            "url": "http://devlink.net",
+            "location": "Chattanooga, TN",
+            "date": "Aug 28 2013",
+            "topics": [
+                "Object Oriented JavaScript",
+                "Propel ORM"
+            ]
+        },
+        {
+            "name": "CoderFaire",
+            "url": "http://coderfaire.com",
+            "location": "Nashville, TN",
+            "date": "Aug 17 2013",
+            "topics": [
+                "JavaScript Testing"
+            ]
+        },
+        {
+            "name": "STL.JS",
+            "url": "http://www.meetup.com/STL-JS-meetup",
+            "location": "St. Louis, O",
+            "date": "Jul 18 2013",
+            "topics": [
+                "Object Oriented JavaScript"
+            ]
+        },
+        {
+            "name": "Ruby Usergroup",
+            "url": null,
+            "location": "Memphis, TN",
+            "date": "May 23 2013",
+            "topics": [
+                "JavaScript Testing"
+            ]
+        },
+        {
+            "name": "PHP Usergroup",
+            "url": null,
+            "location": "Nashville, TN",
+            "date": "Apr 9 2013",
+            "topics": [
+                "Propel ORM"
+            ]
+        },
+        {
+            "name": "Java Usergroup",
+            "url": null,
+            "location": "Memphis, TN",
+            "date": "Apr 18 2013",
+            "topics": [
+                "JavaScript Testing"
+            ]
+        },
+        {
+            "name": "Interactive Developers",
+            "url": null,
+            "location": "Nashville, TN",
+            "date": "Mar 19 2013",
+            "topics": [
+                "Object Oriented JavaScript"
+            ]
+        },
+        {
+            "name": "PHP Usergroup",
+            "url": null,
+            "location": "Memphis, TN",
+            "date": "Feb 26 2013",
+            "topics": [
+                "Propel ORM"
+            ]
+        },
+        {
+            "name": "DCJS",
+            "url": "http://www.meetup.com/DC-JavaScript/events/218040632/",
+            "location": "Washington, DC",
+            "date": "Dec 11 2014",
+            "topics": [
+                "Mocking Ajax Requests"
+            ]
+        },
+        {
+            "name": "CodeMash",
+            "url": "http://www.codemash.org",
+            "location": "Sandusky, OH",
+            "date": "Jan 8 2015",
+            "topics": [
+                "Object Oriented JavaScript",
+                "Advanced Git"
+            ]
+        },
+        {
+            "name": "SF Node.js Meetup",
+            "url": "http://www.meetup.com/Node-js-Serverside-Javascripters-Club-SF/events/219937616/",
+            "location": "San Francisco, CA",
+            "date": "Feb 9 2015",
+            "topics": [
+                "Custom Grunt tasks"
+            ]
+        },
+        {
+            "name": "Node Summit",
+            "url": "http://nodesummit.com",
+            "location": "San Francisco, CA",
+            "date": "Feb 10 2015",
+            "topics": []
+        },
+        {
+            "name": "ConFoo",
+            "url": "http://confoo.ca",
+            "location": "Montreal, Canada",
+            "date": "Feb 18 2015",
+            "topics": [
+                "Remote Working",
+                "Grunt"
+            ]
+        },
+        {
+            "name": "jQuery UK",
+            "url": "http://jqueryuk.com/2015/",
+            "location": "Oxford, England",
+            "date": "Mar 5 2015",
+            "topics": [
+                "Web Developer's Workflow"
+            ]
+        },
+        {
+            "name": "Workshop",
+            "url": "https://strongloop.com/node-js/training/2015-guadalajara/",
+            "location": "Guadalajara, Mexico",
+            "date": "Mar 25 2015",
+            "topics": [
+                "Node.js and API Development"
+            ]
+        },
+        {
+            "name": "Workshop",
+            "url": "https://strongloop.com/node-js/training/workshop-dallas-2015/",
+            "location": "Dallas, TX",
+            "date": "Apr 15 2015",
+            "topics": [
+                "Node.js API Development"
+            ]
+        },
+        {
+            "name": "Lone Star PHP",
+            "url": "http://lonestarphp.com",
+            "location": "Dallas, TX",
+            "date": "Apr 17 2015",
+            "topics": [
+                "Advanced Git",
+                "Object Oriented JavaScript"
+            ]
+        },
+        {
+            "name": "Fluent",
+            "url": "http://fluentconf.com",
+            "location": "San Francisco, CA",
+            "date": "Apr 20 2015",
+            "topics": [
+                "Advanced Git"
+            ]
+        },
+        {
+            "name": "EmpireJS",
+            "url": "http://2015.empirejs.org",
+            "location": "Washington, DC",
+            "date": "Apr 26 2015",
+            "topics": [
+                "Generating a New Async"
+            ]
+        },
+        {
+            "name": "node.dc",
+            "url": "http://www.meetup.com/node-dc/",
+            "location": "Washington, DC",
+            "date": "May 18 2015",
+            "topics": [
+                "Creating APIs in Node"
+            ]
+        },
+        {
+            "name": "webinar",
+            "url": "https://strongloop.com/node-js/ca-technologies-and-strongloop-webinar-series/#toggle-id-2",
+            "location": "online",
+            "date": "May 28 2015",
+            "topics": [
+                "JavaScript and Node.js Fundamentals"
+            ]
+        },
+        {
+            "name": "JSCertif Summer Camp",
+            "url": "https://www.facebook.com/events/1618761485008314/",
+            "location": "Tunisia (online)",
+            "date": "Jun 6 2015",
+            "topics": [
+                "Debugging Node.js"
+            ]
+        },
+        {
+            "name": "webinar",
+            "url": "https://strongloop.com/node-js/ca-technologies-and-strongloop-webinar-series/#toggle-id-3",
+            "location": "online",
+            "date": "Jun 11 2015",
+            "topics": [
+                "Node.js Architecture and Express.js"
+            ]
+        },
+        {
+            "name": "NoVa Node Unconference",
+            "url": "http://www.meetup.com/Nova-Node/events/222312195/",
+            "location": "Arlington, VA",
+            "date": "Jun 13 2015",
+            "topics": []
+        },
+        {
+            "name": "KCDC",
+            "url": "http://www.kcdc.info/#!/",
+            "location": "Kansas City, MO",
+            "date": "Jun 24 2015",
+            "topics": [
+                "APIs in Node",
+                "Node API workshop",
+                "Node is the future"
+            ]
+        },
+        {
+            "name": "webinar",
+            "url": "https://strongloop.com/node-js/ca-technologies-and-strongloop-webinar-series/#toggle-id-5",
+            "location": "online",
+            "date": "Jul 9 2015",
+            "topics": [
+                "Instroduction to LoopBack.io"
+            ]
+        },
+        {
+            "name": "NYC Node UG",
+            "url": "http://www.meetup.com/nyc-node-js/events/223011090/",
+            "location": "New York City, NY",
+            "date": "Jul 27 2015",
+            "topics": [
+                "Developing APIs in Node"
+            ]
+        },
+        {
+            "name": "MidwestJS",
+            "url": "http://midwestjs.com/",
+            "location": "Minneapolis, MN",
+            "date": "Aug 12 2015",
+            "topics": [
+                "Triage and scale Node",
+                "JavaScript prototypes"
+            ]
+        },
+        {
+            "name": "East Valley Web Workers",
+            "url": "http://www.meetup.com/WebWorkers/events/221911631/",
+            "location": "Gilbert, AZ",
+            "date": "Sep 19 2015",
+            "topics": [
+                "What is Node.js?"
+            ]
+        },
+        {
+            "name": "NCDevCon",
+            "url": "http://www.ncdevcon.com/",
+            "location": "Raleigh, NC",
+            "date": "Sep 26 2015",
+            "topics": [
+                "Object-Oriented JavaScript",
+                "Debugging Node"
+            ]
+        },
+        {
+            "name": "ConnectJS",
+            "url": "http://connect-js.com",
+            "location": "Atlanta, GA",
+            "date": "Oct 16 2015",
+            "topics": [
+                "Introduction to Node.js"
+            ]
+        },
+        {
+            "name": "DC PHP",
+            "url": "http://www.meetup.com/DC-PHP/events/220739659/",
+            "location": "Washington, DC",
+            "date": "Nov 11 2015",
+            "topics": [
+                "Node.js: the 800-pound Gorilla"
+            ]
+        },
+        {
+            "name": "Nodevember",
+            "url": "http://nodevember.org/",
+            "location": "Nashville, TN",
+            "date": "Nov 14 2015",
+            "topics": [
+                "Testing Node.js"
+            ]
+        },
+        {
+            "name": "Big Data Developers",
+            "url": "http://www.meetup.com/Big-Data-Developers-in-Phoenix/",
+            "location": "Phoenix, AZ",
+            "date": "Nov 18 2015",
+            "topics": [
+                "Node.js"
+            ]
+        },
+        {
+            "name": "Webinar",
+            "url": "https://engage.vevent.com/index.jsp?eid=556&ecid=82653&code=web-jsk",
+            "location": "(online)",
+            "date": "Jan 13 2016",
+            "topics": [
+                "LoopBack Node APIs (part 1)"
+            ]
+        },
+        {
+            "name": "Webinar",
+            "url": "https://engage.vevent.com/index.jsp?eid=556&ecid=82653&code=web-jsk",
+            "location": "(online)",
+            "date": "Jan 20 2016",
+            "topics": [
+                "LoopBack Node APIs (part 2)"
+            ]
+        },
+        {
+            "name": "Webinar",
+            "url": "https://engage.vevent.com/index.jsp?eid=556&ecid=82653&code=web-jsk",
+            "location": "(online)",
+            "date": "Jan 27 2016",
+            "topics": [
+                "LoopBack Node APIs (part 3)"
+            ]
+        },
+        {
+            "name": "Code Junkies",
+            "url": "http://www.meetup.com/Code-Junkies/events/227293599/",
+            "location": "New Providence, NJ",
+            "date": "Feb 3 2016",
+            "topics": [
+                "APIs in Node.js"
+            ]
+        },
+        {
+            "name": "DevNexus",
+            "url": "https://www.devnexus.com",
+            "location": "Atlanta, GA",
+            "date": "Feb 15 2016",
+            "topics": []
+        },
+        {
+            "name": "IBM Interconnect",
+            "url": "https://www-950.ibm.com/events/global/interconnect/sessions/preview.html?sessionid=PEN-4147",
+            "location": "Las Vegas, NV",
+            "date": "Feb 21 2016",
+            "topics": [
+                "Node.js and Java",
+                "Zero to Node API"
+            ]
+        },
+        {
+            "name": "Fluent",
+            "url": "http://conferences.oreilly.com/fluent/javascript-html-us",
+            "location": "San Francisco, CA",
+            "date": "Mar 8 2016",
+            "topics": []
+        },
+        {
+            "name": "Render",
+            "url": "http://2016.render-conf.com/workshop/325/rapid-api-development-with-nodejs-and-loopback",
+            "location": "Oxford, UK",
+            "date": "Apr 20 2016",
+            "topics": [
+                "APIs in Node.js"
+            ]
+        },
+        {
+            "name": "NationJS Node Day",
+            "url": "http://nationjs.com/",
+            "location": "Washington, DC",
+            "date": "March 11 2016",
+            "topics": []
+        },
+        {
+            "name": "Rochester JS Meetup",
+            "url": "https://plus.google.com/communities/111326506988884743140",
+            "location": "Rochester, NY",
+            "date": "May 17 2016",
+            "topics": [
+                "Testing Front End JavaScript"
+            ]
+        },
+        {
+            "name": "TIY Crash Course",
+            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/230136390/",
+            "location": "Washington, DC",
+            "date": "May 12 2016",
+            "topics": [
+                "Front End Engineering"
+            ]
+        },
+        {
+            "name": "The Iron Yard FEE Course",
+            "url": "https://www.theironyard.com/courses/javascript-and-mvc-frameworks.html",
+            "location": "Washington, DC",
+            "date": "Jun 20 2016",
+            "topics": [
+                "Front End Engineering - HTML, CSS, JS"
+            ]
+        },
+        {
+            "name": "TIY Crash Course",
+            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/229968543/",
+            "location": "Washington, DC",
+            "date": "Apr 12 2016",
+            "topics": [
+                "Intro to Sass"
+            ]
+        },
+        {
+            "name": "TIY Crash Course",
+            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/230136390/",
+            "location": "Washington, DC",
+            "date": "May 19 2016",
+            "topics": [
+                "My first web site"
+            ]
+        },
+        {
+            "name": "DC JavaScript",
+            "url": "http://www.meetup.com/DC-JavaScript/events/231380644/",
+            "location": "Washington, DC",
+            "date": "Jun 16 2016",
+            "topics": [
+                "HTML5 APIs"
+            ]
+        },
+        {
+            "name": "TIY Crash Course",
+            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/231341704/",
+            "location": "Washington, DC",
+            "date": "Jun 15 2016",
+            "topics": [
+                "Intro to Node.js"
+            ]
+        },
+        {
+            "name": "The Iron Yard FEE Course",
+            "url": "https://www.theironyard.com/courses/javascript-and-mvc-frameworks.html",
+            "location": "Washington, DC",
+            "date": "Oct 10 2016",
+            "topics": [
+                "Front End Engineering - HTML, CSS, JS"
+            ]
+        },
+        {
+            "name": "Madison PHP Conference",
+            "url": "http://2016.madisonphpconference.com/talks/A1/",
+            "location": "Madison, WI",
+            "date": "Oct 1 2016",
+            "topics": [
+                "Advanced Git"
+            ]
+        },
+        {
+            "name": "NoVa ColdFusion UG",
+            "url": "http://www.meetup.com/nvcfug/",
+            "location": "Vienna, VA",
+            "date": "July 19 2016",
+            "topics": [
+                "Intro to Node.js"
+            ]
+        },
+        {
+            "name": "node.dc",
+            "url": "http://www.meetup.com/node-dc/",
+            "location": "Washington, DC",
+            "date": "Aug 18 2016",
+            "topics": [
+                "Building an Amazon Echo App"
+            ]
+        },
+        {
+            "name": "Connect.Tech",
+            "url": "http://connect.tech/",
+            "location": "Atlanta, GA",
+            "date": "Oct 21 2016",
+            "topics": [
+                "New HTML5 APIs"
+            ]
+        },
+        {
+            "name": "TIY Crash Course",
+            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/232736644/",
+            "location": "Washington, DC",
+            "date": "Jul 27 2016",
+            "topics": [
+                "Intro to Web Development"
+            ]
+        },
+        {
+            "name": "TIY Crash Course",
+            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/233157810",
+            "location": "Washington, DC",
+            "date": "Aug 15 2016",
+            "topics": [
+                "Intro to JavaScript"
+            ]
+        },
+        {
+            "name": "TIY Crash Course",
+            "url": "https://www.meetup.com/The-Iron-Yard-DC/events/233158296/",
+            "location": "Washington, DC",
+            "date": "Sep 14 2016",
+            "topics": [
+                "Intro to Front End"
+            ]
+        },
+        {
+            "name": "Nodevember",
+            "url": "http://nodevember.org/",
+            "location": "Nashville, TN",
+            "date": "Nov 20 2016",
+            "topics": [
+                "Async Workflows with Generators"
+            ]
+        },
+        {
+            "name": "TIY Crash Course",
+            "url": "https://www.meetup.com/The-Iron-Yard-DC/events/236643960/",
+            "location": "Washington, DC",
+            "date": "Jan 10 2017",
+            "topics": [
+                "Intro to Front End"
+            ]
+        },
+        {
+            "name": "TIY Crash Course",
+            "url": "https://www.meetup.com/The-Iron-Yard-DC/events/236644057/",
+            "location": "Washington, DC",
+            "date": "Jan 26 2017",
+            "topics": [
+                "What is the Internet?"
+            ]
+        },
+        {
+            "name": "TIY Crash Course",
+            "url": "https://www.meetup.com/The-Iron-Yard-DC/events/236643960/",
+            "location": "Washington, DC",
+            "date": "Feb 6 2017",
+            "topics": [
+                "Intro to JavaScript"
+            ]
+        },
+        {
+            "name": "The Iron Yard FEE Course",
+            "url": "https://www.theironyard.com/courses/javascript-and-mvc-frameworks.html",
+            "location": "Washington, DC",
+            "date": "Feb 13, 2017",
+            "topics": [
+                "Front End Engineering - HTML, CSS, JS"
+            ]
+        },
+        {
+            "name": "Web Mavens - Applied Web Tech",
+            "url": "https://www.meetup.com/webcontentmavens/events/236649020/",
+            "location": "Washington, DC",
+            "date": "Mar 30, 2017",
+            "topics": [
+                "HTML5 Features"
+            ]
+        },
+        {
+            "name": "Dutch PHP Conference",
+            "url": "https://www.phpconference.nl/",
+            "location": "Amsterdam, Netherlands",
+            "date": "Jun 29, 2017",
+            "topics": [
+                "JavaScript ES6/2015"
+            ]
+        },
+        {
+            "name": "Connect.Tech",
+            "url": "http://connect.tech/",
+            "location": "Atlanta, GA",
+            "date": "Sep 21 2017",
+            "topics": [
+                "Alexa Skill Development",
+                "Regular Expressions"
+            ]
+        },
+        {
+            "name": "Madison PHP Conference",
+            "url": "http://2017.madisonphpconference.com/",
+            "location": "Madison, WI",
+            "date": "Sep 22 2017",
+            "topics": [
+                "Git Workshop"
+            ]
+        },
+        {
+            "name": "Confoo Vancouver",
+            "url": "https://confoo.ca/en/yvr2017",
+            "location": "Vancouver, Canada",
+            "date": "Dec 5 2017",
+            "topics": [
+                "Generating a New Async",
+                "ES6 Features"
+            ]
+        },
+        {
+            "name": "php[world]",
+            "url": "https://world.phparch.com",
+            "location": "Washington, DC",
+            "date": "Nov 15 2017",
+            "topics": [
+                "Regular Expressions",
+                "ES6 Features"
+            ]
+        },
+        {
+            "name": "DCJS",
+            "url": "https://www.meetup.com/DC-JavaScript/events/247263547/",
+            "location": "Washington, DC",
+            "date": "Feb 8 2018",
+            "topics": [
+                "Using ES6 to rewrite jQuery"
+            ]
+        },
+        {
+            "name": "GitHub Constellation",
+            "url": "https://githubconstellation.com/washington-dc/",
+            "location": "Washington, DC",
+            "date": "Apr 18 2018",
+            "topics": [
+                "Open Sourcing the DoD"
+            ]
+        },
+        {
+            "name": "Code for America Summit",
+            "url": "http://www.cvent.com/events/code-for-america-summit-2018/event-summary-e12d85b157b94d69b80d8911cc641d36.aspx",
+            "location": "Oakland, CA",
+            "date": "May 31 2018",
+            "topics": [
+                "Open Source in Civic Tech"
+            ]
+        },
+        {
+            "name": "Digital Gov Interview",
+            "url": "https://digital.gov/event/2018/06/05/free-open-source-software-in-government-with-codemil/",
+            "location": "remote",
+            "date": "Jun 5 2018",
+            "topics": [
+                "Open Sourcing the DoD"
+            ]
+        },
+        {
+            "name": "OSEHRA Open Source Summit",
+            "url": "http://summit.osehra.org",
+            "location": "Bethesda, MD",
+            "date": "Jul 18 2018",
+            "topics": [
+                "Open Sourcing the DoD"
+            ]
+        },
+        {
+            "name": "Open Source Summit North America",
+            "url": "https://events.linuxfoundation.org/events/open-source-summit-north-america-2018/",
+            "location": "Vancouver, Canada",
+            "date": "Aug 31 2018",
+            "topics": [
+                "Open Sourcing the DoD"
+            ]
+        },
+        {
+            "name": "All Things Open",
+            "url": "https://allthingsopen.org/",
+            "location": "Raleigh, NC",
+            "date": "Oct 21 2018",
+            "topics": [
+                "Open Sourcing the DoD"
+            ]
+        }
+    ]
+}

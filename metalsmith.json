@@ -42,6 +42,7 @@
     "./helpers/tagcloud": {
       "key": "tags"
     },
+    "./helpers/events": {},
     "metalsmith-date-formatter": {
       "dates": [
         {

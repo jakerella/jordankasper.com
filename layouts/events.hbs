@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang='en'>
+    <head>
+        {{> head }}
+    </head>
+
+    <body data-slug='{{#if path}}{{ path }}{{else}}home{{/if}}' class='off-canvas-contain'>
+        {{> header }}
+
+        <section class='main-body row'>
+            <article class='main-content sm-12 md-9'>
+                <h2>Event Schedule</h2>
+
+                <h3>Upcoming</h3>
+
+                <ul class='upcoming-events'>
+                    {{> events events=futureEvents}}
+                </ul>
+
+                <h3>Past</h3>
+
+                <ul class='past-events'>
+                    {{> events events=pastEvents}}
+                </ul>
+
+            </article>
+
+            {{> sidebar }}
+        </section>
+
+        {{> footer }}
+
+        {{> scripts }}
+    </body>
+</html>

@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rm -rf build/",
     "build": "npx metalsmith",
-    "debug": "DEBUG=metalsmith:metdata,metalsmith:source,metalsmith:destination,metalsmith-tagcloud,metalsmith-collections,metalsmith-permalinks,metalsmith-markdown,metalsmith-layouts,metalsmith-excerpts,metalsmith-tags,metalsmith-sass,metalsmith-assets npx metalsmith",
+    "debug": "DEBUG=metalsmith:metdata,metalsmith:source,metalsmith:destination,metalsmith-tagcloud,metalsmith-events,metalsmith-collections,metalsmith-permalinks,metalsmith-markdown,metalsmith-layouts,metalsmith-excerpts,metalsmith-tags,metalsmith-sass,metalsmith-assets npx metalsmith",
     "watch": "npm-watch build"
   },
   "watch": {
