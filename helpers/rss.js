@@ -39,8 +39,14 @@ module.exports = function tagcloud(opts){
       });
     });
 
-    const location = path.join(__dirname, '..', 'build', 'rss');
+    const buildDir = path.join(__dirname, '..', 'build');
+    const location = path.join(buildDir, 'rss');
     const xml = feed.xml({indent: true});
+
+    if (!fs.existsSync(buildDir)) {
+      debug('Build directory does not exist, creating it...');
+      fs.mkdirSync(buildDir);
+    }
 
     debug('Writing blog post XML to %s', location);
     fs.writeFile(location, xml, function functionName(err) {
