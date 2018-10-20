@@ -1,21 +1,34 @@
 <aside class='sidebar speaking sm-12 md-3'>
 
-    <h2>Upcoming Events</h2>
+    <section class='events'>
+        <h2>Upcoming Events</h2>
 
-    <ul class='upcoming-events'>
-        {{> events events=futureEvents}}
-    </ul>
-
-    <h2>Tag Cloud</h2>
-
-    <section class='tag-cloud'>
-        <ul>
-        {{#each tagcloud}}
-            <li class='tag tag-size-{{weightName}}'>
-                <a href='/tag/{{ slug }}' title='See posts with the tag "{{ name }}"'>{{ name }}</a>
-            </li>
-        {{/each}}
+        <ul class='upcoming-events'>
+            {{> events events=futureEvents}}
         </ul>
+    </section>
+
+    <section class='recent-posts'>
+        <h2>Recent Posts</h2>
+
+        <article>
+            <p class='published-on'><i class='icon-calendar'></i>11/3/2017</p>
+            <h3><a href='/understanding-super-in-javascript'>Understanding Super In Javascript</a></h3>
+        </article>
+    </section>
+
+    <section class='tags'>
+        <section class='tag-cloud'>
+        <h2>Tag Cloud</h2>
+
+            <ul>
+            {{#each tagcloud}}
+                <li class='tag tag-size-{{weightName}}'>
+                    <a href='/tag/{{ slug }}' title='See posts with the tag '{{ name }}''>{{ name }}</a>
+                </li>
+            {{/each}}
+            </ul>
+        </section>
     </section>
 
 </aside>
