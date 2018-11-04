@@ -1,0 +1,209 @@
+
+/* Override background from Sky theme */
+body {
+    background-color: #cce3d6;
+    background: -moz-radial-gradient(bottom right, circle cover, #fbfcf7 0%, #cce3d6 50%);
+    background: -webkit-radial-gradient(bottom right, circle cover, #fbfcf7 0%, #cce3d6 50%);
+    background: -o-radial-gradient(bottom right, circle cover, #fbfcf7 0%, #cce3d6 50%);
+    background: -ms-radial-gradient(bottom right, circle cover, #fbfcf7 0%, #cce3d6 50%);
+    background: radial-gradient(bottom right, circle cover, #fbfcf7 0%, #cce3d6 50%);
+}
+
+.reveal em {
+    font-style: italic;
+}
+
+aside.title-text {
+    position: relative;
+    top: -9.5em;
+    left: 0;
+    text-align: left;
+    font-size: 0.8em;
+}
+aside.title-text h2, aside.title-text h3, aside.title-text h4 {
+    color: #111;
+    font-family: 'Times New Roman', serif;
+    letter-spacing: 0.01em;
+    background-color: #fff;
+    padding: 0.2em;
+}
+aside.title-text h4 {
+    width: 25%;
+}
+aside.title-text h3 {
+    position: relative;
+    top: -0.5em;
+    font-size: 1.2em;
+}
+
+.reveal .slides .top-left {
+    text-align: left;
+}
+.reveal .slides section.top-left > * {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.slides cite {
+    display: block;
+    clear: both;
+    font-size: 0.5em;
+    color: #999;
+    position: absolute;
+    bottom: -4em;
+}
+.slides cite:before {
+    content: "Image credit: ";
+}
+
+.outline, .outline h3 {
+    color: #fff;
+    -webkit-text-stroke: 1px #000;
+    text-shadow:
+        3px 3px 4px #000,
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+
+.slides p {
+    color: #446;
+    margin: 0.5em 0;
+}
+
+.reveal .slides section strong {
+    font-weight: bold;
+}
+
+.reveal .slides li {
+    text-align: left;
+    line-height: 1.2em;
+}
+
+.reveal .slides .centered-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    list-style: none;
+}
+.reveal .slides .centered-list li {
+    flex: 1;
+}
+
+.slides pre {
+    background-color: #fff;
+    margin: 0.3em;
+}
+.reveal pre code {
+    line-height: 1.15em;
+    max-height: 600px;
+    padding: 0.3em;
+    display: block;
+    font-size: 0.7em;
+    text-align: left;
+    font-family: Consolas, monospace;
+}
+.reveal .xml .javascript {
+    opacity: 1;
+}
+.slides code.no-highlight, .slides code.no-highlight span {
+    color: #4d4d4c !important;
+}
+.slides code.dim, .slides code.dim span {
+    color: #888 !important;
+}
+
+.slides p code, .slides li > code, .slides h3 code, .slides h4 code {
+    background-color: #ddeff0;
+    color: #2f85aa;
+    font-size: 0.8em;
+    padding: 0.05em 0.2em;
+
+    -webkit-border-radius: 0.4em;
+    -moz-border-radius: 0.4em;
+    border-radius: 0.4em;
+}
+.slides h3 code, .slides h4 code {
+    font-size: 0.9em;
+    letter-spacing: 0.01em;
+}
+
+.slides .fine {
+    color: #999;
+    font-size: 0.9em;
+}
+
+.slides .illuminate {
+    color: #2f85aa;
+    font-style: italic;
+}
+
+ul.file-structure ul { margin-left: 0.7em; }
+ul.file-structure li { list-style: none; margin: 0.25em 0; }
+ul.file-structure .folder {
+    list-style-image: url('/images/folder.png');
+}
+ul.file-structure .folder-open {
+    list-style-image: url('/images/folder-open.png');
+}
+ul.file-structure .file {
+    list-style-image: url('/images/file.png');
+}
+.reveal pre .xml .javascript { opacity: 1; }
+.reveal blockquote {
+    border: none;
+    color: #555;
+    box-shadow: none;
+}
+
+footer {
+    position: absolute;
+    bottom: 0.3em;
+}
+footer.left {
+    left: 0.5em;
+}
+footer.right {
+    left: 0.5em;
+}
+footer .copyright {
+    font-size: 0.5em;
+    color: #666;
+    vertical-align: middle;
+    margin-left: 1em;
+}
+
+pre {
+    position: relative;
+}
+.code-run {
+    position: absolute;
+    top: 2px;
+    right: 0;
+
+    border: none;
+    font-size: 0.7em;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 0.1em 1em;
+    display: inline-block;
+    transition: all 0.2s;
+    background: #cb4e4e;
+    color: #fff;
+    box-shadow: 0 4px #ab3c3c;
+}
+.code-run:hover {
+    box-shadow: 0 3px #ab3c3c;
+    top: 3px;
+}
+.code-run:active {
+    box-shadow: 0 0 #ab3c3c;
+    top: 5px;
+}
+.slides pre .code-result {
+    border: 2px solid #555;
+    border-top: none;
+    background-color: #e5e5e5;
+    text-align: left;
+}

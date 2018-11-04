@@ -1,0 +1,14 @@
+{
+  "name": "source-by-line",
+  "homepage": "https://github.com/jakerella/source-by-line",
+  "version": "0.2.0",
+  "_release": "0.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.0",
+    "commit": "5b6dc6ee9954f77352af853ec38c795b49a41210"
+  },
+  "_source": "git://github.com/jakerella/source-by-line.git",
+  "_target": "*",
+  "_originalSource": "git://github.com/jakerella/source-by-line.git"
+}

@@ -1,0 +1,22 @@
+{
+  "name": "source-by-line",
+  "version": "0.2.0",
+  "description": "Tool for inserting code samples into a page from external sources",
+  "main": "srcByLine.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jakerella/source-by-line.git"
+  },
+  "keywords": [
+    "sample",
+    "code",
+    "highlighting",
+    "slides"
+  ],
+  "author": "Jordan Kasper",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jakerella/source-by-line/issues"
+  },
+  "homepage": "https://github.com/jakerella/source-by-line"
+}
