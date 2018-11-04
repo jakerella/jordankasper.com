@@ -19,6 +19,9 @@
         "pattern": "content/posts/*.md",
         "sortBy": "date",
         "reverse": true
+      },
+      "presos": {
+        "pattern": "content/presos/**/*.html"
       }
     },
     "metalsmith-markdown": {},
@@ -64,6 +67,9 @@
       "source": "./assets",
       "destination": "./"
     },
-    "./helpers/rss": {}
+    "./helpers/rss": {},
+    "metalsmith-move-remove": {
+      "remove": ["presos"]
+    }
   }
 }
