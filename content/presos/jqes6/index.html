@@ -1,0 +1,108 @@
+---
+layout: preso.hbs
+title: jqes6
+displaytitle: Using ES6 to Build a More Efficient jQuery
+description: jQuery is great, but it's big and bloated. What if we could use new ES6 (and ES5) JavaScript APIs to make a smaller, more efficient DOM manipulation framework?
+backgroundColor: white
+---
+
+<style>
+    .reveal .slides h1, .reveal .slides h2, .reveal .slides h3 { text-transform: none; }
+</style>
+
+<section data-background='black'>
+    <h1 style='color: #fff; font-weight: bold; margin-bottom: 2em;'>
+        Using ES6 to Build a More Efficient jQuery
+    </h1>
+
+    <aside style='display: flex; flex-basis: 40%; justify-content: space-around;'>
+        <img src='images/logo-jquery.png' alt='jQuery logo' style='flex: 1; align-self: center; max-width: 40%;'>
+        <img src='images/es6.jpg' alt='ES6 logo' style='flex: 1; align-self: center; max-width: 30%;'>
+    </aside>
+</section>
+
+<section data-background='white'>
+    <img src='/images/hobbes_large_trans.png' alt='me' style='width:40%' /><br>
+    <p style='margin-top: 1em' contenteditable autocorrect='off' spellcheck='false'>Jordan Kasper | <a href='http://twitter.com/jakerella'>@jakerella</a></p>
+</section>
+
+<section>
+    <h2>
+        jQuery is great.
+        <sup style='font-size:0.4em; vertical-align: top; position: relative; top: -0.5em; letter-spacing: 0.03em;'>[citation needed]</sup>
+    </h2>
+</section>
+
+<section data-background='#333'>
+    <h2 style='color: #fff;'>But jQuery has some problems.</h2>
+</section>
+
+<section data-background='#333'>
+    <ul style='color: #fff;' class='centered-list'>
+        <li>non-standard features</li>
+        <li class='fragment'>slow for some operations</li>
+        <li class='fragment'>bloated feature set</li>
+        <li class='fragment'>file size</li>
+    </ul>
+</section>
+
+<section data-transition='none'>
+    <h2>Don't use jQuery.<br><br>Got it.</h2>
+</section>
+
+<section data-transition='none'>
+    <h2><del>Don't use jQuery.<br><br>Got it.</del></h2>
+</section>
+
+<section>
+    <h2>We still need something to manipulate the DOM.</h2>
+</section>
+
+<section>
+    <h2>Why not?</h2>
+    <img src='images/es6.jpg' alt='ES6 logo' style='max-width: 25%;'>
+    <p class='fragment'>(Actually quite a bit of ES5, too.)</p>
+</section>
+
+<section>
+    <h2>Show me!</h2>
+</section>
+
+<section>
+    <h2>Is it more efficient?</h2>
+</section>
+
+<section>
+    <h1>Sorta.</h1>
+    <figure style='font-size: 3em;' class='fragment' title='disapproval face'>ಠ_ಠ</figure>
+</section>
+
+<section>
+    <aside style='display: flex; flex-basis: 40%; justify-content: space-around;'>
+        <img src='images/performance_1.png' style='flex: 1; align-self: center; max-width: 40%;' alt='Some performance results of a test run against jQuery'>
+        <img class='fragment' src='images/performance_2.png' style='flex: 1; align-self: center; max-width: 40%;' alt='Some other performance results of a test run against jQuery'>
+    </aside>
+</section>
+
+<section>
+    <h1>So should I still use jQuery?</h1>
+
+    <figure style='font-size: 2em;' class='fragment' title='shrug'>¯\_(ツ)_/¯</figure>
+</section>
+
+<section>
+    <p>Think about what you need.</p>
+
+    <p class='fragment'>Could you do with just <a href='https://sizzlejs.com'>sizzle</a> and ES5/6?</p>
+</section>
+
+<section data-background='#f5ffff'>
+    <h2>Thank You!</h2>
+    <h3 style='margin-top:1.5em;'>Using ES6 to Build a More Efficient jQuery</h3>
+    <p style='margin-top: 2em'>Jordan Kasper | <a href='http://twitter.com/jakerella'>@jakerella</a></p>
+
+    <p contenteditable>
+      <a href='https://jordankasper.com/jqes6'>jordankasper.com/jqes6</a><br>
+      <a href='https://github.com/jakerella/jqes6'>github.com/jakerella/jqes6</a>
+    </p>
+</section>

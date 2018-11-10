@@ -1,0 +1,888 @@
+---
+layout: preso.hbs
+title: es6
+displaytitle: "ES6 and You: The Future is Now"
+description: A tour of some new features in ECMAScript 6/2015 for JavaScript.
+---
+
+<section data-background='images/delorian-lego.jpg'>
+    <h2 style='font-size: 1.6em; color: #fff; text-shadow: 2px 2px 2px #000; position: relative; top: -0.5em; left: -3.5em;'>
+        ES6 and You: The Future is Now!
+    </h2>
+
+    <cite style='bottom: -27em;'>JD Hancock (http://photos.jdhancock.com/photo/2013-08-18-224606-do-you-remember-the-future.html)</cite>
+</section>
+
+<section data-background='white'>
+    <img src='/images/hobbes_large_trans.png' alt='me' style='width:40%' /><br>
+    <p style='margin-top: 1em' contenteditable autocorrect='off' spellcheck='false'>Jordan Kasper | <a href='http://twitter.com/jakerella'>@jakerella</a></p>
+</section>
+
+<section>
+    <h2>ES6/2015</h2>
+
+    <p style='line-height: 1.2em; margin-top: 1.5em;'>What's the "ES" and how did we get to 6...<br>or 2015... or whatever?</p>
+</section>
+
+<section>
+    <h2 style='text-transform: none;'>What about ES7? Or ES.next?</h2>
+</section>
+
+<section>
+    <h2>Topics for Today</h2>
+
+    <ul style='list-style: none;'>
+        <li class='fragment' style='text-align: center;'>"Classes" (constructors, extends, super)</li>
+        <li class='fragment' style='text-align: center;'>Default Function Args</li>
+        <li class='fragment' style='text-align: center;'>New Variable Declarations and Scope</li>
+        <li class='fragment' style='text-align: center;'>Template Literals</li>
+        <li class='fragment' style='text-align: center;'>Object Deconstruction</li>
+        <li class='fragment' style='text-align: center;'>Arrow Functions</li>
+    </ul>
+</section>
+
+<section>
+    <h2 style='text-transform: none;'>What about Native Modules?</h2>
+
+    <img class='fragment' src='images/module-support.png' alt='Native Module support from caniuse.com' style='width: 120%; margin-left: -10%;'>
+    <cite>http://caniuse.com/#feat=es6-module</cite>
+</section>
+
+<section>
+    <h2 style='text-transform: none;'>What about Promises?</h2>
+
+    <p class='fragment'>
+        They're awesome, and you should
+        <a href='https://developers.google.com/web/fundamentals/getting-started/primers/promises'>look into them</a>...
+    </p>
+    <p class='fragment'>
+        ... especially in combination with the
+        <a href='https://fetch.spec.whatwg.org/'>new fetch API</a><br>(versus traditional Ajax libraries).
+    </p>
+</section>
+
+
+<section> <!-- start big group fo code examples -->
+
+<section>
+    <h2><a href='https://github.com/tastejs/todomvc'>Todo MVC</a></h2>
+</section>
+
+<section>
+    <h2>Our Todo Class</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Todo {
+
+    constructor(text) {
+        this.text = text;
+        this.isComplete = false;
+    }
+
+}
+    </code></pre>
+
+    <pre class='fragment'><code class='lang-javascript' data-trim>
+let item = new Todo('finish presentation');
+    </code></pre>
+</section>
+
+<section>
+    <h2>Our Todo Class</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Todo {
+
+    constructor(text, dueDate) {
+        this.text = text;
+        this.isComplete = false;
+        this._dueDate = dueDate;
+    }
+
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>Our Todo Class</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Todo {
+
+    constructor(text, dueDate) {
+        this.text = text;
+        this.isComplete = false;
+
+        // Default dueDate is tomorrow
+        this._dueDate = dueDate || Date.now() + 86400000;
+    }
+
+}
+    </code></pre>
+</section>
+
+
+<section>
+    <h2>Default Function Arguments</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Todo {
+
+    constructor(text = 'stuff', dueDate) {
+        this.text = text;
+        this.isComplete = false;
+        this._dueDate = dueDate || Date.now() + 86400000;
+    }
+
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>Default Function Arguments</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Todo {
+
+    constructor(text='stuff', dueDate = Date.now() + 86400000) {
+        this.text = text;
+        this.isComplete = false;
+        this._dueDate = dueDate;
+    }
+
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>Starting Our App</h2>
+
+    <ul>
+        <li class='fragment'>Find our form</li>
+        <li class='fragment'>Listen for submit event</li>
+        <li class='fragment'>Create a Todo item</li>
+        <li class='fragment'>Save the item</li>
+        <li class='fragment'>Render the item</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Starting Our App</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class App {
+    constructor() {
+        // kick off all the things...
+    }
+}
+
+new App();  // Get things started
+    </code></pre>
+</section>
+
+<section>
+    <h2>Find the Form</h2>
+
+    <pre><code class='lang-javascript' data-trim contenteditable>
+class App {
+
+    constructor() {
+        document.querySelector('.create-todo')
+            .addEventListener('submit', (eventObj) => {
+                eventObj.preventDefault();
+
+                // do the work!
+            });
+    }
+
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>Some Notes on Arrow Functions</h2>
+
+    <ul style='list-style: none;'>
+        <li class='fragment' style='text-align: center;'>No context (<code>this</code>)</li>
+        <li class='fragment' style='text-align: center;'>Implicit return value (sometimes)</li>
+    </ul>
+</section>
+
+<section>
+    <h2>No Context</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+// ES5 callback
+someFunction() {
+  someNode.addEventListener("click", function (eventObj) {
+    console.log(this);  // someNode
+  });
+}
+    </code></pre>
+
+    <pre class='fragment'><code class='lang-javascript' data-trim>
+// ES6 arrow function
+someFunction() {
+  someNode.addEventListener("click", (eventObj) => {
+    console.log(this);  // whatever someFunction's `this` is
+  });
+}
+    </code></pre>
+</section>
+
+<section>
+    <h3 style='text-transform: none;'>Wait, don't I want `this`?</h3>
+
+    <p class='fragment'>The question is: do you need it?</p>
+</section>
+
+<section>
+    <h2>No Context</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+[1, 2, 3].map(num => {
+    console.log(num);   // 1 (then 2, then 3)
+    console.log(this);  // undefined
+})
+    </code></pre>
+
+    <pre class='fragment'><code class='lang-javascript' data-trim>
+someNode.addEventListener("click", (eventObj) => {
+    console.log(this);             // undefined
+    console.log(eventObj.target);  // someNode (probably)
+});
+    </code></pre>
+
+    <p class='fragment'>
+        One note: if you delegate events this gets tricky!
+    </p>
+</section>
+
+
+<section>
+    <h2>Implicit Return</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+[1, 2, 3].map( num => num * num );  //  [1, 4, 9]
+    </code></pre>
+
+    <p class='fragment'>
+        Note there are <strong>no curly braces</strong>!<br><br>
+        <code>num => num * num</code>
+    </p>
+
+    <aside class='fragment'>
+        <p>Need the second argument? Add parenthesis.</p>
+        <pre><code class='lang-javascript' data-trim>
+[1, 2, 3].map( (num, i) => num * i );  //  [0, 2, 6]
+        </code></pre>
+    </aside>
+</section>
+
+<section>
+    <h2>Implicit Return</h2>
+
+    <p>Only when there is no code block (curly braces).</p>
+</section>
+
+<section>
+    <h2>Back to our Todo Item...</h2>
+</section>
+
+<section>
+    <h2>Creating the Item</h2>
+
+    <pre><code class='lang-javascript' data-trim contenteditable>
+class App {
+
+    constructor() {
+        document.querySelector('.create-todo')
+            .addEventListener('submit', (eventObj) => {
+                eventObj.preventDefault();
+
+                App.createTodo();
+
+            });
+    }
+
+    static createTodo() {
+        const text = document.querySelector('.todo-text').value;
+        const item = new Todo(text);
+    }
+
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2 style='text-transform: none;'><code>let</code> AND <code>const</code></h2>
+    <p>a short tangent</p>
+</section>
+
+<section>
+    <h2 style='text-transform: none;'><code>let</code> and block scoping</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+let z = 1;
+if (x === y) {
+    let z = 10;
+    z++;
+}
+// what is `z` now?
+    </code></pre>
+
+    <p class='fragment'>`z` will be 1 at the bottom!</p>
+</section>
+
+<section>
+    <h2 style='text-transform: none;'><code>let</code> and block scoping</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+for (var i=0; i&lt;10; i++) {
+    // do some stuff...
+}
+console.log(i);  // i is 10 outside the loop!
+    </code></pre>
+
+    <pre class='fragment'><code class='lang-javascript' data-trim>
+for (let i=0; i&lt;10; i++) {
+    // do some stuff...
+}
+console.log(i);  // ReferenceError!
+    </code></pre>
+</section>
+
+<section>
+    <h2 style='text-transform: none;'><code>let</code> vs <code>const</code></h2>
+
+    <pre><code class='lang-javascript' data-trim>
+let counter = 1;
+counter++;       // totally fine
+
+const index = 1;
+index++;         // TypeError
+    </code></pre>
+</section>
+
+<section>
+    <h2 style='text-transform: none;'><code>let</code> vs <code>const</code></h2>
+
+    <pre><code class='lang-javascript' data-trim>
+const o = {};
+o.foo = 'bar';  // totally fine
+    </code></pre>
+
+    <p class='fragment'>constant <strong>reference</strong> vs. constant <strong>value</strong></p>
+</section>
+
+<section>
+    <h2>Back to the main story...</h2>
+</section>
+
+<section>
+    <h2>Rendering the Todo Item</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class App {
+    constructor() { /* ... */ }
+
+    static createTodo() {
+        const text = document.querySelector('.todo-text').value;
+        const item = new Todo(text);
+
+        // put it into the DOM...
+    }
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>Template Literals</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Todo {
+    constructor() { /* ... */ }
+
+    render() {
+        return
+            `<li>
+                <p>${this.text}</p>
+                <time>${this._dueDate}</time>
+            </li>`;
+    }
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>Template Literals</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Todo {
+    constructor() { /* ... */ }
+
+    render() {
+        return
+            `<li class="${(this.isComplete) ? 'complete' : ''}">
+                <p>${this.text}</p>
+                <time>${this._dueDate}</time>
+            </li>`;
+    }
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>Rendering the Todo Item</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class App {
+    // ...
+
+    static createTodo() {
+        const text = document.querySelector('.todo-text').value;
+        const item = new Todo(text);
+
+        const list = document.querySelector('.todo-list');
+
+        list.innerHTML += item.render();
+    }
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>This is fine...</h2>
+
+    <pre><code class='lang-html' data-trim>
+&lt;li class="">
+                &lt;p>finish presentation&lt;/p>
+                &lt;time>1508702292483&lt;/time>
+            &lt;/li>
+    </code></pre>
+
+    <p>(Yes, that spacing is intentional, but do you care?)</p>
+</section>
+
+<section>
+    <h2>Getters and Setters</h2>
+    <h4>(ES5, not 6!)</h4>
+
+    <pre><code class='lang-javascript' data-trim>
+class Todo {
+    constructor() { /* ... */ }
+    render() { /* ... */ }
+
+    get dueDate() {
+        return (new Date(this._dueDate)).toLocaleString();
+    }
+    set dueDate(value) {
+        this._dueDate = (new Date(value)).getTime();
+    }
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>User Getters by Property Access</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+render() {
+    return
+        `<li class="${(this.isComplete) ? 'complete' : ''}">
+            <p>${this.text}</p>
+            <time>${this.dueDate}</time>
+        </li>`;
+}
+    </code></pre>
+
+    <p>Look closesly at the <code>&lt;time></code> element!</p>
+</section>
+
+<section>
+    <h2>This is better...</h2>
+
+    <pre><code class='lang-html' data-trim>
+&lt;li data-id="1234567890">
+                &lt;p>finish presentation&lt;/p>
+                &lt;time>10/22/2017, 4:07:55 PM&lt;/time>
+            &lt;/li>
+    </code></pre>
+</section>
+
+<section>
+    <h2>Object Destructuring</h2>
+
+    <p>I don't like repeating myself...</p>
+
+    <pre class='fragment'><code class='lang-javascript' data-trim>
+this.text
+this.dueDate
+this.isComplete
+    </code></pre>
+
+    <pre class='fragment'><code class='lang-javascript' data-trim>
+render() {
+    const { text, dueDate, isComplete } = this;
+
+    return
+        `<li class="${(isComplete) ? 'complete' : ''}">
+            <p>${text}</p>
+            <time>${dueDate}</time>
+        </li>`;
+}
+    </code></pre>
+</section>
+
+<section>
+    <p>What about saving the Todo Item?</p>
+
+    <pre class='fragment' style='background: none;'><code class='no-highlight'>
+                          Resource
+                           |    |
+                         Todo  User
+                                |
+                              Admin</code></pre>
+</section>
+
+<section>
+    <h2>The Resource Class</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Resource {
+
+    constructor() { }  // You need this, but it can be blank
+
+    save() { }
+
+    get() { }
+
+    destroy() { }
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>Inheritance</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Todo extends Resource {
+    constructor( /* params... */ ) {
+        super();
+
+        // your other code...
+    }
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>Inheritance</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+function Todo() {
+    Resource.prototype.constructor.apply(this, Array.from(arguments));
+
+    // ...
+}
+Todo.prototype = Object.create(Resource.prototype);
+Todo.prototype.constructor = Todo;
+    </code></pre>
+</section>
+
+<section>
+    <h2>This is just syntactic sugar!</h2>
+
+    <p class='fragment'>...which is fine,<br>but you <strong>still need to know about prototypes</strong>!</p>
+</section>
+
+<section>
+    <h2>Back to Our Resource Class</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Resource {
+
+    constructor() { }
+
+    save() { }  // let's look closer at this...
+
+    get() { }
+
+    destroy() { }
+}
+    </code></pre>
+</section>
+
+
+<section>
+    <h2>Validating Data</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Resource {
+    constructor() { }
+
+    save() {
+        // What if there's bad data?
+        // We need validation!
+
+        // do the save...
+        // maybe with fetch()?
+    }
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>Call a "validate" method</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Resource {
+    constructor() { }
+
+    save() {
+        this.validate();
+
+        // do the save...
+        // maybe with fetch()?
+    }
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>The "vaidate" Method</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Resource {
+    constructor() { }
+
+    save() {
+        /* ... */
+    }
+
+    validate() {
+        if (this.id && typeof(this.id) !== "number") {
+            throw new Error("Invalid resource ID");
+        }
+    }
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2>What about the text, or dueDate?</h2>
+    <h3 class='fragment'>We're in the <strong>parent</strong> class!</h3>
+</section>
+
+<section>
+    <h2>Implement "vaidate" in Todo</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class Todo extends Resource {
+    constructor() { /* ... */ }
+    render() { /* ... */ }
+
+    validate() {
+        if (typeof(this.text) !== "string") {
+            throw new Error("Invalid Todo text");
+        }
+        // more data checks...
+    }
+}
+    </code></pre>
+
+    <p class='fragment'>We have a problem... the ID is never checked!</p>
+</section>
+
+<section>
+    <h2>Implement "vaidate" in Todo</h2>
+
+    <p>Don't duplicate, reuse!</p>
+
+    <pre><code class='lang-javascript' data-trim>
+class Todo extends Resource {
+    constructor() { /* ... */ }
+    render() { /* ... */ }
+
+    validate() {
+        super.validate();
+
+        if (typeof(this.text) !== "string") {
+            throw new Error("Invalid Todo text");
+        }
+        // more data checks...
+    }
+}
+    </code></pre>
+</section>
+
+<section>
+    <h2 style='text-transform: none;'><strong>super()</strong> versus <strong>super.whatever()</strong></h2>
+
+    <p class='fragment'>This is still just prototypes!</p>
+
+    <aside class='fragment'>
+        <p><code>super</code> sort of a shortcut to the parent constructor.</p>
+        <pre><code class='lang-javascript' data-trim>
+super.constructor === Resource;
+super.constructor.prototype.save === Resource.prototype.save;
+        </code></pre>
+    </aside>
+
+    <p class='fragment'>(Be careful, it's really just a new keyword that behaves differently in different conditions.)</p>
+</section>
+
+<section>
+    <h2>More Syntactic Sugar!</h2>
+
+    <p class='fine'>(You still need to know about prototypes.)</p>
+</section>
+
+
+<section>
+    <h2>Saving the Item</h2>
+
+    <pre><code class='lang-javascript' data-trim>
+class App {
+    // ...
+
+    static createTodo() {
+        const text = document.querySelector('.todo-text').value;
+        const item = new Todo(text);
+
+        try {
+            item.save();
+            const list = document.querySelector('.todo-list');
+            list.innerHTML += item.render();
+
+        } catch(err) {
+            // Handle the error!
+            // (Maybe tell the user something's wrong?)
+        }
+    }
+}
+    </code></pre>
+</section>
+
+
+</section> <!-- end big group of code examples -->
+
+
+<section>
+    <h2>Well that was fun...</h2>
+
+    <p class='fragment'>... but can I use these today?</p>
+</section>
+
+
+<section data-background='#fff'>
+    <h2>Feature Support</h2>
+
+    <style>
+        .reveal table { border-collapse: collapse; }
+        .reveal table th, .reveal table td { border: 1px solid #000; width: 7em; padding: 0.2em 1em; background: #eee; }
+        .reveal tbody th { width: 10em; }
+        .reveal thead th { background: #ddd; font-style: italic; }
+        .reveal tbody td { background-color: #ee7777; }
+        .reveal td.yes { background-color: #66bb66; }
+    </style>
+
+    <table >
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Modern Browsers?</th>
+                <th>IE 11?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Classes</th>
+                <td class='yes'>◕‿◕</td>
+                <td>ಠ_ಠ</td>
+            </tr>
+            <tr>
+                <th>Default Fn args</th>
+                <td class='yes'>◕‿◕</td>
+                <td>ಠ_ಠ</td>
+            </tr>
+            <tr>
+                <th>let and const</th>
+                <td class='yes'>◕‿◕</td>
+                <td class='yes'>o_o</td>
+            </tr>
+            <tr>
+                <th>Template Literals</th>
+                <td class='yes'>◕‿◕</td>
+                <td>ಠ_ಠ</td>
+            </tr>
+            <tr>
+                <th>Object Deconstruction</th>
+                <td class='yes'>◕‿◕</td>
+                <td>ಠ_ಠ</td>
+            </tr>
+            <tr>
+                <th>Promises</th>
+                <td class='yes'>◕‿◕</td>
+                <td>ಠ_ಠ</td>
+            </tr>
+            <tr>
+                <th>Arrow Functions</th>
+                <td class='yes'>◕‿◕</td>
+                <td>ಠ_ಠ</td>
+            </tr>
+            <tr>
+                <th>fetch</th>
+                <td class='yes'>◕‿◕</td>
+                <td>ಠ_ಠ</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section>
+    <h2>Or use a preprocessor!</h2>
+
+    <h3><a href='https://babeljs.io/'>BabelJS</a></h3>
+
+    <aside class='fragment'>
+        <p>Install it (and the ES6 presets):</p>
+        <pre><code class='no-highlight'>npm i -s babel-cli babel-preset-env</code></pre>
+    </aside>
+
+    <aside class='fragment'>
+        <p>Create a <code>.babelrc</code> file and put this in it:</p>
+        <pre><code>{ "presets": ["env"] }</code></pre>
+    </aside>
+
+    <aside class='fragment'>
+        <p>Now run this command:</p>
+        <pre><code class='no-highlight'>babel src/ -d build/</code></pre>
+    </aside>
+</section>
+
+
+<section>
+    <h2>Try it yourself!</h2>
+
+    <aside class='fragment'>
+        <p><a href='https://github.com/jakerella/es6-todos'>github.com/jakerella/es6-todos</a></p>
+
+        <p>
+            or look at the <a href='https://github.com/jakerella/es6-todos/tree/solution'>"solution" branch</a>.
+        </p>
+    </aside>
+</section>
+
+
+
+<section data-background='#f5ffff'>
+    <h2>Thank You!</h2>
+    <h3 style='margin-top:1.5em;text-transform: none;'>ES6 and You: The Future is Now!</h3>
+    <p style='margin-top: 2em'>Jordan Kasper | <a href='http://twitter.com/jakerella'>@jakerella</a></p>
+
+    <p contenteditable>
+      <a href='https://jordankasper.com/es6'>jordankasper.com/es6</a><br>
+      <a href='https://github.com/jakerella/es6-todos'>github.com/jakerella/es6-todos</a>
+    </p>
+</section>

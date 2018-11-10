@@ -1,0 +1,450 @@
+---
+layout: preso.hbs
+title: no-server
+displaytitle: Look Ma, No Server!
+description: Testing Front End Code Without a Server
+---
+
+<section data-background='images/Alice_mock_turtle_cropped.png' class='no-footer'>
+    <aside class='title-text'>
+        <h2>Look Ma, No Server!</h2>
+        <h3>Testing Front End Code Without a Server</h3>
+        <h4>Jordan Kasper</h4>
+    </aside>
+
+    <aside class='notes'>
+        <p>
+            Then the Queen left off, quite out of breath, and said to Alice, "Have you seen the Mock Turtle yet?"<br>
+            "No," said Alice. "I don't even know what a Mock Turtle is."<br>
+            "It's the thing Mock Turtle Soup is made from," said the Queen.<br>
+            -- From Alice's Adventures in Wonderland, Chapter 9
+        </p>
+    </aside>
+</section>
+
+<section class='no-footer'>
+    <h3 style="text-transform:none;">
+        <a href="http://strongloop.com">
+            <img src="/images/strongloop_logo_stacked.png" alt="StrongLoop" style="width:30%;" />
+        </a>
+    </h3>
+    <div class='fragment' style="margin-top:-2em;">
+        <a href="http://nodejs.org" style="display:block;">
+            <img src="/images/nodejs.png" alt="Node.js" style="width:40%;" />
+        </a>
+        <div style='margin-top:-1em;'>
+            <h4 style="font-size: 2em; width: 50%; float: left; text-transform: none; text-align: center; margin-top: 0.8em; font-family:'Helvetica Neue','Open Sans',sans-serif;"><a href="http://expressjs.com">
+                Express
+            </a></h4>
+            <a href="http://loopback.io" style="display:block;">
+                <img src="/images/loopback.png" alt="Loopback" />
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- The Situation -->
+
+<section>
+    <h1 style='position:relative;top:1em;'>The Situation:</h1>
+
+    <img alt='"The Situation"' src='images/situation.gif' style='position:relative;bottom:-5em;right:-10em'>
+
+    <cite>http://theshorereporter.blogspot.com/p/cast.html</cite>
+</section>
+
+<section>
+    <h3>You have a data-driven application...</h3>
+    
+    <h4 class='fragment'>...and a JavaScript app using these data services.</h4>
+</section>
+
+<section>
+    <img alt='Diagram of data services architecture' src='images/data_services.png'>
+    <cite>http://www.compositesw.com/data-virtualization/data-services/</cite>
+</section>
+
+<section>
+    <h3>And you have JavaScript tests...</h3>
+
+    <pre><code class='lang-javascript' data-trim>
+// /test/front-end.js
+
+// Note to future self: write tests.
+
+// Note from future self: thanks, jerk.
+    </code></pre>
+</section>
+
+<section data-background='#fff'>
+    <h3>Well, you <em>want</em> to have JavaScript Tests...</h3>
+    <img src='images/disapproval.png' alt='Look of disapproval' style='width:40%;'>
+</section>
+
+<section>
+    <h3>Web Application Testing</h3>
+
+    <img alt='Nested Russian dolls' src='images/nested_dolls.png'>
+
+    <cite>http://www.aventure.ac.in/the-russian-riddle/</cite>
+</section>
+
+<section data-background='#eff' data-transition='fade'>
+    <img alt='Web app flow diagram' src='images/async-flow.png'>
+</section>
+
+<section data-background='#eff' data-transition='fade'>
+    <img alt='Web app flow diagram - what to test' src='images/async-flow-what-to-test.png'>
+</section>
+
+<section data-background='#eff' data-transition='fade'>
+    <img alt='Web app flow diagram - no server' src='images/async-flow-no-server.png'>
+</section>
+
+
+<!-- The Plan -->
+
+<section>
+    <h1>The Plan:</h1>
+</section>
+
+<section>
+    <ol>
+        <li>Test our client application code</li>
+        <li class='fragment'>No changes to our application source code</li>
+        <li class='fragment'>Handle successes <strong>and</strong> errors</li>
+        <li class='fragment'>Test both expected and unexpected data</li>
+    </ol>
+</section>
+
+<section>
+    <h2>How do we do that?</h2>
+</section>
+
+<section data-background='images/hijack.jpg'>
+    <h1 style='bottom:-3.7em; font: italic bold 2em arial; color:white; position:relative;'>
+        Ajax
+    </h1>
+
+    <aside class='notes'>
+        This is an actual movie (minus the "Ajax" bit):<br>
+        After the passing away of his wife, Pooja, Delhi-based Vikram Madan, enrolls his daughter, 
+        Priya, in a boarding school in Amritsar, and re-locates to work as a Mechanic at Chandigarh 
+        Airport. His daughter informs him that she is on her way to Amritsar on a hostel-trip on 
+        Indian Airlines Flight IC147. Shortly thereafter, Vikram will be informed that the flight 
+        has been hijacked to Dubai by Islamic terrorists, who want the Indian government to release 
+        one of their comrades, Rashid Omar, or else they will start killing the passengers and crew 
+        one by one at half-hour intervals.
+    </aside>
+</section>
+
+<section data-background='#eff' data-transition='fade'>
+    <img alt='Web app flow diagram - brief' src='images/async-brief.png'>
+</section>
+
+<section data-background='#eff' data-transition='fade'>
+    <img alt='Async mocking diagram' src='images/async-mock.png'>
+</section>
+
+<section data-background='images/mockingjay.jpg' class='outline'>
+    <h3 style='font-weight:bold;font-family:arial,sans-serif;'>The Hunger Tests: Mockingjax</h3>
+
+    <ol style='margin-top:2em; font-weight:bold;'>
+        <li class='fragment'>Intercept the XMLHttpRequest</li>
+        <li class='fragment'>Inspect the URL, headers, and data</li>
+        <li class='fragment'>Execute callbacks with mock data</li>
+    </ol>
+
+    <cite style='bottom:-11em;'>http://www.imdb.com/media/rm550033152/tt1951265?ref_=ttmd_md_pv</cite>
+</section>
+
+
+<!-- The Execution -->
+
+<section>
+    <h1 style='font-size:2.8em;'>The Execution:</h1>
+</section>
+
+<section>
+    <h2>Tools Galore</h2>
+
+    <ul>
+        <li class='fragment'><a href='https://github.com/jakerella/jquery-mockjax'>jQuery Mockjax</a></li>
+        <li class='fragment'><a href='https://docs.angularjs.org/api/ngMockE2E/service/$httpBackend'>Angular $httpBackend (ng-mocks)</a></li>
+        <li class='fragment'><a href='https://github.com/pivotal/jasmine-ajax'>Jasmine.Ajax</a></li>
+        <li class='fragment'><a href='http://sinonjs.org/docs/#server'>Sinon</a></li>
+    </ul>
+</section>
+
+<section>
+    <h2>What should I use?</h2>
+
+    <h4 class='fragment' style='margin-top:1em;'>Whatever makes your workflow easier.</h4>
+</section>
+
+<section data-background='#fff'>
+    <h3>Not Helpful.</h3>
+
+    <img src='images/disapproval.png' alt='Look of disapproval' style='width:30%;'>
+
+    <h2 class='fragment' style='margin-top:2em;'>Yes, it is.</h2>
+</section>
+
+<section>
+    <h2>Let's look at some sample code...</h2>
+</section>
+
+<section data-background='images/beer.png'>
+    <h2>Beer</h2>
+
+    <p class='fragment' style='margin-top:1em;'>Search for a beer</p>
+    <p class='fragment'>Mark a beer as a "favorite"</p>
+    <p class='fragment'>Rate a beer</p>
+
+    <cite style='right:0;left:auto;bottom:-10em;'>http://pngimg.com/download/2330</cite>
+</section>
+
+<section>
+    <pre><code class='lang-javascript' data-srcbyline='examples/beer.js?3-19'></code></pre>
+</section>
+
+<section>
+    <pre><code class='lang-javascript' data-srcbyline='examples/beer.js?21;23-31;36;38'></code></pre>
+</section>
+
+<section>
+    <pre><code class='lang-javascript' data-srcbyline='examples/beer.js?40;42-51;56;58'></code></pre>
+</section>
+
+<section data-background='#fff'>
+    <h3>Pseudo Test-code</h3>
+    <p class='fine' style='font-style:italic'>Just like real tests, except they actually pass.</p>
+
+    <img alt='Build passing' src='images/build_passing.png'>
+
+    <cite style='bottom:-9em;'>http://blakehall.github.io/tugboat-session-slides</cite>
+</section>
+
+<section>
+    <pre><code class='lang-javascript' data-srcbyline='examples/test-search.js?28-29;37-47'></code></pre>
+</section>
+
+<section>
+    <pre><code class='lang-javascript' data-srcbyline='examples/test-search.js?49-62'></code></pre>
+</section>
+
+<section>
+    <pre><code class='lang-javascript' data-srcbyline='examples/test-search.js?64-76'></code></pre>
+</section>
+
+<section>
+    <pre><code class='lang-javascript' data-srcbyline='examples/test-favorite.js?60-64;68-75'></code></pre>
+</section>
+
+<section>
+    <pre><code class='lang-javascript' data-srcbyline='examples/test-rating.js?46-59'></code></pre>
+</section>
+
+<section data-background='images/fight_club.gif' class='outline'>
+    <h3 style='font-family:arial,sans-serif; font-size:1.1em; position:absolute; bottom:-15em;'>
+        But what happens when the server goes down?
+    </h3>
+</section>
+
+<section data-background='#fff'>
+    <img alt='Async mocking diagram' src='images/async-mock.png'>
+</section>
+
+<section>
+    <pre><code class='lang-javascript' data-srcbyline='examples/test-search.js?7;9;11-14;16;18-20;22;24-25;28;42;47'></code></pre>
+</section>
+
+<section>
+    <h2>Idempotency</h2>
+    <p class='fine' style='font-style:italic;'>Just like real potency, only more idem.</p>
+</section>
+
+<section data-background='#eef'>
+    <h3>This is great, but I don't<br>live in the pseudo world...</h3>
+
+    <h4 style='margin-top:6em;' class='fine'>... or do you?</h4>
+</section>
+
+<section>
+    <h2>jQuery Mockjax</h2>
+    
+    <p style='margin-top:4em; font-style:italic;' class='fine'>Note: I maintain this one. ;)</p>
+</section>
+
+<section>
+    <h4>Basic Query</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?5-11'></code></pre>
+    <pre class='fragment'><code class='lang-javascript' data-srcbyline='examples/mockjax.js?181-185'></code></pre>
+</section>
+
+<section>
+    <h4>Changing Status</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?45-50'></code></pre>
+</section>
+
+<section>
+    <h4>Custom Response Handler</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?14;16-21;23-25;27;35-39;41'></code></pre>
+</section>
+
+<section>
+    <h4>Generating Lots of Data</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?14-15;18-21;26;29;31-33;35-39;41'></code></pre>
+</section>
+
+<section>
+    <h4>Dynamic URLs</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?54-58;77;80-82'></code></pre>
+</section>
+
+<section>
+    <h4>Using URL Params</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?54;56-67;69;76;78-80;82'></code></pre>
+</section>
+
+<section>
+    <h2>Angular</h2>
+    <h3 style='text-transform:none;'>(ng-mocks and $httpBackend)</h3>
+</section>
+
+<section>
+    <h4>Angular Setup</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/ng-mocks.js?6-8;37-38'></code></pre>
+    <pre class='fragment'><code class='html'>&lt;html ng-app='testApp'&gt;
+  &lt;head&gt;
+    ...
+    &lt;script src="angular.js"&gt;
+    &lt;script src="angular-mocks.js"&gt;
+    ...
+  &lt;/head&gt;
+</code></pre>
+</section>
+
+<section>
+    <h4>Basic Mock</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/ng-mocks.js?8-11;38'></code></pre>
+</section>
+
+<section>
+    <h4>Custom Handler</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/ng-mocks.js?8-9;13-22;38'></code></pre>
+</section>
+
+<section>
+    <h4>Dynamic URL</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/ng-mocks.js?8-9;24-38'></code></pre>
+</section>
+
+<section>
+    <h1>Jasmine</h1>
+</section>
+
+<section>
+    <h4>Installing the Ajax Server</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/jasmine.js?6-13;27-28;31-35'></code></pre>
+</section>
+
+<section>
+    <h4>Basic Stub</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/jasmine.js?8-11;19-27'></code></pre>
+</section>
+
+<section>
+    <h4>Testing Errors</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/jasmine.js?8-11;14-18;26-27'></code></pre>
+</section>
+
+<section>
+    <h4>Dynamically Composing Responses</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/jasmine.js?42-60'></code></pre>
+</section>
+
+<section>
+    <h1>Sinon</h1>
+</section>
+
+<section>
+    <h4>Creating the Fake Server</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/sinon.js?6-10;45-51'></code></pre>
+</section>
+
+<section>
+    <h4>Basic Mock</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/sinon.js?6-7;9-12;15-23;45'></code></pre>
+</section>
+
+<section>
+    <h4>Dynamic URL</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/sinon.js?7;13;25-42;45'></code></pre>
+</section>
+
+
+<section>
+    <h1>MOAR EXAMPLES</h1>
+</section>
+
+<section>
+    <h3>jQuery Mockjax</h3>
+    <h4>asynchronous mock response</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?86;88-93;96-98;100;102;104'></code></pre>
+</section>
+
+<section>
+    <h3>jQuery Mockjax</h3>
+    <h4>forced lag; response headers</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?108-116'></code></pre>
+</section>
+
+<section>
+    <h3>jQuery Mockjax</h3>
+    <h4>forced timeout</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?120-125'></code></pre>
+</section>
+
+<section>
+    <h3>jQuery Mockjax</h3>
+    <h4>external data (proxy)</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?129-132'></code></pre>
+</section>
+
+<section>
+    <h3>jQuery Mockjax</h3>
+    <h4>custom matching; external data (proxy)</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?136-147'></code></pre>
+</section>
+
+<section>
+    <h4>Request Header Matching</h4>
+    <pre><code class='lang-javascript' data-srcbyline='examples/mockjax.js?151-153;155-156;158-159;163-167;169-170;172-175;177-178'></code></pre>
+</section>
+
+
+<section data-background='images/rapper_ponies.png'>
+    <h2 style='margin-top:-4em;'>Wrapping Things Up</h2>
+
+    <p class='fragment'>Test your JavaScript code. ಠ_ಠ</p>
+    <p class='fragment'>Don't rely on external services (even your own).</p>
+    <p class='fragment'>Find a library that works for you!</p>
+
+    <cite style='top:-17em; text-align:center; width:98%;'>http://chainchomp2.deviantart.com/art/Rapper-Ponies-450348867</cite>
+</section>
+
+<section class='no-footer'>
+    <h1>Thank You!</h1>
+    <p style='margin-top:2em;'>
+        Jordan Kasper | <a href='http://twitter.com/jakerella'>@jakerella</a>
+    </p>
+    
+    <p style='font-size:0.9em; margin-top:2em;'>
+        <a href='http://jordankasper.com/no-server'>jordankasper.com/no-server</a> | 
+        <a href='examples/mocking-ajax.zip'>Example Code</a>
+    </p>
+    
+    <img src='/images/strongloop_logo_horiz.png' style='width:50%; position:relative; top:2em;'>
+</section>
