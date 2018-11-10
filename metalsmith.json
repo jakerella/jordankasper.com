@@ -25,10 +25,7 @@
       }
     },
     "metalsmith-markdown": {},
-    "metalsmith-better-excerpts": {
-      "stripTags": true,
-      "pruneLength": 500
-    },
+    "./helpers/excerpt": {},
     "metalsmith-permalinks": {
       "pattern": ":title",
       "linksets": [{

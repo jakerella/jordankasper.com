@@ -17,7 +17,8 @@
       "patterns": [
         "assets/**/*.*",
         "content/**/*.*",
-        "layouts/**/*.*"
+        "layouts/**/*.*",
+        "helpers/*.js"
       ],
       "delay": 1000
     }
@@ -40,7 +41,6 @@
     "jstransformer-markdown": "^1.2.1",
     "metalsmith": "^2.3.0",
     "metalsmith-assets": "^0.1.0",
-    "metalsmith-better-excerpts": "^0.2.1",
     "metalsmith-collections": "^0.9.0",
     "metalsmith-date-formatter": "^1.0.2",
     "metalsmith-debug": "^1.2.0",
@@ -52,6 +52,7 @@
     "metalsmith-sass": "^1.5.1",
     "metalsmith-tags": "^2.0.0",
     "npm-watch": "^0.4.0",
-    "rss": "^1.2.2"
+    "rss": "^1.2.2",
+    "voca": "^1.4.0"
   }
 }
