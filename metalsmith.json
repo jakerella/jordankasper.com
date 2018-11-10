@@ -68,8 +68,9 @@
       "destination": "./"
     },
     "./helpers/rss": {},
+    "./helpers/copy": {},
     "metalsmith-move-remove": {
-      "remove": ["presos"]
+      "remove": ["presos", "static"]
     }
   }
 }
