@@ -4,14 +4,14 @@
         {{> head }}
     </head>
 
-    <body data-slug='{{#if path}}{{ path }}{{else}}home{{/if}}' class='off-canvas-contain'>
+    <body data-slug='home' class='off-canvas-contain'>
         {{> header }}
 
         <section class='main-body row'>
             <section class='main-content recent-posts sm-12 md-9'>
                 <a href='/rss' class='rss'><i class='icon-rss-squared'></i></a>
 
-                {{#each posts}}
+                {{#each pagination.files}}
                     <article>
                         <h3><a href='/{{ path }}'>{{ title }}</a></h3>
                         <p>{{{ excerpt }}}</p>
@@ -22,7 +22,12 @@
             {{> sidebar }}
 
             <nav class='paging'>
-
+                {{#if pagination.next}}
+                    <a class='next-page' href='/{{ pagination.next.path }}' title='View next page'><i class='icon-angle-double-left'></i> Older</a>
+                {{/if}}
+                {{#if pagination.previous}}
+                    <a class='prev-page' href='/{{ pagination.previous.path }}' title='View previous page'>Newer <i class='icon-angle-double-right'></i></a>
+                {{/if}}
             </nav>
         </section>
 

@@ -24,6 +24,15 @@
         "pattern": "content/presos/**/*.html"
       }
     },
+    "metalsmith-pagination": {
+      "collections.posts": {
+        "perPage": 5,
+        "layout": "posts.hbs",
+        "first": "index.html",
+        "path": "page/:num/index.html",
+        "noPageOne": true
+      }
+    },
     "metalsmith-markdown": {},
     "./helpers/excerpt": {},
     "metalsmith-permalinks": {
