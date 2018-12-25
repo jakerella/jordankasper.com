@@ -36,6 +36,7 @@
   "homepage": "https://github.com/jakerella/jordankasper.com#readme",
   "devDependencies": {},
   "dependencies": {
+    "event-stream": "^4.0.1",
     "fs-extra": "^7.0.1",
     "handlebars": "^4.0.12",
     "jstransformer-handlebars": "^1.1.0",
