@@ -67,7 +67,8 @@
     },
     "metalsmith-layouts": {
       "directory": "layouts",
-      "default": "post.hbs"
+      "default": "post.hbs",
+      "pattern": ["**/*.html", "**/*.md"]
     },
     "metalsmith-assets": {
       "source": "./assets",
