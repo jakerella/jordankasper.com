@@ -805,6 +805,16 @@
             "topics": [
                 "Open Sourcing the DoD"
             ]
+        },
+        {
+            "name": "MId-Atlantic Developer Conference",
+            "url": "https://www.middevcon.com/",
+            "location": "Baltimore, MD",
+            "date": "Aug 1 2019",
+            "topics": [
+                "Open Sourcing the DoD",
+                "Regular Expressions"
+            ]
         }
     ]
 }
