@@ -807,13 +807,22 @@
             ]
         },
         {
-            "name": "MId-Atlantic Developer Conference",
+            "name": "Mid-Atlantic Developer Conference",
             "url": "https://www.middevcon.com/",
             "location": "Baltimore, MD",
             "date": "Aug 1 2019",
             "topics": [
                 "Open Sourcing the DoD",
                 "Regular Expressions"
+            ]
+        },
+        {
+            "name": "AvengerCon",
+            "url": "https://www.avengercon.com",
+            "location": "Columbia, MD",
+            "date": "Oct 17 2019",
+            "topics": [
+                "Training Cyber Soldiers"
             ]
         }
     ]
