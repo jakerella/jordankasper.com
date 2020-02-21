@@ -59,7 +59,8 @@
         <script>
         // Disqus config & startup
         (function() {
-            if (!/localhost/.test(location.hostname)) {
+            let port = (location.port.length) ? Number(location.port) : 80;
+            if (port === 80) {
                 var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
                 dsq.src = '//jordankasper.disqus.com/embed.js';
                 (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
