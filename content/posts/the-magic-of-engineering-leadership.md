@@ -98,4 +98,9 @@ Take what you learn and share that with the community. Demonstrate leadership be
     width: 25%;
     padding: 1%;
 }
+@media (max-width: 50em) {
+    .main-content img {
+        width: 50%;
+    }
+}
 </style>
