@@ -7,7 +7,7 @@ tags: development, javascript, node, loopback, authentication
 
 > This entry was [originally posted](https://strongloop.com/strongblog/two-factor-authentication-with-loopback/) on the StrongBlog (by me). Nothing changed, just adding it to my personal site. :) That said, you should [check out StrongLoop](http://strongloop.com/get-started/) if you're interested in building APIs in Node!
 
-<a href='http://confoo.ca/en' class='right'><img src='http://strongloop.com/wp-content/uploads/2015/02/confoo.gif' alt='Confoo logo'></a> Before I get into the code and walk you through it, I wanted to talk about my motivation for this post. I recently spoke at the [Confoo developer conference](http://confoo.ca) in Montreal. If you haven't been, it's a whirlwind of [new technologies](http://confoo.ca/en/2015/session/the-future-is-now-javascript-es6-and-traceur), [complex data theories](http://confoo.ca/en/2015/session/tracking-your-data-cross-the-fourth-dimension), [useful soft skills](http://confoo.ca/en/2015/session/confessions-of-a-remote-worker), and [solid, practical information](http://confoo.ca/en/2015/session/a-rebasing-workflow-for-git) for technologists of all sorts and levels. I've had the pleasure of attending (and speaking) the last two years and I always find an abundance of good information and good networking opportunities. This year was the first time that StrongLoop has had a presence, but given the contacts made with both users of [LoopBack](http://loopback.io) and new potential partners like [Riak](http://basho.com/riak/) and [Nexmo](http://nexmo.com), I hope we are able to go back next year.
+<a href='http://confoo.ca/en' class='right'><img src='https://strongloop.com/wp-content/uploads/2015/02/confoo.gif' alt='Confoo logo'></a> Before I get into the code and walk you through it, I wanted to talk about my motivation for this post. I recently spoke at the [Confoo developer conference](http://confoo.ca) in Montreal. If you haven't been, it's a whirlwind of [new technologies](http://confoo.ca/en/2015/session/the-future-is-now-javascript-es6-and-traceur), [complex data theories](http://confoo.ca/en/2015/session/tracking-your-data-cross-the-fourth-dimension), [useful soft skills](http://confoo.ca/en/2015/session/confessions-of-a-remote-worker), and [solid, practical information](http://confoo.ca/en/2015/session/a-rebasing-workflow-for-git) for technologists of all sorts and levels. I've had the pleasure of attending (and speaking) the last two years and I always find an abundance of good information and good networking opportunities. This year was the first time that StrongLoop has had a presence, but given the contacts made with both users of [LoopBack](http://loopback.io) and new potential partners like [Riak](http://basho.com/riak/) and [Nexmo](http://nexmo.com), I hope we are able to go back next year.
 
 > _What's LoopBack? It's an open source framework for quickly building APIs in Node and getting them connected to data._
 
@@ -15,7 +15,7 @@ Based on the frequency of sessions surrounding it and conversations in the hallw
 
 ## What about authentication?
 
-<img src='http://strongloop.com/wp-content/uploads/2014/04/api_security.png' alt='Lock' class='right' style='width:20%; margin-top:-1em; padding-top:0;'> LoopBack already has [authentication and authorization](http://docs.strongloop.com/display/public/LB/Authentication%2C+authorization%2C+and+permissions) baked in. There is a base `User` class that you can use directly or extend to suit your needs. Each model in LoopBack can also have a rich set of access control rules built in using the existing user roles. I'm not going to talk in depth about these mechanisms, but you can read more at the link above. Instead, I want to focus on some insights from one of the sessions at Confoo: [Chris Cornutt's "Beginner's Guide to Alternative Authorization"](http://confoo.ca/en/2015/session/the-beginner-s-guide-to-alternative-authorization).
+<img src='https://strongloop.com/wp-content/uploads/2014/04/api_security.png' alt='Lock' class='right' style='width:20%; margin-top:-1em; padding-top:0;'> LoopBack already has [authentication and authorization](http://docs.strongloop.com/display/public/LB/Authentication%2C+authorization%2C+and+permissions) baked in. There is a base `User` class that you can use directly or extend to suit your needs. Each model in LoopBack can also have a rich set of access control rules built in using the existing user roles. I'm not going to talk in depth about these mechanisms, but you can read more at the link above. Instead, I want to focus on some insights from one of the sessions at Confoo: [Chris Cornutt's "Beginner's Guide to Alternative Authorization"](http://confoo.ca/en/2015/session/the-beginner-s-guide-to-alternative-authorization).
 
 You can review the [slides from his talk on his SpeakerDeck page](https://speakerdeck.com/ccornutt/the-beginners-guide-to-alternative-authentication), but let me give you the TL;DR version: There are **a lot** of different authentication mechanisms, and all of them have their own nuances, benefits, and issues. This session was just an overview of a lot of those mechanisms, but it got me thinking about the authentication built into LoopBack and how a developer might make that more secure using something like a multi-factor process.
 
@@ -23,7 +23,7 @@ So, without further ado, let's see how we can extend the existing LoopBack User 
 
 ## Time Based and SMS
 
-<img src='http://strongloop.com/wp-content/uploads/2013/07/sl_graphics__08.png' alt='mobile device' class='right' style='width:15%; padding-top:0;'> There are certainly many enhanced authentication mechanisms, as Chris' presentation demonstrates, but we need to focus on something widely applicable to web applications and something we can build in one blog post! With the abundance of SMS APIs out there, sending a time-based code should be simple. Why time-based? Well, we want the user to only be able to use this code as they're logging in, so we want it to be useless after an appropriate amount of time (maybe 60 seconds?).
+<img src='https://strongloop.com/wp-content/uploads/2013/07/sl_graphics__08.png' alt='mobile device' class='right' style='width:15%; padding-top:0;'> There are certainly many enhanced authentication mechanisms, as Chris' presentation demonstrates, but we need to focus on something widely applicable to web applications and something we can build in one blog post! With the abundance of SMS APIs out there, sending a time-based code should be simple. Why time-based? Well, we want the user to only be able to use this code as they're logging in, so we want it to be useless after an appropriate amount of time (maybe 60 seconds?).
 
 The basic login process will change from a simple email and password form entry to a 2.5 step process:
 
@@ -149,7 +149,7 @@ https.get(
 
 That's it for the server! At this point you could execute `slc run` and go to [http://localhost:3000/explorer](http://localhost:3000/explorer) and see your new model and the custom remote methods. However, they aren't very interesting without seeing them in action. So let's build out a lightweight front end to see how everything fits together.
 
-![LoopBack explorer showing new routes](http://strongloop.com/wp-content/uploads/2015/02/two-factor-explorer.png)
+![LoopBack explorer showing new routes](https://strongloop.com/wp-content/uploads/2015/02/two-factor-explorer.png)
 
 ## A Lightweight Login Form
 
@@ -176,7 +176,7 @@ First, you need to follow the [instructions here](http://docs.strongloop.com/dis
 </form>
 ```
 
-![A basic two-factor login form](http://strongloop.com/wp-content/uploads/2015/02/two-factor-form.png)
+![A basic two-factor login form](https://strongloop.com/wp-content/uploads/2015/02/two-factor-form.png)
 
 Now we can add a `<script>` tag at the bottom for our UI code to call those endpoints. We'll use some simple Ajax calls and DOM manipulation to achieve our goal, but don't get caught up in the particulars, your UI may differ widely. This is more to demonstrate how to use the endpoints we just created!
 
@@ -222,7 +222,7 @@ document
 
 You can access the [full example application code](https://github.com/jakerella/loopback-example-two-factor) on Github, just clone the repository (or download the code), execute `npm install` from a console to install all dependencies, then execute `slc run` to start the application! Head to [http://localhost:3000](http://localhost:3000) to see the application in action! You'll want to have the console up, since we don't have SMS integration hooked up yet, the verification code will simply print to the server console.
 
-![The server console with the two-factor code prompt](http://strongloop.com/wp-content/uploads/2015/02/two-factor-code.png)
+![The server console with the two-factor code prompt](https://strongloop.com/wp-content/uploads/2015/02/two-factor-code.png)
 
 ## They can't be all there is?!
 
