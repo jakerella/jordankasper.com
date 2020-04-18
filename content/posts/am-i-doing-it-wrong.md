@@ -7,7 +7,7 @@ tags: development, ted, wrong, learning, simplicity
 
 Recently I watched a small interlude between TED talks from 2005 by Terry Moore. You may have seen, you may not. It's about how most of us have been taught an inferior way to tie our shoe laces. Take a look at the video below (it's only 3 minutes long):
 
-<p><iframe src="http://www.youtube.com/embed/zAFcV7zuUDA" frameborder="0" width="420" height="315"></iframe></p>
+<p><iframe src="https://www.youtube.com/embed/zAFcV7zuUDA" frameborder="0" width="420" height="315"></iframe></p>
 
 I was hesitant to believe that our "weak form" knot was in fact so inferior, well, a few days ago I put it to the test. I went for a run and started with my shoe laces tied in my normal – weak – fashion. No double knot as I would usually do in order to keep them tied. Sure enough, after only a few minutes the laces came undone and I had to stop and retie them. This time I used the "strong form" of the knot, completed my run, and the laces remained tied until I undid them at home (and they came undone just as easy as the "weak form" when explicitly untied). I performed this test again this morning on my run, using the "strong form" knot first, and the shoe laces remained tied the entire run.
 
