@@ -1,0 +1,56 @@
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: white;
+}
+
+body {
+    position: relative;
+    font-family: 'Fira Sans', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.main-content {
+    background: #fff;
+    height: 100vh;
+}
+
+h2 {
+    color: #bbb;
+    margin: 0;
+    font-size: 1em;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+}
+
+.edit-notes {
+    display: block;
+    margin: 0 auto;
+    border: none;
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+.edit-notes:focus {
+    box-shadow: none;
+}
+
+.main-body {
+    padding-top: 0;
+}
+
