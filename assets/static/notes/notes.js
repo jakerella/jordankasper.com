@@ -1,46 +1,80 @@
 
 (() => {
-    const bin = window.location.hash || 'misc';
-    document.querySelector('.notes-title .bin').innerText = bin;
-
-    const data = localStorage.getItem(bin);
-
+    let bin = window.location.hash.substr(1) || 'misc';
     const field = document.querySelector('.edit-notes');
 
-    field.value = data;
+    
 
-    field.addEventListener('keydown', (e) => {
-        // The tab would normally take us off of the textarea, we don't want that!
-        if (e.keyCode === 9) {
-            e.preventDefault();
-        }
-    });
-
-    field.addEventListener('keyup', (e) => {
-        // Insert 2-space tabs, including indenting list items
-        if (e.keyCode === 9) {
-            let insert = '  ';
-            let replace = false;
-            const current = getCurrentLine();
-            if (/^\s*(?:\*|\-)\s/.test(current.content)) {
-                insert += current.content;
-                replace = true;
-            }
-            insertElem(insert, replace);
-        }
-
-        // Handle automatic list continuation for * or -
-        if (e.keyCode === 13) {
-            const listElem = getListElem(1);
-            if (listElem) {
-                insertElem(listElem[1]);
-            }
-        }
-
-        localStorage.setItem(bin, field.value);
-    });
+    setupEditor();
+    addBinToggle();
 
     field.focus();
+
+
+    /* *******************************************************************
+                                    HELPERS
+       *******************************************************************/
+
+    function setupEditor() {
+        document.querySelector('.notes-title .bin').innerText = bin;
+        field.value = localStorage.getItem(bin);
+
+        field.addEventListener('keydown', (e) => {
+            // The tab would normally take us off of the textarea, we don't want that!
+            if (e.keyCode === 9) {
+                e.preventDefault();
+            }
+        });
+    
+        field.addEventListener('keyup', (e) => {
+            // Insert 2-space tabs, including indenting list items
+            if (e.keyCode === 9) {
+                let insert = '  ';
+                let replace = false;
+                const current = getCurrentLine();
+                if (/^\s*(?:\*|\-)\s/.test(current.content)) {
+                    insert += current.content;
+                    replace = true;
+                }
+                insertElem(insert, replace);
+            }
+    
+            // Handle automatic list continuation for * or -
+            if (e.keyCode === 13) {
+                const listElem = getListElem(1);
+                if (listElem) {
+                    insertElem(listElem[1]);
+                }
+            }
+    
+            localStorage.setItem(bin, field.value);
+        });
+    }
+
+    function addBinToggle() {
+        const bins = Object.keys(localStorage);
+        const list = document.querySelector('.notes-list');
+
+        list.innerHTML = (bins.map((bin) => {
+            return `<li>${bin}</li>`;
+        })).join('');
+
+        document.querySelector('.notes-title').addEventListener('click', toggleList);
+
+        list.addEventListener('click', (e) => {
+            if (e.target.tagName === 'LI') {
+                bin = e.target.innerText;
+                window.location.hash = bin;
+                field.value = localStorage.getItem(bin);
+                document.querySelector('.notes-title .bin').innerText = bin;
+                toggleList();
+            }
+        });
+
+        function toggleList() {
+            list.style.display = (list.style.display === 'block') ? 'none' : 'block';
+        }
+    }
 
     function insertElem(insert, replace=false) {
         let start = field.selectionStart;
