@@ -60,8 +60,6 @@
         })).join('');
 
         document.body.addEventListener('click', (e) => {
-            console.log('click on', e.target);
-            
             if (e.target.tagName === 'LI') {
                 if (e.target.className === 'new-note') {
                     createNote();
@@ -85,7 +83,11 @@
     }
 
     function createNote() {
-        console.log('new note...');
+        const name = window.prompt('What will the name be?\n(Note: only letters, numbers, and hyphens!)');
+        const bin = name.replace(/[^a-zA-Z0-9\-]/g, '');
+        window.location.hash = bin;
+        localStorage.setItem(bin, '');
+        window.location.reload();
     }
 
     function insertElem(insert, replace=false) {
