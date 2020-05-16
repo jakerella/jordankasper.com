@@ -55,25 +55,37 @@
         const bins = Object.keys(localStorage);
         const list = document.querySelector('.notes-list');
 
-        list.innerHTML = (bins.map((bin) => {
-            return `<li>${bin}</li>`;
+        list.innerHTML += (bins.map((bin) => {
+            return `<li class="note-link">${bin}</li>`;
         })).join('');
 
-        document.querySelector('.notes-title').addEventListener('click', toggleList);
-
-        list.addEventListener('click', (e) => {
+        document.body.addEventListener('click', (e) => {
+            console.log('click on', e.target);
+            
             if (e.target.tagName === 'LI') {
-                bin = e.target.innerText;
-                window.location.hash = bin;
-                field.value = localStorage.getItem(bin);
-                document.querySelector('.notes-title .bin').innerText = bin;
+                if (e.target.className === 'new-note') {
+                    createNote();
+                } else if (e.target.className === 'note-link')  {
+                    bin = e.target.innerText;
+                    window.location.hash = bin;
+                    field.value = localStorage.getItem(bin);
+                    document.querySelector('.notes-title .bin').innerText = bin;
+                }
                 toggleList();
+            } else if (e.target.className === 'notes-title' || e.target.parentNode.className === 'notes-title') {
+                toggleList();
+            } else {
+                list.style.display = 'none';
             }
         });
 
         function toggleList() {
             list.style.display = (list.style.display === 'block') ? 'none' : 'block';
         }
+    }
+
+    function createNote() {
+        console.log('new note...');
     }
 
     function insertElem(insert, replace=false) {

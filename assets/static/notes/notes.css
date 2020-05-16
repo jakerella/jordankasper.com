@@ -30,8 +30,8 @@ h2 {
     margin: 0;
     font-size: 1em;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 0.1em;
+    right: 0.2em;
     z-index: 2;
     cursor: pointer;
 }
@@ -46,6 +46,7 @@ h2 {
     text-align: right;
     list-style: none;
     background-color: #eee;
+    overflow: hidden;
 }
 .notes-list li {
     padding: 0.3em 1em;
@@ -67,9 +68,12 @@ h2 {
     top: 0;
     left: 0;
     z-index: 1;
+    padding: 0.2em 0.3em
 }
 .edit-notes:focus {
     box-shadow: none;
+    border: none;
+    outline: none;
 }
 
 .main-body {
