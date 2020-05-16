@@ -1,6 +1,6 @@
 
 (() => {
-    let bin = window.location.hash.substr(1) || 'misc';
+    let currentBin = window.location.hash.substr(1) || 'misc';
     const field = document.querySelector('.edit-notes');
 
     
@@ -16,8 +16,8 @@
        *******************************************************************/
 
     function setupEditor() {
-        document.querySelector('.notes-title .bin').innerText = bin;
-        field.value = localStorage.getItem(bin);
+        document.querySelector('.notes-title .bin').innerText = currentBin;
+        field.value = localStorage.getItem(currentBin);
 
         field.addEventListener('keydown', (e) => {
             // The tab would normally take us off of the textarea, we don't want that!
@@ -47,31 +47,31 @@
                 }
             }
     
-            localStorage.setItem(bin, field.value);
+            localStorage.setItem(currentBin, field.value);
         });
     }
 
     function addBinToggle() {
-        const bins = Object.keys(localStorage);
         const list = document.querySelector('.notes-list');
-
-        list.innerHTML += (bins.map((bin) => {
-            return `<li class="note-link">${bin}</li>`;
-        })).join('');
+        list.innerHTML += buildBinList();
 
         document.body.addEventListener('click', (e) => {
-            if (e.target.tagName === 'LI') {
-                if (e.target.className === 'new-note') {
-                    createNote();
+            if (e.target.className === 'new-note') {
+                createNote();
+
+            } else if (e.target.className === 'note-link' || e.target.parentNode.className === 'note-link') {
+                if (e.target.className === 'delete')  {
+                    deleteNote(e.target.parentNode.querySelector('.bin').innerText);
                 } else if (e.target.className === 'note-link')  {
-                    bin = e.target.innerText;
-                    window.location.hash = bin;
-                    field.value = localStorage.getItem(bin);
-                    document.querySelector('.notes-title .bin').innerText = bin;
+                    switchNote(e.target.querySelector('.bin').innerText);
+                } else if (e.target.className === 'bin')  {
+                    switchNote(e.target.innerText);
                 }
                 toggleList();
+                
             } else if (e.target.className === 'notes-title' || e.target.parentNode.className === 'notes-title') {
                 toggleList();
+
             } else {
                 list.style.display = 'none';
             }
@@ -82,10 +82,46 @@
         }
     }
 
+    function buildBinList() {
+        const bins = Object.keys(localStorage);
+        return (bins.map((bin) => {
+            return `<li class='note-link'><button class='delete' title='Delete this note'>X</button><span class='bin'>${bin}</span></li>`;
+        })).join('');
+    }
+
+    function deleteNote(bin) {
+        if (localStorage.getItem(bin) === null) {
+            if (bin === currentBin) {
+                window.location.replace(window.location.href.replace(/#.+/, ''));
+            }
+            return;
+        }
+        
+        if (bin === currentBin) {
+            field.value = '';
+            localStorage.setItem(bin, '');
+        } else {
+            localStorage.removeItem(bin);
+            document.querySelectorAll('.note-link').forEach((link) => {
+                if (link.querySelector('.bin').innerText === bin) {
+                    link.parentNode.removeChild(link);
+                }
+            });
+        }
+    }
+
+    function switchNote(bin) {
+        currentBin = bin;
+        window.location.hash = bin;
+        field.value = localStorage.getItem(bin);
+        document.querySelector('.notes-title .bin').innerText = bin;
+    }
+
     function createNote() {
         const name = window.prompt('What will the name be?\n(Note: only letters, numbers, and hyphens!)');
         if (!name) { return; }
         const bin = name.replace(/[^a-zA-Z0-9\-]/g, '');
+        currentBin = bin;
         window.location.hash = bin;
         localStorage.setItem(bin, '');
         window.location.reload();

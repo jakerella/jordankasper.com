@@ -53,6 +53,8 @@ h2 {
     min-width: 10em;
     border-bottom: 1px solid #333;
     cursor: pointer;
+    display: flex;
+    justify-content: space-between;
 }
 .notes-list li:hover {
     background-color: #ccc;
