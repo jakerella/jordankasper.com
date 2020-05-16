@@ -28,7 +28,7 @@
     
         field.addEventListener('keyup', (e) => {
             // Insert 2-space tabs, including indenting list items
-            if (e.keyCode === 9) {
+            if (e.keyCode === 9 && !e.shiftKey) {
                 let insert = '  ';
                 let replace = false;
                 const current = getCurrentLine();
@@ -37,6 +37,14 @@
                     replace = true;
                 }
                 insertElem(insert, replace);
+            }
+            // Handle outdents (removing an indentation level)
+            if (e.keyCode === 9 && e.shiftKey) {
+                const current = getCurrentLine();
+                if (/^\s{2,}/.test(current.content)) {
+                    insert = current.content.substr(2);
+                    insertElem(insert, true);
+                }
             }
     
             // Handle automatic list continuation for * or -
