@@ -3,17 +3,10 @@
     let currentBin = window.location.hash.substr(1) || 'misc';
     const field = document.querySelector('.edit-notes');
 
-    
-
     setupEditor();
     addBinToggle();
-
     field.focus();
 
-
-    /* *******************************************************************
-                                    HELPERS
-       *******************************************************************/
 
     function setupEditor() {
         document.querySelector('.notes-title .bin').innerText = currentBin;
@@ -32,7 +25,7 @@
                 let insert = '  ';
                 let replace = false;
                 const current = getCurrentLine();
-                if (/^\s*(?:\*|\-)\s/.test(current.content)) {
+                if (/^\s*(?:\*|\-|\(?([0-9]+)[\.\)]?)\s/.test(current.content)) {
                     insert += current.content;
                     replace = true;
                 }
@@ -49,9 +42,9 @@
     
             // Handle automatic list continuation for * or -
             if (e.keyCode === 13) {
-                const listElem = getListElem(1);
+                const listElem = getNextListBullet();
                 if (listElem) {
-                    insertElem(listElem[1]);
+                    insertElem(listElem);
                 }
             }
     
@@ -148,11 +141,22 @@
         field.selectionEnd = start + insert.length;
     }
 
-    function getListElem(linesBack=0) {
+    function getNextListBullet() {
         const split = field.selectionStart;
         const lines = field.value.substr(0, split).split(/\n/);
-        const listElem = lines[lines.length-1-linesBack].match(/^(\s*(?:\*|\-)\s)[^\s\*\-]+/);
-        return listElem;
+        // we go back 2 in the array because the last line is always empty due to splitting on newline cahrs
+        let listElem = lines[lines.length-2].match(/^(\s*(?:\*|\-)\s)[^\s\*\-]+/);
+        let bullet = null;
+        if (listElem) {
+            bullet = listElem[1];
+        } else {
+            listElem = lines[lines.length-2].match(/^(\s*(?:\(?([0-9]+)[\.\)]?)\s)[^\s\*\-]+/);
+            if (listElem) {
+                let num = Number(listElem[2]);
+                bullet = listElem[1].replace(/[0-9]+/, ++num);
+            }
+        }
+        return bullet;
     }
 
     function getCurrentLine() {
