@@ -84,6 +84,7 @@
 
     function createNote() {
         const name = window.prompt('What will the name be?\n(Note: only letters, numbers, and hyphens!)');
+        if (!name) { return; }
         const bin = name.replace(/[^a-zA-Z0-9\-]/g, '');
         window.location.hash = bin;
         localStorage.setItem(bin, '');
