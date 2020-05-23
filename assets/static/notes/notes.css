@@ -36,7 +36,7 @@ h2 {
     cursor: pointer;
 }
 
-.notes-list {
+.notes-list, .version-list {
     display: none;
     z-index: 3;
     position: absolute;
@@ -48,16 +48,23 @@ h2 {
     background-color: #eee;
     overflow: hidden;
 }
-.notes-list li {
+.notes-list li, .version-list li {
     padding: 0.3em 1em;
-    min-width: 10em;
+    min-width: 12em;
     border-bottom: 1px solid #333;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
 }
-.notes-list li:hover {
+.version-list li {
+    justify-content: flex-end;
+}
+.notes-list li:hover, .version-list li:hover {
     background-color: #ccc;
+}
+
+.versions:hover {
+    color: #000;
 }
 
 .edit-notes {
