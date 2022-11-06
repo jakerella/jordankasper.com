@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "rm -rf build/",
     "build": "npx metalsmith",
-    "debug": "DEBUG=metalsmith:metdata,metalsmith:source,metalsmith:destination,metalsmith-tagcloud,metalsmith-events,metalsmith-recent-posts,metalsmith-rss,metalsmith-collections,metalsmith-permalinks,metalsmith-markdown,metalsmith-layouts,metalsmith-excerpts,metalsmith-tags,metalsmith-sass,metalsmith-assets npx metalsmith",
+    "debug": "DEBUG=metalsmith:metdata,metalsmith:source,metalsmith:destination,metalsmith-tagcloud,metalsmith-events,metalsmith-recent-posts,metalsmith-rss,metalsmith-collections,metalsmith-permalinks,metalsmith-markdown,metalsmith-layouts,metalsmith-excerpts,metalsmith-tags,metalsmith-assets npx metalsmith",
     "watch": "npm-watch build"
   },
   "watch": {
@@ -34,28 +34,26 @@
     "url": "https://github.com/jakerella/jordankasper.com/issues"
   },
   "homepage": "https://github.com/jakerella/jordankasper.com#readme",
-  "devDependencies": {},
-  "dependencies": {
+  "devDependencies": {
     "fs-extra": "^8.1.0",
-    "handlebars": "^4.7.3",
-    "jquery": "^3.4.1",
-    "jstransformer-handlebars": "^1.1.0",
+    "handlebars": "^4.7.7",
+    "jquery": "^3.6.1",
+    "jstransformer-handlebars": "^1.2.0",
     "jstransformer-markdown": "^1.2.1",
-    "lodash": "^4.17.15",
-    "metalsmith": "^2.3.0",
+    "lodash": "^4.17.21",
+    "metalsmith": "^2.5.1",
     "metalsmith-assets": "^0.1.0",
     "metalsmith-collections": "^0.9.0",
     "metalsmith-date-formatter": "^1.0.2",
     "metalsmith-debug": "^1.2.0",
     "metalsmith-discover-partials": "^0.1.2",
-    "metalsmith-layouts": "^2.2.0",
+    "metalsmith-layouts": "^2.3.1",
     "metalsmith-markdown": "^1.3.0",
-    "metalsmith-move-remove": "0.0.1",
-    "metalsmith-pagination": "^1.4.0",
+    "metalsmith-move-remove": "^0.0.1",
+    "metalsmith-pagination": "^1.5.0",
     "metalsmith-permalinks": "^1.0.0",
-    "metalsmith-sass": "^1.5.1",
-    "metalsmith-tags": "^2.0.0",
-    "npm-watch": "^0.4.0",
+    "metalsmith-tags": "^2.1.0",
+    "npm-watch": "^0.11.0",
     "rss": "^1.2.2",
     "voca": "^1.4.0"
   }

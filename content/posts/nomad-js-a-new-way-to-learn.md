@@ -1,5 +1,5 @@
 ---
-title: NomadJS: A new way to learn
+title: "NomadJS: A new way to learn"
 collection: posts
 date: 2014-12-17
 tags: javascript, community, learning

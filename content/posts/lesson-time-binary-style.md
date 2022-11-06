@@ -1,5 +1,5 @@
 ---
-title: Lesson Time: Binary Style
+title: "Lesson Time: Binary Style"
 collection: posts
 date: 2010-09-29
 tags: learning, development

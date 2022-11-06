@@ -9,11 +9,6 @@
   },
   "plugins": {
     "metalsmith-debug": {},
-    "metalsmith-sass": {
-      "files": ["sass/main.scss"],
-      "outputDir": "css/",
-      "outputStyle": "compact"
-    },
     "metalsmith-collections": {
       "posts": {
         "pattern": "content/posts/*.md",
