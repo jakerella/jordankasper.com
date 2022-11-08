@@ -833,6 +833,15 @@
             "topics": [
                 "Security and Access Management"
             ]
+        },
+        {
+            "name": "Anyone can be a CivicTech Hero",
+            "url": "https://frontrunners.tech/",
+            "location": "Washington, DC",
+            "date": "Dec 8 2022",
+            "topics": [
+                "Open Source in Civic Tech"
+            ]
         }
     ]
 }
