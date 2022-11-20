@@ -32,6 +32,14 @@ backgroundColor: white
 <section>
     <h1>Anyone Can be a #CivicTech Hero</h1>
     <img src='images/hero.png' alt='A woman holding the Earth with a couple things orbiting them' class='main-image'>
+
+    <aside class='notes'>
+        * Whether you realize it or not, you benefit from government technology<br>
+        * But Government tech struggles to keep up with industry, in large people because of a lack of talent<br>
+        * Simple fact is: tech is created by the people who show up<br>
+        * We need smart people like all of you get involved
+        * Share my journey with a recent example, and talk about how you can be a #civictech hero
+    </aside>
 </section>
 
 <section>
@@ -41,21 +49,10 @@ backgroundColor: white
 
     <aside class='notes'>
 		* SW engineer<br>
-        * Startups, big companies, lots of community engagement<br>
-        * Then a friend brought me into USDS<br>
+        * Startups, big companies, lots of community engagement: dev advocate, code school instructor, conf speaking, usergroup organizing<br>
+        * Leaving a role and a friend talked to me about US Digital Service<br>
         * It was a natural extension from my community focus
-	</aside>
-</section>
-
-<section>
-    <img src='images/thinking.png' alt='A man and woman read and write in books while they think' class='secondary-image'>
-    <h1>Why should <em>you</em> care?</h1>
-
-    <aside class='notes'>
-		* Whether you realize it or not, you benefit from government tech<br>
-        * Government tech struggles to keep up with industry, in large people because of a lack of talent<br>
-        * Tech is created by the people who show up<br>
-        * We need smart people like you to be involved
+        * I was driven by the impact my work could have on a broader demographic
 	</aside>
 </section>
 
@@ -65,7 +62,7 @@ backgroundColor: white
             <img src='images/select_option.png' alt='A man looking at three options'>
         </aside>
         <article>
-            <h1>Getting Started<br>in 3 Easy Steps</h1>
+            <h1>Civic Tech<br>in 3 Easy Steps</h1>
             <br>
             <ol style='margin-left: 4rem;'>
                 <li class='fragment'>Identify a problem</li>
@@ -76,14 +73,15 @@ backgroundColor: white
     </main>
     
     <aside class='notes'>
+        * I'd like to tell you a story of one recent civic tech journey I took, and how you can do so in 3 easy steps
 		1. Problem doesn't have to be big and flashy, just find a user and ask about pain points<br>
-        2. We'll talk about open data, and where to find it<br>
+        2. We'll talk about open data and APIs, and where you can find them<br>
         3. Build one, small thing. Put it out there, get someone using it, collect feedback, repeat!
 	</aside>
 </section>
 
 
-<!-- My Experience -->
+<!-- My Recent Experience -->
 
 <section>
     <h1>A Real World Example</h1>
@@ -91,7 +89,7 @@ backgroundColor: white
 
     <aside class='notes'>
         * I've worked with a lot of government tech, but this story isn't about that<br>
-        * This is a story about solving someone's problem with open source data and technology
+        * This story is about solving one group's problem with open source data and technology
     </aside>
 </section>
 
@@ -99,9 +97,9 @@ backgroundColor: white
     <img src='images/regs-gov.svg' alt='The logo for regulations.gov, "Your Voice in Federal Decision Making"' class='main-image'>
     
     <aside class='notes'>
-        * Important site for administrative law professionals, but also the public<br>
-        * Allows anyone to see proposed regulations from agencies and comment on them<br>
-        * The government is <strong>required</strong> to read those comments<br>
+        * Important site for public engagement with the government, but also for administrative law professionals<br>
+        * Allows anyone to see proposed rules & regulations from gov agencies, and allows them to comment on proposals<br>
+        * The government is <strong>required</strong> to read those comments when considering rule changes
     </aside>
 </section>
 
@@ -114,7 +112,7 @@ backgroundColor: white
         * Image from the "WayBack" machine at archive.org from January 2021<br>
         * Site was created in 2003 - and uses Flash<br>
         * Just to reiterate, this screenshot was from January 2021<br>
-        * For reference, Flash was EOL on December 31, 2020
+        * For reference, Flash reached EOL on December 31, 2020 and Adobe ceased all support for it at that time
     </aside>
 </section>
 
@@ -124,9 +122,10 @@ backgroundColor: white
     <img src='images/regs-gov-new.png' alt='A screenshot of the latest version of the regulations.gov website'>
 
     <aside class='notes'>
+        * Beta tested in late 2020 and fully live in February 2021
         * New site looks nice, but does not have full functionality of old site<br>
         * It was clear they had not done sufficient (or any) direct user research<br>
-        * But this isn't a rage session on regulations.gov<br>
+        * But this isn't a rage session on regulations.gov or GSA<br>
         * General Services Administration (or GSA) is working to make it better
     </aside>
 </section>
@@ -138,6 +137,9 @@ backgroundColor: white
     <aside class='notes'>
         * I knew someone who was complaining about this site and its poor functionality<br>
         * I listened, asked questions, and asked what would make things better<br>
+        * (go back one slide) One issue was that many lawyers copy & paste a "docket ID" from the Federal Register into regulations.goc<br>
+        * this copied ID has a special character in it that regulations.gov doesn't recognize, meaning the search fails<br>
+        * This is an easy fix: we know what special character it is, so we just remove it before performing a search<br> 
         * Then, I needed to do some investigation...
     </aside>
 </section>
@@ -183,7 +185,8 @@ backgroundColor: white
 
     <aside class='notes'>
         * Realtively modern API: uses HTTP Methods, authentication keys, and mostly JSON<br>
-        * 17 government organizations host their APIs through here, including regulations.gov!
+        * 17 government organizations host their APIs through here, including regulations.gov!<br>
+        * I had identified a problem, I found the data to solve that problem, now I needed to do something about it
     </aside>
 </section>
 
@@ -192,8 +195,8 @@ backgroundColor: white
     <h1>3. Build an MVP</h1>
 
     <aside class='notes'>
-        * I found a problem, listened to my users, and found the data I needed<br>
-        * Now I needed to build something and validate my solution with my users
+        * I listened to my users, but now I needed to build something and validate that solution with my users<br>
+        * My first step was to play with the API and data to see how I can use it to solve my user's problem
     </aside>
 </section>
 
@@ -214,34 +217,43 @@ backgroundColor: white
 </section>
 
 <section>
-    <h1>One Solution</h1>
+    <h1>My Solution</h1>
+
+    <p class='fragment'>
+        Step 1: Have user's register for an API key
+    </p>
+
     <main class='side-by-side'>
         <aside>
-            <img src='images/fed-gov-regs-arch.png' alt='A simplified architecture diagram of the solution showing a UI with an API request to a Node server, retrieving API keys from a database, making calls to api.data.gov, then caching that data in Redis'>
+            <img src='images/fed-gov-regs-arch.png' alt='A simplified architecture diagram of the solution showing a UI with an API request to a Node server, retrieving API keys from a database, making calls to api.data.gov, then caching that data in Redis' class='fragment'>
         </aside>
         <article>
             <ol>
                 <li class='fragment'>User requests data</li>
                 <li class='fragment'>Check the cache</li>
-                <li class='fragment'>Get user API key</li>
                 <li class='fragment'>Get data from API</li>
                 <li class='fragment'>Cache data (30 days)</li>
-                <li class='fragment'>Return data to UI</li>
             </ol>
         </article>
     </main>
 
     <aside class='notes'>
-        * Before all of this, we ask the user to register on api.data.gov and trust us with their API key<br>
-        * We cache the data by the regulations.gov unique identifier, so any user can benefit from cached data<br>
-        * Most of the time we have to make multiple calls to the API for each user request<br>
-        * We cache data for 30 days, their data really doesn't change much, but we also want to keep our storage low
+        Step 1. ask user to register on api.data.gov and trust us with their key<br>
+        * User's enter docket ID, or specific "document" ID<br>
+        * We cache data from API, so all users benefit<br>
+        * If data is not cached, use user's API key to hit API<br>
+        * Have to make multiple calls for most requests (get all comments), which we do in batches due to second rate limit (req/s)<br>
+        * Cache data 30 days, data doesn't really change
     </aside>
 </section>
 
 <section>
     <h1>What about the UI?</h1>
     <img src='images/build-ui.png' alt='A group of people climb around a web site while it is being built' class='main-image'>
+
+    <aside class='notes'>
+        * Now that I have the data retrieval figured out, what about the user experience?
+    </aside>
 </section>
 
 <section>
@@ -259,12 +271,22 @@ backgroundColor: white
         U.S. Web Design System, <em>maintained by GSA</em>
         <a href='https://github.com/uswds/uswds' target='_blank'>github.com/uswds</a>
     </p>
+
+    <aside class='notes'>
+        * lots of reusable components, and theme-able<br>
+        * Especially good for gov-adjacent work, this fits in nicely
+    </aside>
 </section>
 
 <section>
     <p style='margin-bottom: 2em;'><a href='https://www.fedgovregs.org/' target='_blank'>fedgovregs.org</a></p>
 
     <img src='images/demo.png' alt='A man shows off a web page' class='main-image'>
+
+    <aside class='notes'>
+        * If there's time...<br>
+        * Lots of comments: EPA-HQ-OAR-2003-0197
+    </aside>
 </section>
 
 
@@ -281,6 +303,10 @@ backgroundColor: white
     <p class='fragment' style='margin-top: 1em;'>Find a non-profit that needs help,<br>or just talk to your friends!</p>
     <p class='fragment' style='margin-top: 1em;'>You don't have to solve all of the world's problems.</p>
     <p class='fragment' style='margin-top: 1em;'>Start small!</p>
+
+    <aside class='notes'>
+        
+    </aside>
 </section>
 
 <section>
@@ -294,15 +320,32 @@ backgroundColor: white
     </p>
     <p class='fragment' style='margin-top: 1em;'>
         <a href='https://code.gov' target='_blank'>
-            <img src='images/code-gov.svg' alt='The code.gov logo' style='width: 40%'>
+            <img src='images/code-gov.svg' alt='The code.gov logo' style='width: 40%'><br>
+            https://code.gov
         </a>
     </p>
+
+    <aside class='notes'>
+        * USWDS accepts public contributions through Pull Requests<br>
+        * code.gov collects data on open source projects and GitHub organizations from all around the federal government
+    </aside>
 </section>
 
 <section>
     <h1>Raise your voice.</h1>
     
-    <p style='margin-top: 1em;'>Visit regulations.gov and look for opportunities to voice your expert opinion on technical policies!</p>
+    <p style='margin-top: 1em;'>Visit <strong>regulations.gov</strong> and look for opportunities to voice your expert opinion on technical policies!</p>
+
+    <p style='margin-top: 1em;' class='fragment'>
+        Take a look at the Department of Labor's<br>
+        <a href='https://www.regulations.gov/document/DOL-2022-0003-0001'>
+            Open Data RFI: DOL-2022-0003-0001
+        </a>
+    </p>
+
+    <aside class='notes'>
+        * Dec 2022: mention DoL Data RFI
+    </aside>
 </section>
 
 <section>
@@ -317,6 +360,10 @@ backgroundColor: white
         <li><a href='https://18f.gsa.gov' target='_blank'>18F</a> (GSA)</li>
         <li>Come talk to me!</li>
     </ul>
+
+    <aside class='notes'>
+        
+    </aside>
 </section>
 
 
@@ -342,4 +389,8 @@ backgroundColor: white
     </p>
 
     <cite><a href='https://undraw.co/' target='_blank'>unDraw</a></cite>
+
+    <aside class='notes'>
+        
+    </aside>
 </section>
