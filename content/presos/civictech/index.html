@@ -7,7 +7,9 @@ backgroundColor: white
 ---
 
 <style>
-    div.slides { background-color: #fff !important; }
+    /* the print layout sort of requires this, or the colors look weird */
+    /* div.slides { background-color: #fff !important; } */
+
     .image-color { background-color: #6C63FF; }
     .reveal section h1 { text-transform: none; }
     .reveal section sup { font-size: 0.6em; position: relative; top: -1em; }
@@ -195,8 +197,15 @@ backgroundColor: white
                 <li class='fragment'><a href='https://dhs.gov/data' target='_blank'>dhs.gov/data</a></li>
             </ul>
         </article>
-
     </main>
+
+    <aside class='notes'>
+        * DIP is enterprise catalog of data assets (accurate, complete, timely, useful)<br>
+        * Mandated by "OPEN Government Data Act" (and other things)<br>
+        * Also working to categorize that data (public? PII? Where is it stored? Contacts for breaches?)<br>
+        * Also allows us to open data to the public... (data.gov)<br>
+        * ...but we need to do so in a standardized way.
+    </aside>
 </section>
 
 <section>
@@ -303,14 +312,23 @@ backgroundColor: white
     </aside>
 </section>
 
+
+<!-- DEMO -->
+
 <section>
     <p style='margin-bottom: 2em;'><a href='https://www.fedgovregs.org/' target='_blank'>fedgovregs.org</a></p>
 
     <img src='images/demo.png' alt='A man shows off a web page' class='main-image'>
+</section>
 
-    <aside class='notes'>
-        * Lots of documents and comments on: EPA-HQ-OAR-2003-0197
-    </aside>
+<section>
+    <img style='width:100%' src='images/fedgovregs-1.png' alt='A screenshot of the home page of fedgovregs.org once logged in' class='main-image'>
+</section>
+<section>
+    <img style='width:100%' src='images/fedgovregs-2.png' alt='A screenshot of some documents within a docket on fedgovregs.org' class='main-image'>
+</section>
+<section>
+    <img style='width:100%' src='images/fedgovregs-3.png' alt='A screenshot of the comments on a document on fedgovregs.org' class='main-image'>
 </section>
 
 
@@ -327,10 +345,6 @@ backgroundColor: white
     <p class='fragment' style='margin-top: 1em;'>Find a non-profit that needs help,<br>or just talk to your friends!</p>
     <p class='fragment' style='margin-top: 1em;'>You don't have to solve all of the world's problems.</p>
     <p class='fragment' style='margin-top: 1em;'>Start small!</p>
-
-    <aside class='notes'>
-        
-    </aside>
 </section>
 
 <section>
@@ -361,8 +375,8 @@ backgroundColor: white
     <p style='margin-top: 1em;'>Visit <strong>regulations.gov</strong> and look for opportunities to voice your expert opinion on technical policies!</p>
 
     <aside class='notes'>
-        * Can search regulations.gov for topics you're interested in
-        * DoL data RFI is on how to design and implement an open data policy
+        * Can search regulations.gov for topics you're interested in<br>
+        * DoL data RFI is on how to design and implement an open data policy<br>
         * What protocols or data formats should they use? Speak up!
     </aside>
 </section>
