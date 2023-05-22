@@ -3,56 +3,73 @@ layout: preso.hbs
 title: internet
 displaytitle: Everything you always wanted to know abotu the Internet but were afraid to ask.
 description: A presentation covering everything you always wanted to know abotu the Internet but were afraid to ask.
+backgroundColor: white
 ---
 
-<section id='cover' data-background='white'>
-    <img src='images/internet_cloud.jpg' style='width: 30%;' />
+<!-- undraw.co with color #B9DA8B -->
+<style>
+    /* need this for print to PDF */
+    /* div.slides { background-color: #fff !important; } */
+</style>
+
+<section>
+    <img src='images/web_devices.png' style='width: 50%;' />
     <h3 style='margin-top: 1em; font-size: 1.1em;'>Everything you always wanted to know about the Internet, but were afraid to ask.</h3>
 
     <p><a href='http://jordankasper.com/internet'>jordankasper.com/internet</a></p>
-
-    <cite class='image'>Image reference: http://www.psdgraphics.com/psd-icons/cloud-computing-icon/</cite>
 </section>
 
-<section id='web-addresses'>
-    <h2>Where you wanna go?</h2>
-
-    <p>
-        <img src='images/url_bar.png' /><br />
-        <acronym class='expand' title='Uniform Resource Locator'>URL</acronym><br />
-        <span class='fine'>(Human readable addressing)</span>
-    </p>
+<section>
+    <h2>Where do you want to go?</h2>
 
     <p class='fragment'>
-        <img src='images/maps.png' /><br />
-        But we really want to go here: <strong>36.16085, -86.773903</strong><br />
-        (more on that shortly)
+        <img src='images/url_bar.png' /><br />
+        <abbr class='expand' title='Uniform Resource Locator'>URL</abbr><br />
+        <span class='fine'>(Human readable addressing)</span>
     </p>
 </section>
 
-<section id='protocols'>
-    <h2>This is how we do it</h2>
+<section>
+    <h2>Where do you want to go?</h2>
+
+    <p>
+        <img src='images/maps.png' />
+    </p>
+    <p class='fragment'>
+        But we really want to go to <strong>36.16085, -86.773903</strong>...
+    </p>
+    <p class='fragment'>
+        by car...
+    </p>
+    <p class='fragment'>
+        and to the second floor...
+    </p>
+    <p class='fragment'>
+        room 202.
+    </p>
+</section>
+
+<section>
+    <h2>How should we communicate?</h2>
 
     <p>
         <img src='images/url_bar_protocol.png' /><br />
-        <acronym class='expand' title='Hyper Text Transfer Protocol'>HTTP</acronym>
+        <p>HyperText Transfer Protocol - Secure</p>
     </p>
 
     <p class='fragment'>
-        But what is a <em>protocol</em>?<br />
-        <img src='images/japanese_toilet.jpg' style='height:45%;' /><br />
-        <cite class='image'>http://tweattwaddle.blogspot.com/2012/01/kitty-and-vicky-visit-japan.html</cite>
+        <img src='images/thought_process.png' style='width:40%;' />
     </p>
 
-    <p class='fragment'>
-        Other protocols you probably know of...
-        <acronym title='File Transfer Protocol'>FTP</acronym>,
-        <acronym title='Post Office Protocol'>POP</acronym>,
-        <acronym title='Simple Mail Transfer Protocol'>SMTP</acronym>,
-        <acronym title='Secure Socket Layers'>SSL</acronym>,
-        <acronym title='Dynamic Host Configuration Protocol'>DHCP</acronym>,
-        <acronym title='Transmission Control Protocol'>TCP</acronym>,
-        <acronym title='User Datagram Protocol'>SSH</acronym>, ...
+    <p class='fragment' style='font-size: 0.9em;'>
+        Other protocols you might know...<br><br>
+        <abbr title='File Transfer Protocol'>FTP</abbr>,
+        <abbr title='Post Office Protocol'>POP</abbr>,
+        <abbr title='Simple Mail Transfer Protocol'>SMTP</abbr>,
+        <abbr title='Secure Socket Layers'>SSL</abbr>,
+        <abbr title='Dynamic Host Configuration Protocol'>DHCP</abbr>,
+        <abbr title='Transmission Control Protocol'>TCP</abbr>,
+        <abbr title='User Datagram Protocol'>SSH</abbr>
     </p>
 </section>
 
@@ -69,13 +86,13 @@ description: A presentation covering everything you always wanted to know abotu 
 
     <p>
         <img src='images/url_bar_domain_parts.png' /><br />
-        subdomain.<acronym title='Second Level Domain'>SLD</acronym>.<acronym title='Top Level Domain'>TLD</acronym>
+        subdomain.<abbr title='Second Level Domain'>SLD</abbr>.<abbr title='Top Level Domain'>TLD</abbr>
     </p>
 
     <p class='fragment' style='margin-top:1em;'>
-        <span class='fine'>Common <acronym title='Top Level Domain'>TLD</acronym>'s:</span> <strong>.com, .net, .org, .biz</strong><br />
-        <span class='fine'>Examples of <acronym title='Second Level Domain'>SLD</acronym>'s:</span> <strong>google, yahoo, barcampnashville</strong><br />
-        <span class='fine'>Typical subdomains:</span> <strong>www, mail, blog</strong>
+        <span class='fine'>Common <abbr title='Top Level Domain'>TLD</abbr>'s:</span> <strong>.com, .org, .gov</strong><br />
+        <span class='fine'>Examples of <abbr title='Second Level Domain'>SLD</abbr>'s:</span> <strong>google, whitehouse, facebook</strong><br />
+        <span class='fine'>Typical subdomains:</span> <strong><abbr title='world wide web'>www</abbr>, mail, blog</strong>
     </p>
 </section>
 
@@ -87,8 +104,7 @@ description: A presentation covering everything you always wanted to know abotu 
     </p>
 
     <p class='fragment' style='margin-top:1em;'>
-        <img src='images/paths.jpg' style='height: 50%;' /><br />
-        <cite class='image'>http://manypathsonecommunity.co.uk/lifepathreadings.html</cite>
+        This is <strong>not</strong> a real directory structure!
     </p>
 </section>
 
@@ -153,28 +169,24 @@ description: A presentation covering everything you always wanted to know abotu 
     </p>
 </section>
 
-<section id='translating-urls' data-background='#f5f5ff'>
-    <h2 title='This is a translation'>這是一個翻譯</h2>
+<section data-background='#f5f5ff'>
+    <h2>Where are we going again?</h2>
 
     <p>
-        We just typed in "http://www.google.com/reader/view/" ...<br />
-        <img src='images/url_translate.png' />
+        We just typed in:<br><br>http://www.google.com/search/howsearchworks/
     </p>
 
-    <p>We need a translator!</p>
-
-    <aside class='notes'>
-        <p>Remember our street address to GPS coordinate example? Same deal!</p>
-    </aside>
+    <p class='fragment'>
+        <br>But where do we really want to go?<br><br>
+        <img src='images/url_translate.png' />
+    </p>
 </section>
 
 <section id='telephone-exchange'>
-    <h2 title='This is a translation'>這是一個翻譯</h2>
+    <h2>We need a translator!</h2>
 
     <p>
-        Translating domains into Internet Protocol (IP) addresses<br />
-        <img src='images/telephone_exchange.jpg' style='width: 60%;' />
-        <cite class='image'>http://www.witnessthis.co.za/2009/10/05/incentive-to-work/telephone-exchange/</cite>
+        <img src='images/translate.png' style='width: 60%;' />
     </p>
 </section>
 
@@ -257,7 +269,7 @@ description: A presentation covering everything you always wanted to know abotu 
     </p>
 
     <p class='fragment' style='margin-top:1em;'>
-        It's an <acronym class='expand' title='Internet Protocol'>IP</acronym> - address.<br><br>
+        It's an <abbr class='expand' title='Internet Protocol'>IP</abbr> - address.<br><br>
         A machine-readable identifier for a network interface<br>(not for the whole machine!)
     </p>
 
@@ -266,43 +278,38 @@ description: A presentation covering everything you always wanted to know abotu 
 <section id='ip-address-versions'>
     <h2>IPv4</h2>
     <div class='fragment'>
-        <p>Set of four numbers between <strong>0 and 255</strong> (that's 8 bits each, making a 32-bit address):</p>
-        <table style='width:100%; margin-top:1em; font-size:0.75em;'>
+        <p>
+            Set of four numbers,<br>between <strong>0 and 255</strong>
+        </p>
+        <p class='fine' style='font-size:0.8em;'>
+            (that's 8 bits each, making a 32-bit address)
+        </p>
+
+        <table style='width:100%; margin-top:1em; font-size:0.75em;' class='fragment'>
             <tr>
                 <td style='text-align:right; padding:0 0.5em; width:50%;'>74.</td>
                 <td style='text-align:left; padding:0 0.5em;'>125.227.26</td>
             </tr>
             <tr>
-                <td style='text-align:right; padding:0 0.5em;'>Network Identification (1-126, Class A)</td>
-                <td style='text-align:left; padding:0 0.5em;'>Host (interface) Identification</td>
+                <td style='text-align:right; padding:0 0.5em;'>Network ID (1-126, Class A)</td>
+                <td style='text-align:left; padding:0 0.5em;'>Host (interface) ID</td>
             </tr>
         </table>
     </div>
 </section>
 
-<section id='public-vs-private'>
-    <img src='images/public_restroom.png'>
-    <strong>VS.</strong>
-    <img src='images/privacy_sweater.jpg' style='height:30%;'>
+<section>
+    <p>Your computer at home has an IP address, too!</p>
+    <p>But why does it always start with 192?</p>
 
-    <cite class='image'>
-        http://www.justbathroomsigns.com/Restroom/No-Public-Restroom-Signs.aspx<br>
-        http://thesocietypages.org/cyborgology/2012/08/06/a-new-privacy-full-essay-parts-i-ii-and-iii-2/digital-privacy/
-    </cite>
-</section>
-
-<section id='home-net' data-background='#f5f5ff'>
-    <h2>Home + network = Homework</h2>
-
-    <p>Your machine has an IP address, too!<br>But how did you get it?</p>
-
-    <div class='fragment'>
-        <img src='images/home_network.png' />
-    </div>
+    <p class='fragment'>
+        It's a <strong>private</strong> network,<br>
+        and every device you have has a private IP!
+    </p>
 </section>
 
 <section id='dhcp-or-static' data-background='#f5f5ff' data-transition='none'>
-    <h2>Home + network = Homework</h2>
+    <h2>Home Networks</h2>
 
     <div class='home-net-other'>
         <img src='images/home_network_ip1.png' />
@@ -310,7 +317,7 @@ description: A presentation covering everything you always wanted to know abotu 
 </section>
 
 <section id='static-ip' data-background='#f5f5ff' data-transition='none'>
-    <h2>Home + network = Homework</h2>
+    <h2>Static IP</h2>
 
     <div class='home-net-other'>
         <img src='images/home_network_ip2.png' />
@@ -318,7 +325,7 @@ description: A presentation covering everything you always wanted to know abotu 
 </section>
 
 <section id='dhcp-request' data-background='#f5f5ff' data-transition='none'>
-    <h2>Home + network = Homework</h2>
+    <h2>Dynamic Host Control Protocol</h2>
 
     <div class='home-net-other'>
         <img src='images/home_network_ip3.png' />
@@ -326,7 +333,7 @@ description: A presentation covering everything you always wanted to know abotu 
 </section>
 
 <section id='dhcp-response' data-background='#f5f5ff' data-transition='none'>
-    <h2>Home + network = Homework</h2>
+    <h2>Dynamic Host Control Protocol</h2>
 
     <div class='home-net-other'>
         <img src='images/home_network_ip4.png' />
@@ -334,36 +341,36 @@ description: A presentation covering everything you always wanted to know abotu 
 </section>
 
 <section id='ipv4-vs-ipv6'>
-    <h2>I can haz IP?</h2>
-
-    <h3>IPv4 vs. IPv6</h3>
+    <h2 style='text-transform: none;'>IPv4 vs IPv6</h2>
 
     <p>
-        Why the need for a new version of IP addressing?<br />
+        Why the need for a new version of IP addressing?
+    </p>
+    <p>
         Seems to work just fine...
     </p>
 
     <div class='fragment' style='font-size:0.7em'>
-        <div style='width:48%; float: left;'>
+        <div style='width:43%; float: left;'>
             <h4>IPv4</h4>
             <ul>
                 <li>format: 192.168.1.67</li>
-                <li>32-bit addressing (4 places, 8 bits each)</li>
+                <li>32-bit addressing (4 x 8 bits)</li>
                 <li>2^32 possible IPs = <br>4,294,967,296 (~4.3 billion)</li>
             </ul>
         </div>
 
-        <div style='width:48%; float: left;'>
+        <div style='width:56%; float: left;'>
             <h4>IPv6</h4>
             <ul>
                 <li>format: 2001:db8:85a3:42:0:8a2e:370:7334</li>
-                <li>128-bit addressing (8 places, 16 bits each)</li>
+                <li>128-bit addressing (8 x 16 bits)</li>
                 <li>2^128 possible IPs =<br>340,282,366,920,938,463,463,374,607,431,768,211,456</li>
             </ul>
         </div>
     </div>
 
-    <p class='fragment' style='clear:both; padding-top:1em;'>We started running out on April 15, 2011</p>
+    <p class='fragment' style='clear:both; padding-top:1em;'>We started running out of IPv4 addresses in 2011.</p>
 
     <aside class='notes'>
         <p>
@@ -377,43 +384,47 @@ description: A presentation covering everything you always wanted to know abotu 
 </section>
 
 <section id='ipv6-visualization'>
-    <p>One pixel per address...</p>
+    <h2>Visualizing IPv6</h2>
 
-    <img src='images/united_states_ips.png' style='width:40%'>
-    <img src='images/solar_system_ips.png' class='fragment' style='width:40%'>
+    <p>
+        Imagine a monitor with 105px per inch,<br>
+        and 1px per IP address...
+    </p>
 
-    <cite class='image'>http://pthree.org/2009/03/08/the-sheer-size-of-ipv6/</cite>
+    <aside style='display: flex;'>
+        <aside class='fragment' style='width: 49%'>
+            <h3>IPv4</h3>
+            <img src='images/washington_monument.png' style='width: 100%'>
+        </aside>
+        <aside class='fragment' style='width: 49%'>
+            <h3>IPv6</h3>
+            <img src='images/solar_system_ips.png' style='width: 100%'>
+        </aside>
+    </aside>
+    
+    <p class='fine' style='font-size:0.8em;'>http://pthree.org/2009/03/08/the-sheer-size-of-ipv6/</p>
 </section>
 
 <section id='cloud-recap' data-background='#f5f5ff' data-transition='none'>
     <h2>Let's see that again...</h2>
 
     <p>
-        <img src='images/internet_full_request1.png' />
-    </p>
-</section>
-
-<section id='http-request-path' data-background='#f5f5ff' data-transition='none'>
-    <h2>Let's see that again...</h2>
-
-    <p>
-        <img src='images/internet_full_request2.png' />
+        <img src='images/internet_basic.png' />
     </p>
 </section>
 
 <section id='request-anatomy'>
     <h2>Anatomy 101</h2>
 
-    <h3>The HTTP REQUEST data</h3>
+    <h3>The HTTP REQUEST</h3>
 
-    <p>http://www.google.com/reader/view/</p>
-
-    <pre class='fragment'><code class='lang-no-highlight'>GET /reader/view/ HTTP/1.1
+    <pre class='fragment'><code class='lang-no-highlight'>GET /search/howsearchworks/ HTTP/1.1
     Host: www.google.com
     Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
     Connection: keep-alive
-    Cookie: 1%2FcA8CoqFFr9udmhMd2NpbtBcfH9Rzdd9fE5ISkdmB%2F2012-10-09+22%3A21%3A59
-    User-Agent: Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.4 (KHTML, like Gecko) Chrome/22.0.1229.79 Safari/537.4</code></pre>
+    Cookie: 1%2FcA8CoqFFr9udmhMd2NpbtBcfH9Rzdd9fE5ISkdmB%2F...
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ...
+    ...</code></pre>
 
     <aside class='notes'>
         <p>
@@ -423,33 +434,10 @@ description: A presentation covering everything you always wanted to know abotu 
     </aside>
 </section>
 
-<section id='get-v-post'>
-    <h3>I'll <strong>GET</strong> you my pretty, and your little <strong>POST</strong>, too.</h3>
+<section id='http-methods'>
+    <h2>The Method</h2>
 
-    <div>
-        <div style='width:48%; float:left;' class='fragment'>
-            <h3>GET</h3>
-            <p>
-                Data Retrieval<br />
-                <img src='images/show-me-the-money.jpg' />
-            </p>
-        </div>
-
-        <div style='width:48%; float:left;' class='fragment'>
-            <h3>POST</h3>
-            <p>
-                Data Creation<br />
-                <img src='images/kitty_money.jpg' height='270px' /><br />
-                <cite class='image'>http://cheezburger.com/6339194624</cite>
-            </p>
-        </div>
-
-    </div>
-    <div style='clear:both;'></div>
-</section>
-
-<section id='other-http-methods'>
-    <h2>Grumpy, Sneezy, Dopey, Happy, Doc, ...</h2>
+    <pre><code class='lang-no-highlight'>GET /search/howsearchworks/ HTTP/1.1</code></pre>
 
     <div class='fragment' style='margin-top:2em; text-align:left;'>
         <ul>
@@ -459,7 +447,7 @@ description: A presentation covering everything you always wanted to know abotu 
             <li><strong>DELETE</strong> - Data Deletion</li>
         </ul>
         <div class='fragment' style='font-size:0.8em;'>
-            <h3 style='margin-top:2em;'>Less used...</h3>
+            <h3 style='margin-top:2em;'>Less often used...</h3>
             <ul style='margin-top:1em;'>
                 <li><strong>OPTIONS</strong> - Tells the client what methods are supported (and sometimes how to use them)</li>
                 <li><strong>PATCH</strong> - Update part of a record with the given data (if implemented, then PUT usually replaces the <em>entire record</em>)</li>
@@ -474,45 +462,41 @@ description: A presentation covering everything you always wanted to know abotu 
 
     <h3>What's a cookie?</h3>
 
-    <pre><code class='lang-no-highlight'>Cookie: 1%2FcA8CoqFFr9udmhMd2NpbtBcfH9Rzdd9fE5ISkdmB%2F2012-10-09+22%3A21%3A59</code></pre>
+    <pre><code class='lang-no-highlight'>Cookie: 1%2FcA8CoqFFr9udmhMd2NpbtBcfH9Rzdd9fE5ISkdmB%2F2023-05-09+15%3A21%3A59</code></pre>
 
-    <p class='fragment'>
-        <img src='images/cookie_monster.jpg' style='width:40%'>
-        <cite class='image'>http://www.quickmeme.com/meme/3qehyt/</cite>
-    </p>
+    <pre class='fragment'><code class='lang-no-highlight'>Cookie: 1/cA8CoqFFr9udmhMd2NpbtBcfH9Rzdd9fE5ISkdmB/2023-05-09 15:21:59</code></pre>
+
+    <ul>
+        <li class='fragment'>Typically URL or base64 encoded (not required)</li>
+        <li class='fragment'>Stored on local user's machine</li>
+        <li class='fragment'>Sent with <strong>every</strong> request to the scoped host/domain</li>
+    </ul>
 </section>
 
-<section id='server-architecture' data-background='#f5f5ff'>
-    <h2>Not what I.M. Pei would do...</h2>
+<section id='server-architecture'>
+    <h2>Typical Web Application</h2>
 
-    <h3>Typical Web Server Architecture</h3>
-    <div>
-        <img src='images/web_server_arch.png' />
-    </div>
-
-    <p><acronym class='expand' title='Linux Apache MySQL PHP'>LAMP</acronym></p>
+    <p>
+        <img src='images/web-server-arch.png' />
+    </p>
 </section>
 
 <section id='response-anatomy'>
     <h2>Anatomy 102</h2>
 
-    <h3>The HTTP RESPONSE data</h3>
+    <h3>The HTTP RESPONSE</h3>
 
-    <p>http://www.google.com/reader/view/</p>
-
-    <pre><code class='lang-no-highlight'>HTTP/1.1 200 OK
+    <pre class='fragment'><code class='lang-no-highlight'>HTTP/1.1 200 OK
     Date: Mon, 28 Mar 2016 09:15:00 GMT
     Server: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)
     Last-Modified: Mon, 08 Jan 2016 23:11:55 GMT
     Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-    Content-Encoding: gzip
     Content-Type: text/html; charset=UTF-8
     Content-Length: 220
     Expires: Fri, 01 Jan 2020 00:00:00 GMT
-    Pragma: no-cache
-    X-Reader-Google-Version: 553-000
+    X-Search-Version: 245.136
 
-    &lt;!DOCTYPE html>&lt;html>    &lt;head>&lt;meta ...</code></pre>
+    &lt;!DOCTYPE html>&lt;html>&lt;head>...&lt;/head>&lt;body>...&lt;/body>&lt;/html></code></pre>
 
     <aside class='notes'>
         <p>
@@ -525,6 +509,8 @@ description: A presentation covering everything you always wanted to know abotu 
 <section id='status-codes'>
     <h2>Status Codes</h2>
 
+    <pre><code class='lang-no-highlight'>HTTP/1.1 200 OK</code></pre>
+
     <ul>
         <li class='fragment'>100-199 - Informational <span class='fine'>(very rarely used)</span></li>
         <li class='fragment'>200-299 - Success <span class='fine'>(200, 201, 204)</span></li>
@@ -535,81 +521,44 @@ description: A presentation covering everything you always wanted to know abotu 
 
 </section>
 
+<section data-background='images/all-resources.png'>
+    <h2 style='text-shadow: 3px 3px 3px; font-weight: bold;'>More than just the HTML</h2>
+
+    <!-- <img src='images/all-resources.png' /> -->
+</section>
+
 <section id='browser-rendering'>
-    <h2>It renders you helpless...</h2>
+    <h2>Rendering & Code Execution</h2>
 
-    <p>And now the HTML and CSS are rendered by the browser</p>
+    <p><code>&lt;!DOCTYPE html>&lt;html>&lt;head>...&lt;/head>&lt;body>...&lt;/body>&lt;/html></code></p>
 
-    <div style='position:relative;'>
+    <ol>
+        <li>Setup processing based on <code>DOCTYPE</code></li>
+        <li class='fragment'>Start processing the <code>&lt;head></code> element</li>
+        <li class='fragment'>Process <code>&lt;meta></code> tags (in order)</li>
+        <li class='fragment'>Download resources from <code>&lt;link></code> & <code>&lt;script></code> tags</li>
+        <li class='fragment'>Execute JavaScript when found (unless <code>defer</code>ed)</li>
+        <li class='fragment'>Start rendering the DOM tree from the <code>&lt;body></code> element</li>
+        <li class='fragment'>Download resources in <code>&lt;body></code> (<code>&lt;img></code>, <code>&lt;script></code>, <code>&lt;video></code>, etc)</li>
+        <li class='fragment'>Render Cascading Style Sheets, from <code>&lt;head></code> to <code>&lt;body></code></li>
+    </ol>
+</section>
+
+<section id='rendered-page'>
+    <h2>Rendering You Helpless</h2>
+
+    <p style='position:relative;'>
         <img src='images/cat_render.png' />
         <img src='images/cat_tail.gif' style='position:absolute; top:100px; left:360px; height:254px;' />
-    </div>
-
-    <p class='fine'>(This is not part of my presentation.)</p>
-</section>
-
-<section id='javascript'>
-    <h2>Scriptalicious</h2>
-
-    <p>What about JavaScript? Where does that code run?</p>
-
-    <div class='fragment'>
-        <img src='images/dev_tools.png' />
-        <div class='fragment'>
-            <p>
-                Now that the browser <strong>has</strong> the code, it runs it against
-                the <strong>rendered</strong> HTML and CSS<br />
-                (at least, the html and css that has already been processed)
-            </p>
-        </div>
-    </div>
-
-    <aside class='notes'>
-        <p>
-            Note that ANY file not directly in the original html file will
-            be requested separately (via an HTTP request) and thus having
-            numerous, separate JS, CSS, Flash, and image files can really
-            drag down page load times!
-        </p>
-    </aside>
-</section>
-
-<!--
-<section id='ajax'>
-    <h2>AJAX: It's synchronicity!</h2>
-
-    <p>
-        <acronym class='expand' title='Asynchronous JavaScript And XML'>AJAX</acronym><br />
-        <img src='images/synchronicity_whales.jpg' /><br />
-        <cite class='image'>http://livingwithcertainty.com/2011/04/07/more-synchronicity-in-my-life/</cite>
     </p>
 </section>
-
-<section id='client-server-traditional'>
-    <h2>One foot in front of the other</h2>
-
-    <p>
-        <img src='images/client-server_traditional.png' /><br />
-        <cite class='image'>http://www.adaptivepath.com/ideas/ajax-new-approach-web-applications</cite>
-    </p>
-</section>
-
-<section id='client-server-ajax'>
-    <h2>One foot in front of the other</h2>
-
-    <p>
-        <img src='images/client-server_ajax.png' /><br />
-        <cite class='image'>http://www.adaptivepath.com/ideas/ajax-new-approach-web-applications</cite>
-    </p>
-</section>
--->
 
 <section id='ssl-handshake' data-background='#f5f5ff'>
-    <h2>Come with me if you want to live...</h2>
+    <h2>What about encryption?</h2>
 
     <p>
-        <acronym class='expand' title='Secure Socket Layers'>SSL</acronym>
-        (<acronym title='Transport Layer Security'>TLS</acronym>)-
+        <abbr class='expand' title='Secure Socket Layers'>SSL</abbr>
+        (<abbr title='Transport Layer Security'>TLS</abbr>)-
         encrypt data sent to and from a client/server
     </p>
 
@@ -619,27 +568,31 @@ description: A presentation covering everything you always wanted to know abotu 
 </section>
 
 <section id='ssl-cert-authority'>
-    <p>
-        But how do you know you can trust that server's certificate?
-    </p>
+    <h2>Why trust that server's certificate?</h2>
 
     <p class='fragment' style='margin-top:1em;'>
         A Certificate Authority (CA) guarantees<br>
-        the holder of the certificate is who they say they are.<br><br>
-        (Examples of ROOT CA's: Verisign, Thawte, GeoTrust, etc)
+        the holder of the certificate is who they say they are.
     </p>
     <p class='fragment' style='margin-top:1em;'>
         <strong>They are the gatekeepers.</strong><br>
         <img src='images/gatekeeper.jpg' style='width:60%;'>
     </p>
+
+    <p class='fragment' style='margin-top:1em;'>
+        Examples of ROOT CA's: Verisign, Thawte, GeoTrust, etc.
+    </p>
 </section>
 
 <section id='ssl-chains'>
     <p>
-        But what if the web site didn't want to pay up to $3,000<br />
-        for a certificate from a <strong>root</strong> authority like <strong>Verisign</strong>?
+        Certificates from root CA's can cost <strong>over $3,000</strong>
     </p>
-    <p class='fragment'>I hear you can get one for $8 some places...</p>
+    <p class='fragment'>
+        But I hear you can <a href='https://letsencrypt.org'>get one for free</a>...
+        <br><br>
+        <img src='images/thinking-face.png' alt='Thinking face emoji'>
+    </p>
 </section>
 
 <section id='ssl-chain-start' data-background='white' data-transition='none'>
@@ -680,49 +633,49 @@ description: A presentation covering everything you always wanted to know abotu 
     <h2>Acronymity</h2>
 
     <ul style='font-size:0.9em; width:33%; float:left;'>
-        <li><acronym class='expand' title='Asynchronous Javascript And XML'>AJAX</acronym></li>
-        <li><acronym class='expand' title='Common Gateway Interface'>CGI</acronym></li>
-        <li><acronym class='expand' title='Command Line Interface'>CLI</acronym></li>
-        <li><acronym class='expand' title='Command Run ON'>CRON</acronym></li>
-        <li><acronym class='expand' title='Cascading Style Sheet'>CSS</acronym></li>
-        <li><acronym class='expand' title='DataBase Management System'>DBMS</acronym></li>
-        <li><acronym class='expand' title='Dynamic Host Configuration Protocol'>DHCP</acronym></li>
-        <li><acronym class='expand' title='Domain Name System'>DNS</acronym></li>
-        <li><acronym class='expand' title='Document Object Model'>DOM</acronym></li>
-        <li><acronym class='expand' title='File Transfer Protocol'>FTP</acronym></li>
-        <li><acronym class='expand' title='Hyper Text Transfer Protocol Secure'>HTTPS</acronym></li>
-        <li><acronym class='expand' title='Internet Message Access Protocol'>IMAP</acronym></li>
-        <li><acronym class='expand' title='Internet Protocol'>IP</acronym></li>
-        <li><acronym class='expand' title='Internet Service Provider'>ISP</acronym></li>
-        <li><acronym class='expand' title='Linux Apache MySQL PHP'>LAMP</acronym> (or Perl, or Python)</li>
+        <li><abbr class='expand' title='Asynchronous Javascript And XML'>AJAX</abbr></li>
+        <li><abbr class='expand' title='Common Gateway Interface'>CGI</abbr></li>
+        <li><abbr class='expand' title='Command Line Interface'>CLI</abbr></li>
+        <li><abbr class='expand' title='Command Run ON'>CRON</abbr></li>
+        <li><abbr class='expand' title='Cascading Style Sheet'>CSS</abbr></li>
+        <li><abbr class='expand' title='DataBase Management System'>DBMS</abbr></li>
+        <li><abbr class='expand' title='Dynamic Host Configuration Protocol'>DHCP</abbr></li>
+        <li><abbr class='expand' title='Domain Name System'>DNS</abbr></li>
+        <li><abbr class='expand' title='Document Object Model'>DOM</abbr></li>
+        <li><abbr class='expand' title='File Transfer Protocol'>FTP</abbr></li>
+        <li><abbr class='expand' title='Hyper Text Transfer Protocol Secure'>HTTPS</abbr></li>
+        <li><abbr class='expand' title='Internet Message Access Protocol'>IMAP</abbr></li>
+        <li><abbr class='expand' title='Internet Protocol'>IP</abbr></li>
+        <li><abbr class='expand' title='Internet Service Provider'>ISP</abbr></li>
+        <li><abbr class='expand' title='Linux Apache MySQL PHP'>LAMP</abbr> (or Perl, or Python)</li>
     </ul>
     <ul style='font-size:0.9em; width:33%; float:left;'>
-        <li><acronym class='expand' title='Local Area Network'>LAN</acronym></li>
-        <li><acronym class='expand' title='Media Access Control'>MAC</acronym></li>
-        <li><acronym class='expand' title='Network Interface Controller'>NIC</acronym></li>
+        <li><abbr class='expand' title='Local Area Network'>LAN</abbr></li>
+        <li><abbr class='expand' title='Media Access Control'>MAC</abbr></li>
+        <li><abbr class='expand' title='Network Interface Controller'>NIC</abbr></li>
         <li>Perl - (not an acronym!)</li>
-        <li><acronym class='expand' title='PHP: Hypertext Preprocessor'>PHP</acronym> (yes, it's recursive)</li>
-        <li><acronym class='expand' title='Post Office Protocol'>POP</acronym></li>
-        <li><acronym class='expand' title='Really Simple Syndication'>RSS</acronym></li>
-        <li><acronym class='expand' title='Simple Mail Transfer Protocol'>SMTP</acronym></li>
-        <li><acronym class='expand' title='Secure Shell'>SSH</acronym></li>
-        <li><acronym class='expand' title='Service Set Identifier'>SSID</acronym></li>
-        <li><acronym class='expand' title='Secure Socket Layers'>SSL</acronym></li>
-        <li><acronym class='expand' title='Structured Query Language'>SQL</acronym></li>
-        <li><acronym class='expand' title='Transmission Control Protocol'>TCP</acronym></li>
+        <li><abbr class='expand' title='PHP: Hypertext Preprocessor'>PHP</abbr> (yes, it's recursive)</li>
+        <li><abbr class='expand' title='Post Office Protocol'>POP</abbr></li>
+        <li><abbr class='expand' title='Really Simple Syndication'>RSS</abbr></li>
+        <li><abbr class='expand' title='Simple Mail Transfer Protocol'>SMTP</abbr></li>
+        <li><abbr class='expand' title='Secure Shell'>SSH</abbr></li>
+        <li><abbr class='expand' title='Service Set Identifier'>SSID</abbr></li>
+        <li><abbr class='expand' title='Secure Socket Layers'>SSL</abbr></li>
+        <li><abbr class='expand' title='Structured Query Language'>SQL</abbr></li>
+        <li><abbr class='expand' title='Transmission Control Protocol'>TCP</abbr></li>
     </ul>
     <ul style='font-size:0.9em; width:33%; float:left;'>
-        <li><acronym class='expand' title='User Datagram Protocol'>UDP</acronym></li>
-        <li><acronym class='expand' title='Uniform Resource Indicator'>URI</acronym></li>
-        <li><acronym class='expand' title='Uniform Resource Locator'>URL</acronym></li>
-        <li><acronym class='expand' title='Virtual Private Server'>VPS</acronym></li>
-        <li><acronym class='expand' title='Windows Apache MySQL PHP'>WAMP</acronym></li>
-        <li><acronym class='expand' title='Wide Area Network'>WAN</acronym></li>
-        <li><acronym class='expand' title='Wired Equivalent Privacy'>WEP</acronym></li>
+        <li><abbr class='expand' title='User Datagram Protocol'>UDP</abbr></li>
+        <li><abbr class='expand' title='Uniform Resource Indicator'>URI</abbr></li>
+        <li><abbr class='expand' title='Uniform Resource Locator'>URL</abbr></li>
+        <li><abbr class='expand' title='Virtual Private Server'>VPS</abbr></li>
+        <li><abbr class='expand' title='Windows Apache MySQL PHP'>WAMP</abbr></li>
+        <li><abbr class='expand' title='Wide Area Network'>WAN</abbr></li>
+        <li><abbr class='expand' title='Wired Equivalent Privacy'>WEP</abbr></li>
         <li>WiFi - No, it does not mean "Wireless Fidelity", it's just a name.</li>
-        <li><acronym class='expand' title='Wifi Protected Access'>WPA</acronym></li>
-        <li><acronym class='expand' title='World Wide Web'>WWW</acronym></li>
-        <li><acronym class='expand' title='eXstensible HyperText Markup Language'>XHTML</acronym></li>
-        <li><acronym class='expand' title='eXstensible Markup Language'>XML</acronym></li>
+        <li><abbr class='expand' title='Wifi Protected Access'>WPA</abbr></li>
+        <li><abbr class='expand' title='World Wide Web'>WWW</abbr></li>
+        <li><abbr class='expand' title='eXstensible HyperText Markup Language'>XHTML</abbr></li>
+        <li><abbr class='expand' title='eXstensible Markup Language'>XML</abbr></li>
     </ul>
 </section>
