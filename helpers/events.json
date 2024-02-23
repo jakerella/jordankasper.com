@@ -851,6 +851,15 @@
             "topics": [
                 "Open Source in Civic Tech"
             ]
+        },
+        {
+            "name": "digital Services Coalition",
+            "url": "https://digitalservicescoalition.org",
+            "location": "Washington, Dc",
+            "date": "Feb 27 2024",
+            "topics": [
+                "Open Source Software in Government"
+            ]
         }
     ]
 }
