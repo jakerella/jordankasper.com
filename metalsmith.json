@@ -8,6 +8,7 @@
     "url": "https://jordankasper.com"
   },
   "plugins": {
+    "./helpers/metadata": {},
     "metalsmith-debug": {},
     "metalsmith-collections": {
       "posts": {
