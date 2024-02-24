@@ -2,7 +2,8 @@
 layout: jquery.hbs
 ---
 
-<h2>What are you looking for?</h2>
+<h2>**WARNING**</h2>
+<h3>All of these jQuery plugins have been archived and are no longer maintained.</h3>
 
 <section id='pluginList'>
     <article class='plugin'>
