@@ -37,7 +37,7 @@ Each presentation directory is also the path used to access it on my website. In
 
 ### Event Data
 
-The last piece of content is the list of events available on https://jordankasper.com/events, which is all stored as a large JSON file in the `/helpers` directory. Each entry in this file will display as a single event on the site. The metadata here - like that of the blog posts - will be used for ordering and display.
+The last piece of content is the list of events available on https://jordankasper.com/events, which is all stored as a large JSON file in the `/plugins` directory. Each entry in this file will display as a single event on the site. The metadata here - like that of the blog posts - will be used for ordering and display.
 
 For example, this is the entry for my talk on Open Source at the Frontrunners conference in 2023:
 
@@ -57,7 +57,7 @@ For example, this is the entry for my talk on Open Source at the Frontrunners co
 
 There are some other assets (the site's JavaScript, CSS, etc) which is all located in the `/assets` directory.
 
-There are also a few non-dynamic static pages in there under `/assets/static`. These are not dynamically built with metalsmith. Instead, this content is served up as is with no injection. This is accomplished using a `copy` task during the metalsmith build. Check out the `/helpers/copy.js` file to see how that's done.
+There are also a few non-dynamic static pages in there under `/assets/static`. These are not dynamically built with metalsmith. Instead, this content is served up as is with no injection. This is accomplished using a `copy` task during the metalsmith build. Check out the `/plugins/copy.js` file to see how that's done.
 
 
 ## Building the Site
@@ -68,7 +68,9 @@ Building the site is pretty simple, make sure you have all of the dependencies, 
 2. `npm run clean`
 3. `npm run build`
 
-How is this all done? Well, the site is built using metalsmith, which itself is highly customizable (one reason I like it). In fact, all of the `*.js` files in the `/helpers` directory are tiny metalsmith plugins. You can see how they are then used in the `metalsmith.json` configuration file.
+How is this all done? Well, the site is built using metalsmith, which itself is highly customizable (one reason I like it). In fact, all of the `*.js` files in the `/plugins` directory are tiny metalsmith plugins. You can see how they are then used in the `metalsmith.json` configuration file.
+
+> If things aren't going well, you should look at the full debug output using: `npm run debug`
 
 The final, static site will be in the `/build` directory and you can **run the site** using your favorite HTTP server tool, serving content from that directory. For example, in Node you could use: `http-server ./build` (presuming you had installed the http-server Node module globally).
 

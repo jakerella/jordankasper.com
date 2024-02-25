@@ -1,22 +1,27 @@
 
 const v = require('voca');
+const logger = require('./_logger')();
 
-module.exports = function() {
+module.exports = function excerpts(opts) {
+    const length = opts.length || 500;
+
     return function(files, metalsmith, done) {
         Object.keys(files).forEach(function(filename) {
             if (!/\.html$/.test(filename)) { return; }
+            
+            logger.debug('getting excerpt for file:', filename)
 
-            let excerpt = getExcerptText(files[filename]);
+            let excerpt = getExcerptText(files[filename], length);
             files[filename].excerpt = excerpt && excerpt.length > 0 ? excerpt : null;
         });
         done();
     };
 };
 
-function getExcerptText(file) {
+function getExcerptText(file, length) {
     let excerpt = file.excerpt || file.contents.toString();
     excerpt = excerpt.replace(/<h\d[^\>]+>[^\<]+<\/h\d>/, '');
     excerpt = v.stripTags(excerpt, ['p', 'strong', 'em']);
-    excerpt = v.prune(excerpt, 500, '...');
+    excerpt = v.prune(excerpt, length, '...');
     return excerpt;
 }

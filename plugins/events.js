@@ -1,14 +1,14 @@
 
 const moment = require('moment');
-const debug = require('debug')('metalsmith-events');
-const events = require('./events.json').events;
+const logger = require('./_logger')();
+const events = require('../assets/events.json').events;
 
-module.exports = function tagcloud(opts){
+module.exports = function eventPlugin(opts){
   opts.targetPast = opts.targetPast || 'pastEvents';
   opts.targetFuture = opts.targetFuture || 'futureEvents';
 
   return function (files, metalsmith, done){
-    debug('events module started with %s events', events.length);
+    logger.debug(`events module started with ${events.length} events`);
 
     const data = metalsmith.metadata();
 
@@ -24,7 +24,7 @@ module.exports = function tagcloud(opts){
     });
     const sortedEvents = events
       .filter(function(event) {
-        if (!event.timestamp) { debug('filtering out event due to bad timestamp (date=%s)', event.date); }
+        if (!event.timestamp) { logger.warn('filtering out event due to bad timestamp - date=', event.date); }
         return event.timestamp;
       })
       .sort(function(a, b) {
@@ -42,9 +42,9 @@ module.exports = function tagcloud(opts){
       }
     });
 
-    debug('Events processed...');
-    debug('  there are %s upcoming', data[opts.targetFuture].length);
-    debug('  there are %s past', data[opts.targetPast].length);
+    logger.info('Events processed...');
+    logger.info(`  there are ${data[opts.targetFuture].length} upcoming`);
+    logger.info(`  there are ${data[opts.targetPast].length} past`);
 
     done();
   };

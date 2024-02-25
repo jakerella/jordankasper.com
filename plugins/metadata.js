@@ -1,9 +1,10 @@
 
-const debug = require('debug')('metalsmith-metadata');
+const logger = require('./_logger')();
 
 module.exports = function getMetadata(){
   return function (files, metalsmith, done){
-    debug('metadata init');
+    logger.info('Source folder:', metalsmith.source());
+    logger.info('Destination folder:', metalsmith.destination());
 
     const data = metalsmith.metadata();
     data.fullYear = (new Date()).getFullYear()

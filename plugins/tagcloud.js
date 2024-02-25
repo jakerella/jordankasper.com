@@ -1,16 +1,16 @@
 
-const debug = require('debug')('metalsmith-tagcloud');
+const logger = require('./_logger')();
 
 module.exports = function tagcloud(opts){
   opts.key = opts.key || 'tags';
 
   return function (files, metalsmith, done){
-    debug('tagcloud using metadata key: %s', opts.key);
+    logger.debug('tagcloud using metadata key:', opts.key);
 
     const data = metalsmith.metadata();
     data.tagcloud = [];
     Object.keys(data[opts.key]).forEach(function(name) {
-      debug('Adding tag entry with data:', name, data[opts.key][name].urlSafe, data[opts.key][name].length);
+      logger.info('Adding tag entry with data:', name, data[opts.key][name].urlSafe, data[opts.key][name].length);
       data.tagcloud.push({
         name,
         slug: data[opts.key][name].urlSafe,

@@ -3,26 +3,30 @@ const fs = require('fs');
 const path = require('path');
 const RSS = require('rss');
 const moment = require('moment');
-const debug = require('debug')('metalsmith-rss');
+const logger = require('./_logger')();
 
-module.exports = function tagcloud(opts){
+module.exports = function rss(opts){
+  const language = opts.language || 'en'
+  const description = opts.description || ''
+  const relative_image_path = opts.image_url || ''
+  const categories = opts.categories || []
 
-  return function (files, metalsmith, done){
-    debug('rss module init');
+  return function (files, metalsmith, done) {
+    logger.debug('init RSS plugin');
 
     const data = metalsmith.metadata();
 
     const feed = new RSS({
       title: data.description,
-      description: 'Blog posts from Jordan Kasper',
+      description,
       feed_url: `${data.url}/rss`,
       site_url: data.url,
-      image_url: `${data.url}/images/hobbes_small.png`,
+      image_url: `${data.url}/${relative_image_path}`,
       managingEditor: data.author,
       webMaster: data.author,
       copyright: `${(new Date()).getFullYear()} ${data.author}`,
-      language: 'en',
-      categories: ['Software Development','JavaScript','Front End', 'Technology', 'Learning'],
+      language,
+      categories,
       pubDate: `${moment().format('MMMM d, YYYY')} 00:00:00 GMT`,
       ttl: '1440'
     });
@@ -44,14 +48,14 @@ module.exports = function tagcloud(opts){
     const xml = feed.xml({indent: true});
 
     if (!fs.existsSync(buildDir)) {
-      debug('Build directory does not exist, creating it...');
+      logger.debug('Build directory does not exist, creating it...');
       fs.mkdirSync(buildDir);
     }
 
-    debug('Writing blog post XML to %s', location);
+    logger.info('Writing blog post XML to', location);
     fs.writeFile(location, xml, function functionName(err) {
       if (err) { return done(err); }
-      debug('Wrote XML content to destination');
+      logger.debug('Wrote XML content to destination');
       done();
     });
   };

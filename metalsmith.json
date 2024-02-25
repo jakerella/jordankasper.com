@@ -8,9 +8,8 @@
     "url": "https://jordankasper.com"
   },
   "plugins": {
-    "./helpers/metadata": {},
-    "metalsmith-debug": {},
-    "metalsmith-collections": {
+    "./plugins/metadata": {},
+    "@metalsmith/collections": {
       "posts": {
         "pattern": "content/posts/*.md",
         "sortBy": "date",
@@ -30,9 +29,14 @@
       }
     },
     "metalsmith-markdown": {},
-    "./helpers/excerpt": {},
-    "metalsmith-permalinks": {
-      "pattern": ":title",
+    "./plugins/excerpt": {},
+    "@metalsmith/permalinks": {
+      "duplicates": "error",
+      "slug": {
+        "lowercase": true,
+        "replacement": "-",
+        "extend": { "(": "-", ")": "-", "'": "-", ".": "-" }
+      },
       "linksets": [{
           "match": { "collection": "posts" },
           "pattern": ":title"
@@ -45,11 +49,11 @@
       "sortBy": "date",
       "reverse": true
     },
-    "./helpers/tagcloud": {
+    "./plugins/tagcloud": {
       "key": "tags"
     },
-    "./helpers/events": {},
-    "./helpers/recent-posts": {},
+    "./plugins/events": {},
+    "./plugins/recent-posts": {},
     "metalsmith-date-formatter": {
       "dates": [
         {
@@ -61,7 +65,7 @@
     "metalsmith-discover-partials": {
       "directory": "layouts/partials"
     },
-    "metalsmith-layouts": {
+    "@metalsmith/layouts": {
       "directory": "layouts",
       "default": "post.hbs",
       "pattern": ["**/*.html", "**/*.md"]
@@ -70,8 +74,17 @@
       "source": "./assets",
       "destination": "./"
     },
-    "./helpers/rss": {},
-    "./helpers/copy": {},
+    "./plugins/rss": {
+      "description": "Blog posts from Jordan Kasper",
+      "relative_image_path": "images/hobbes_small.png",
+      "categories": ["Software Development", "JavaScript", "Front End", "Technology", "Learning"]
+    },
+    "./plugins/copy": {
+      "locations": [
+        { "from": "assets/static/", "to": "build/" },
+        { "from": "node_modules/jquery/dist/jquery.min.js", "to": "build/js/vendor/jquery.min.js" }
+      ]
+    },
     "metalsmith-move-remove": {
       "remove": ["presos", "static"]
     }
