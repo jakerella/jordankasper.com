@@ -94,4 +94,4 @@ This command will generate a preview site that you can check out. Of course, **y
 
 This site is copyright Jordan Kasper, 2018-2024, all rights reserved.
 
-You are welcome to reuse the **code** on this site as you wish, under an MIT license. However, all written content in the `/content` directory and `/assets/static` directory is reserved with no permissions.
+You are welcome to reuse the **code** in the `/plugins` directory as you wish, under an [MIT license](https://github.com/jakerella/jordankasper.com/blob/master/plugins/LICENSE). However, all other content, especially the written content in the `/content` and `/assets/static` directories, is reserved with no permissions.
