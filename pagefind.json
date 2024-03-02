@@ -1,0 +1,6 @@
+{
+    "site": "build",
+    "output_subdir": "__pagefind",
+    "glob": "**/*.{html,pdf}",
+    "force_language": "en"
+}

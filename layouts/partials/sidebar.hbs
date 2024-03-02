@@ -1,11 +1,15 @@
-<aside class='sidebar speaking sm-12 md-3'>
+<aside class='sidebar speaking sm-12 md-12 lg-3' data-pagefind-ignore>
 
     <section class='events'>
         <h2>Upcoming Events</h2>
 
-        <ul class='upcoming-events'>
-            {{> events events=futureEvents}}
-        </ul>
+        {{#if futureEvents}}
+            <ul class='upcoming-events'>
+                {{> events events=futureEvents}}
+            </ul>
+        {{else}}
+            <p>Nothing scheduled</p>
+        {{/if}}
     </section>
 
     <section class='recent-posts'>

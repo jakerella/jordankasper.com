@@ -1,38 +1,48 @@
 (function () {
 
-    setupHobbesHover();
-    adjustContentHeight();
-    setupSearch();
+    setupHobbesHover()
+    adjustContentHeight()
+    setupSearch()
 
     function setupHobbesHover() {
-        const hobbes = $('.hobbes-hover');
+        const hobbes = $('.hobbes-hover')
         hobbes.on('mouseover', function() {
             $(this)
                 .attr('data-oldsrc', $(this).attr('src'))
-                .attr('src', '/images/hobbes_small.png');
-        });
+                .attr('src', '/images/hobbes_small.png')
+        })
         hobbes.on('mouseout', function() {
-            $(this).attr('src', $(this).attr('data-oldsrc'));
-        });
+            $(this).attr('src', $(this).attr('data-oldsrc'))
+        })
     }
 
     function adjustContentHeight() {
-        var content = $('.main-content'),
-            sh = $('.sidebar').height(),
-            ch = content.height();
-
-        if (sh > ch) {
+        const content = $('.main-content')
+        const sh = $('.sidebar').height()
+        if (sh > content.height()) {
             content.css('min-height', sh + 'px');
         }
     }
 
     function setupSearch() {
-        var input = $('.search [type="query"]');
-        $('.search').on('submit', function(e) {
-            e.preventDefault();
-            window.location.href = 'https://www.google.com/?gws_rd=ssl#q=site:jordankasper.com+' + input.val();
-            return false;
-        });
+        const options = {
+            showSubResults: false,
+            pageSize: 5,
+            showImages: false,
+            excerptLength: 30,
+            showEmptyFilters: false,
+            resetStyles: false
+        }
+        new PagefindUI({ element: ".search", ...options })
+        new PagefindUI({ element: "#off-canvas-nav .search", ...options })
+
+        $('.pagefind-ui__drawer').css('maxHeight', `${$('.main-content').height()-240}px`)
+
+        $('body').on('click', (e) => {
+            if (!$(e.target).parents('.search').length) {
+                $('.pagefind-ui__search-clear').trigger('click')
+            }
+        })
     }
 
-})();
+})()

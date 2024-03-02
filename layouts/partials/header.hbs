@@ -1,12 +1,16 @@
-<header class="row sm-12 top-sticky">
-    <h1 class="left">So long, and thanks for all the fish</h1>
-    <a href="#" aria-controls="off-canvas-nav" class="off-canvas-trigger-right hide-md right"><i class="icon-menu"></i></a>
-    {{> searchform }}
+<header class="row sm-12 top-sticky" >
+    <h1 class="left">
+        <a href="/" title="Back to the home page">So long, and thanks for all the fish</a>
+    </h1>
+    <a href="#" aria-controls="off-canvas-nav" class="off-canvas-trigger-right hide-lg right"><i class="icon-menu"></i></a>
+    <aside class='on-canvas-search show-lg'>
+        {{> searchform }}
+    </aside>
     <nav id="off-canvas-nav" class="off-canvas-right no-bullets text-center">
         {{> searchform }}
         {{> mainnav }}
     </nav>
-    <nav class="show-md no-bullets right">
+    <nav class="show-lg no-bullets right">
         {{> mainnav }}
     </nav>
 </header>
