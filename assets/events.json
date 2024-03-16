@@ -853,12 +853,21 @@
             ]
         },
         {
-            "name": "digital Services Coalition",
+            "name": "Digital Services Coalition",
             "url": "https://digitalservicescoalition.org",
             "location": "Washington, Dc",
             "date": "Feb 27 2024",
             "topics": [
                 "Open Source Software in Government"
+            ]
+        },
+        {
+            "name": "Open Sustainability Policy Summit",
+            "url": "https://opensource.engineering.jhu.edu",
+            "location": "Washington, Dc",
+            "date": "May 2 2024",
+            "topics": [
+                "Open Source Program Offices"
             ]
         }
     ]
