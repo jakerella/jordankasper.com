@@ -862,6 +862,15 @@
             ]
         },
         {
+            "name": "CISA OSS Summit",
+            "url": "https://cisa.gov/opensource",
+            "location": "Washington, Dc",
+            "date": "Mar 5 2024",
+            "topics": [
+                "Open Source Program Offices in Government"
+            ]
+        },
+        {
             "name": "Open Sustainability Policy Summit",
             "url": "https://opensource.engineering.jhu.edu",
             "location": "Washington, Dc",
