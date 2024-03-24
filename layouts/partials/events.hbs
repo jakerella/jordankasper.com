@@ -6,5 +6,10 @@
         <span class='event-topics'>
             {{#each topics as |topic i|}}{{#if i}}, {{/if}}{{ topic }}{{/each}}
         </span>
+        {{#if media}}
+            {{#each media}}
+                <span class='event-slides'>[<a href='{{ href }}' title='{{ title }}'>{{ type }}</a>]</span>
+            {{/each}}
+        {{/if}}
     </li>
 {{/each}}

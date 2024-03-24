@@ -1,6 +1,19 @@
 {
     "events": [
         {
+            "name": "BarCamp Nashville",
+            "url": "#",
+            "location": "Nashville, TN",
+            "date": "Nov 2 2013",
+            "topics": [
+                "Remote Working"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/remote", "title": "Slides for remote working" },
+                { "type": "video", "href": "https://vimeo.com/78469994", "title": "Video of remote working talk" }
+            ]
+        },
+        {
             "name": "JavaScript Summit",
             "url": "http://jssummit.com",
             "location": "(Virtual)",
@@ -17,6 +30,9 @@
             "topics": [
                 "JavaScript Testing (Tutorial)",
                 "Object Oriented JavaScript"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oop-js", "title": "Slides for object-oriented javascript" }
             ]
         },
         {
@@ -28,6 +44,9 @@
                 "Web Developer's Workflow",
                 "Remote Working",
                 "Native Windows 8 Apps with WinJS"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/remote", "title": "Slides for remote working" }
             ]
         },
         {
@@ -38,6 +57,11 @@
             "topics": [
                 "Object Oriented JavaScript",
                 "Advanced Git"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oop-js", "title": "Slides for object-oriented javascript" },
+                { "type": "slides", "href": "https://jordankasper.com/git", "title": "Slides for advanced git" },
+                { "type": "video", "href": "https://vimeo.com/100758423", "title": "Video of advanced git session" }
             ]
         },
         {
@@ -47,6 +71,9 @@
             "date": "Jun 3 2014",
             "topics": [
                 "JavaScript Testing"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/no-server", "title": "Slides for front end JavaScript testing" }
             ]
         },
         {
@@ -84,6 +111,10 @@
             "topics": [
                 "JavaScript Testing",
                 "Object Oriented JavaScript"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oop-js", "title": "Slides for object-oriented javascript" },
+                { "type": "slides", "href": "https://jordankasper.com/no-server", "title": "Slides for front end JavaScript testing" }
             ]
         },
         {
@@ -93,6 +124,9 @@
             "date": "Feb 7 2014",
             "topics": [
                 "JavaScript Testing"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/no-server", "title": "Slides for front end JavaScript testing" }
             ]
         },
         {
@@ -101,7 +135,12 @@
             "location": "San Jose, CA",
             "date": "Oct 8 2013",
             "topics": [
-                "Object Oriented JavaScript"
+                "Object Oriented JavaScript",
+                "Browser Eyeballing != JavaScript Testing"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oop-js", "title": "Slides for object-oriented javascript" },
+                { "type": "video", "href": "https://vimeo.com/72753350", "title": "Video of javascript testing talk" }
             ]
         },
         {
@@ -111,6 +150,9 @@
             "date": "Sep 11 2013",
             "topics": [
                 "JavaScript Testing"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/no-server", "title": "Slides for front end JavaScript testing" }
             ]
         },
         {
@@ -128,6 +170,10 @@
             "topics": [
                 "Object Oriented JavaScript",
                 "Propel ORM"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oop-js", "title": "Slides for object-oriented javascript" },
+                { "type": "video", "href": "https://vimeo.com/62353516", "title": "Video of object-oriented javascript talk" }
             ]
         },
         {
@@ -137,6 +183,9 @@
             "date": "Aug 17 2013",
             "topics": [
                 "JavaScript Testing"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/no-server", "title": "Slides for front end JavaScript testing" }
             ]
         },
         {
@@ -146,6 +195,9 @@
             "date": "Jul 18 2013",
             "topics": [
                 "Object Oriented JavaScript"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oop-js", "title": "Slides for object-oriented javascript" }
             ]
         },
         {
@@ -155,6 +207,9 @@
             "date": "May 23 2013",
             "topics": [
                 "JavaScript Testing"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/no-server", "title": "Slides for front end JavaScript testing" }
             ]
         },
         {
@@ -173,6 +228,9 @@
             "date": "Apr 18 2013",
             "topics": [
                 "JavaScript Testing"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/no-server", "title": "Slides for front end JavaScript testing" }
             ]
         },
         {
@@ -182,6 +240,9 @@
             "date": "Mar 19 2013",
             "topics": [
                 "Object Oriented JavaScript"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oop-js", "title": "Slides for object-oriented javascript" }
             ]
         },
         {
@@ -210,6 +271,10 @@
             "topics": [
                 "Object Oriented JavaScript",
                 "Advanced Git"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oop-js", "title": "Slides for object-oriented javascript" },
+                { "type": "slides", "href": "https://jordankasper.com/git", "title": "Slides for advanced git" }
             ]
         },
         {
@@ -236,6 +301,9 @@
             "topics": [
                 "Remote Working",
                 "Grunt"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/remote", "title": "Slides for remote working" }
             ]
         },
         {
@@ -273,6 +341,10 @@
             "topics": [
                 "Advanced Git",
                 "Object Oriented JavaScript"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oop-js", "title": "Slides for object-oriented javascript" },
+                { "type": "slides", "href": "https://jordankasper.com/git", "title": "Slides for advanced git" }
             ]
         },
         {
@@ -282,6 +354,9 @@
             "date": "Apr 20 2015",
             "topics": [
                 "Advanced Git"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/git", "title": "Slides for advanced git" }
             ]
         },
         {
@@ -291,6 +366,9 @@
             "date": "Apr 26 2015",
             "topics": [
                 "Generating a New Async"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/generate", "title": "Slides for talk on generators in JavaScript" }
             ]
         },
         {
@@ -300,6 +378,9 @@
             "date": "May 18 2015",
             "topics": [
                 "Creating APIs in Node"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/node-apis", "title": "Slides for writing APIs in Node.js" }
             ]
         },
         {
@@ -345,6 +426,9 @@
                 "APIs in Node",
                 "Node API workshop",
                 "Node is the future"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/node-apis", "title": "Slides for writing APIs in Node.js" }
             ]
         },
         {
@@ -363,6 +447,9 @@
             "date": "Jul 27 2015",
             "topics": [
                 "Developing APIs in Node"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/node-apis", "title": "Slides for writing APIs in Node.js" }
             ]
         },
         {
@@ -392,6 +479,9 @@
             "topics": [
                 "Object-Oriented JavaScript",
                 "Debugging Node"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oop-js", "title": "Slides for object-oriented javascript" }
             ]
         },
         {
@@ -401,6 +491,9 @@
             "date": "Oct 16 2015",
             "topics": [
                 "Introduction to Node.js"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/intro-to-node", "title": "Slides for introduction to Node.js" }
             ]
         },
         {
@@ -464,6 +557,9 @@
             "date": "Feb 3 2016",
             "topics": [
                 "APIs in Node.js"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/node-apis", "title": "Slides for writing APIs in Node.js" }
             ]
         },
         {
@@ -481,6 +577,9 @@
             "topics": [
                 "Node.js and Java",
                 "Zero to Node API"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/node-apis", "title": "Slides for writing APIs in Node.js" }
             ]
         },
         {
@@ -497,6 +596,9 @@
             "date": "Apr 20 2016",
             "topics": [
                 "APIs in Node.js"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/node-apis", "title": "Slides for writing APIs in Node.js" }
             ]
         },
         {
@@ -513,6 +615,9 @@
             "date": "May 17 2016",
             "topics": [
                 "Testing Front End JavaScript"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/no-server", "title": "Slides for front end JavaScript testing" }
             ]
         },
         {
@@ -558,6 +663,9 @@
             "date": "Jun 16 2016",
             "topics": [
                 "HTML5 APIs"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/html5", "title": "Slides for talk on HTML5 features" }
             ]
         },
         {
@@ -567,6 +675,9 @@
             "date": "Jun 15 2016",
             "topics": [
                 "Intro to Node.js"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/intro-to-node", "title": "Slides for introduction to Node.js" }
             ]
         },
         {
@@ -585,6 +696,9 @@
             "date": "Oct 1 2016",
             "topics": [
                 "Advanced Git"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/git", "title": "Slides for advanced git" }
             ]
         },
         {
@@ -594,6 +708,9 @@
             "date": "July 19 2016",
             "topics": [
                 "Intro to Node.js"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/intro-to-node", "title": "Slides for introduction to Node.js" }
             ]
         },
         {
@@ -603,6 +720,9 @@
             "date": "Aug 18 2016",
             "topics": [
                 "Building an Amazon Echo App"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/alexa", "title": "Slides for talk on developing an alexa app" }
             ]
         },
         {
@@ -612,6 +732,9 @@
             "date": "Oct 21 2016",
             "topics": [
                 "New HTML5 APIs"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/html5", "title": "Slides for talk on HTML5 features" }
             ]
         },
         {
@@ -648,6 +771,9 @@
             "date": "Nov 20 2016",
             "topics": [
                 "Async Workflows with Generators"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/generate", "title": "Slides for talk on generators in JavaScript" }
             ]
         },
         {
@@ -666,6 +792,9 @@
             "date": "Jan 26 2017",
             "topics": [
                 "What is the Internet?"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/internet", "title": "Slides for What is the Internet?" }
             ]
         },
         {
@@ -693,6 +822,9 @@
             "date": "Mar 30, 2017",
             "topics": [
                 "HTML5 Features"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/html5", "title": "Slides for talk on HTML5 features" }
             ]
         },
         {
@@ -702,6 +834,9 @@
             "date": "Jun 29, 2017",
             "topics": [
                 "JavaScript ES6/2015"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/es6", "title": "Slides for talk on ES6 features" }
             ]
         },
         {
@@ -712,6 +847,10 @@
             "topics": [
                 "Alexa Skill Development",
                 "Regular Expressions"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/alexa", "title": "Slides for talk on developing an alexa app" },
+                { "type": "slides", "href": "https://jordankasper.com/regex-101", "title": "Slides for regex 101 talk" }
             ]
         },
         {
@@ -721,6 +860,9 @@
             "date": "Sep 22 2017",
             "topics": [
                 "Git Workshop"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/git", "title": "Slides for Git workshop" }
             ]
         },
         {
@@ -731,6 +873,10 @@
             "topics": [
                 "Generating a New Async",
                 "ES6 Features"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/es6", "title": "Slides for talk on ES6 features" },
+                { "type": "slides", "href": "https://jordankasper.com/generate", "title": "Slides for talk on generators in JavaScript" }
             ]
         },
         {
@@ -741,6 +887,10 @@
             "topics": [
                 "Regular Expressions",
                 "ES6 Features"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/es6", "title": "Slides for talk on ES6 features" },
+                { "type": "slides", "href": "https://jordankasper.com/regex-101", "title": "Slides for regex 101 talk" }
             ]
         },
         {
@@ -750,6 +900,9 @@
             "date": "Feb 8 2018",
             "topics": [
                 "Using ES6 to rewrite jQuery"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/jqes6", "title": "Slides for talk on using ES6 to rewrite jQuery" }
             ]
         },
         {
@@ -759,6 +912,9 @@
             "date": "Apr 18 2018",
             "topics": [
                 "Open Sourcing the DoD"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oss-at-dod", "title": "Slides for open sourcing the DoD" }
             ]
         },
         {
@@ -768,6 +924,9 @@
             "date": "May 31 2018",
             "topics": [
                 "Open Source in Civic Tech"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/civictech", "title": "Slides for open source in civic tech" }
             ]
         },
         {
@@ -777,6 +936,9 @@
             "date": "Jun 5 2018",
             "topics": [
                 "Open Sourcing the DoD"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oss-at-dod", "title": "Slides for open sourcing the DoD" }
             ]
         },
         {
@@ -786,6 +948,9 @@
             "date": "Jul 18 2018",
             "topics": [
                 "Open Sourcing the DoD"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oss-at-dod", "title": "Slides for open sourcing the DoD" }
             ]
         },
         {
@@ -795,6 +960,9 @@
             "date": "Aug 31 2018",
             "topics": [
                 "Open Sourcing the DoD"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oss-at-dod", "title": "Slides for open sourcing the DoD" }
             ]
         },
         {
@@ -804,6 +972,9 @@
             "date": "Oct 21 2018",
             "topics": [
                 "Open Sourcing the DoD"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oss-at-dod", "title": "Slides for open sourcing the DoD" }
             ]
         },
         {
@@ -814,6 +985,10 @@
             "topics": [
                 "Open Sourcing the DoD",
                 "Regular Expressions"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/oss-at-dod", "title": "Slides for open sourcing the DoD" },
+                { "type": "slides", "href": "https://jordankasper.com/regex-101", "title": "Slides for regex 101 talk" }
             ]
         },
         {
@@ -850,6 +1025,10 @@
             "date": "Mar 10 2023",
             "topics": [
                 "Open Source in Civic Tech"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/civictech", "title": "Slides for open source in civic tech" },
+                { "type": "video", "href": "https://www.youtube.com/watch?v=QCCG36yqgVA", "title": "Video of open source in civic tech" }
             ]
         },
         {
