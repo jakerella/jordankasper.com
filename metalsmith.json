@@ -84,9 +84,6 @@
         { "from": "assets/static/", "to": "build/" },
         { "from": "node_modules/jquery/dist/jquery.min.js", "to": "build/js/vendor/jquery.min.js" }
       ]
-    },
-    "metalsmith-move-remove": {
-      "remove": ["presos", "static"]
     }
   }
 }
