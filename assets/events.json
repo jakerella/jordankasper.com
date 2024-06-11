@@ -1052,10 +1052,20 @@
         {
             "name": "Open Sustainability Policy Summit",
             "url": "https://opensource.engineering.jhu.edu",
-            "location": "Washington, Dc",
+            "location": "Washington, DC",
             "date": "May 2 2024",
             "topics": [
                 "Open Source Program Offices"
+            ]
+        },
+        
+        {
+            "name": "Federal DevSecOps Summit",
+            "url": "https://atarc.org/event/open-source-summit",
+            "location": "Reston, VA",
+            "date": "Jun 13 2024",
+            "topics": [
+                "Efficiency, Security, Collaboration: The DevOps Trifecta"
             ]
         }
     ]
