@@ -23,6 +23,19 @@
             ]
         },
         {
+            "name": "Modern Web Conference",
+            "url": "#",
+            "location": "(Virtual)",
+            "date": "Oct 29 2014",
+            "topics": [
+                "Getting Git"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/git", "title": "Slides for getting git talk" },
+                { "type": "video", "href": "https://www.youtube.com/watch?v=luNBStMZ_ms", "title": "Video of talk on Git" }
+            ]
+        },
+        {
             "name": "True North PHP",
             "url": "http://truenorthphp.ca",
             "location": "Toronto, Canada",
@@ -368,7 +381,8 @@
                 "Generating a New Async"
             ],
             "media": [
-                { "type": "slides", "href": "https://jordankasper.com/generate", "title": "Slides for talk on generators in JavaScript" }
+                { "type": "slides", "href": "https://jordankasper.com/generate", "title": "Slides for talk on generators in JavaScript" },
+                { "type": "video", "href": "https://www.youtube.com/watch?v=jG0141gfxzY", "title": "Video of talk on generators in JavaScript" }
             ]
         },
         {
@@ -503,6 +517,10 @@
             "date": "Nov 11 2015",
             "topics": [
                 "Node.js: the 800-pound Gorilla"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/intro-to-node", "title": "Slides for introduction to Node.js" },
+                { "type": "video", "href": "https://www.youtube.com/watch?v=okMCcSap-Z8", "title": "Video of Intro to Node.js talk at PHP DC" }
             ]
         },
         {
@@ -1056,9 +1074,11 @@
             "date": "May 2 2024",
             "topics": [
                 "Open Source Program Offices"
+            ],
+            "media": [
+                { "type": "video", "href": "https://www.youtube.com/watch?v=iThAKBEsCnw", "title": "Video of OSPO panel talk" }
             ]
         },
-        
         {
             "name": "Federal DevSecOps Summit",
             "url": "https://atarc.org/event/open-source-summit",
@@ -1066,6 +1086,15 @@
             "date": "Jun 13 2024",
             "topics": [
                 "Efficiency, Security, Collaboration: The DevOps Trifecta"
+            ]
+        },
+        {
+            "name": "DEF CON 32",
+            "url": "https://defcon.org/html/defcon-32/dc-32-index.html",
+            "location": "Las Vegas, NV",
+            "date": "Aug 9 2024",
+            "topics": [
+                "The Value of Trust in the Open-source Software Ecosystem"
             ]
         }
     ]
