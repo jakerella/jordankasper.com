@@ -169,13 +169,6 @@
             ]
         },
         {
-            "name": "HackMemphis",
-            "url": "http://hackmemphis.com",
-            "location": "Memphis, TN",
-            "date": "Sep 14 2013",
-            "topics": []
-        },
-        {
             "name": "DevLink",
             "url": "http://devlink.net",
             "location": "Chattanooga, TN",
@@ -304,7 +297,9 @@
             "url": "http://nodesummit.com",
             "location": "San Francisco, CA",
             "date": "Feb 10 2015",
-            "topics": []
+            "topics": [
+                "LoopBack Node APIs"
+            ]
         },
         {
             "name": "ConFoo",
@@ -398,9 +393,9 @@
             ]
         },
         {
-            "name": "webinar",
+            "name": "StrongLoop Webinar",
             "url": "https://strongloop.com/node-js/ca-technologies-and-strongloop-webinar-series/#toggle-id-2",
-            "location": "online",
+            "location": "(Virtual)",
             "date": "May 28 2015",
             "topics": [
                 "JavaScript and Node.js Fundamentals"
@@ -409,27 +404,20 @@
         {
             "name": "JSCertif Summer Camp",
             "url": "https://www.facebook.com/events/1618761485008314/",
-            "location": "Tunisia (online)",
+            "location": "(Virtual)",
             "date": "Jun 6 2015",
             "topics": [
                 "Debugging Node.js"
             ]
         },
         {
-            "name": "webinar",
+            "name": "StrongLoop Webinar",
             "url": "https://strongloop.com/node-js/ca-technologies-and-strongloop-webinar-series/#toggle-id-3",
-            "location": "online",
+            "location": "(Virtual)",
             "date": "Jun 11 2015",
             "topics": [
                 "Node.js Architecture and Express.js"
             ]
-        },
-        {
-            "name": "NoVa Node Unconference",
-            "url": "http://www.meetup.com/Nova-Node/events/222312195/",
-            "location": "Arlington, VA",
-            "date": "Jun 13 2015",
-            "topics": []
         },
         {
             "name": "KCDC",
@@ -446,9 +434,9 @@
             ]
         },
         {
-            "name": "webinar",
+            "name": "StrongLoop Webinar",
             "url": "https://strongloop.com/node-js/ca-technologies-and-strongloop-webinar-series/#toggle-id-5",
-            "location": "online",
+            "location": "(Virtual)",
             "date": "Jul 9 2015",
             "topics": [
                 "Instroduction to LoopBack.io"
@@ -542,30 +530,12 @@
             ]
         },
         {
-            "name": "Webinar",
+            "name": "StrongLoop Webinar",
             "url": "https://engage.vevent.com/index.jsp?eid=556&ecid=82653&code=web-jsk",
-            "location": "(online)",
+            "location": "(Virtual)",
             "date": "Jan 13 2016",
             "topics": [
-                "LoopBack Node APIs (part 1)"
-            ]
-        },
-        {
-            "name": "Webinar",
-            "url": "https://engage.vevent.com/index.jsp?eid=556&ecid=82653&code=web-jsk",
-            "location": "(online)",
-            "date": "Jan 20 2016",
-            "topics": [
-                "LoopBack Node APIs (part 2)"
-            ]
-        },
-        {
-            "name": "Webinar",
-            "url": "https://engage.vevent.com/index.jsp?eid=556&ecid=82653&code=web-jsk",
-            "location": "(online)",
-            "date": "Jan 27 2016",
-            "topics": [
-                "LoopBack Node APIs (part 3)"
+                "LoopBack Node APIs"
             ]
         },
         {
@@ -581,13 +551,6 @@
             ]
         },
         {
-            "name": "DevNexus",
-            "url": "https://www.devnexus.com",
-            "location": "Atlanta, GA",
-            "date": "Feb 15 2016",
-            "topics": []
-        },
-        {
             "name": "IBM Interconnect",
             "url": "https://www-950.ibm.com/events/global/interconnect/sessions/preview.html?sessionid=PEN-4147",
             "location": "Las Vegas, NV",
@@ -601,13 +564,6 @@
             ]
         },
         {
-            "name": "Fluent",
-            "url": "http://conferences.oreilly.com/fluent/javascript-html-us",
-            "location": "San Francisco, CA",
-            "date": "Mar 8 2016",
-            "topics": []
-        },
-        {
             "name": "Render",
             "url": "http://2016.render-conf.com/workshop/325/rapid-api-development-with-nodejs-and-loopback",
             "location": "Oxford, UK",
@@ -618,13 +574,6 @@
             "media": [
                 { "type": "slides", "href": "https://jordankasper.com/node-apis", "title": "Slides for writing APIs in Node.js" }
             ]
-        },
-        {
-            "name": "NationJS Node Day",
-            "url": "http://nationjs.com/",
-            "location": "Washington, DC",
-            "date": "March 11 2016",
-            "topics": []
         },
         {
             "name": "Rochester JS Meetup",
@@ -671,7 +620,7 @@
             "location": "Washington, DC",
             "date": "May 19 2016",
             "topics": [
-                "My first web site"
+                "My first web site (tutorial)"
             ]
         },
         {
@@ -761,7 +710,7 @@
             "location": "Washington, DC",
             "date": "Jul 27 2016",
             "topics": [
-                "Intro to Web Development"
+                "Intro to Web Development (HTML & CSS)"
             ]
         },
         {
@@ -779,7 +728,7 @@
             "location": "Washington, DC",
             "date": "Sep 14 2016",
             "topics": [
-                "Intro to Front End"
+                "Intro to Front End (HTML & CSS)"
             ]
         },
         {
@@ -800,7 +749,7 @@
             "location": "Washington, DC",
             "date": "Jan 10 2017",
             "topics": [
-                "Intro to Front End"
+                "Intro to Front End (HTML & CSS)"
             ]
         },
         {
@@ -950,7 +899,7 @@
         {
             "name": "Digital Gov Interview",
             "url": "https://digital.gov/event/2018/06/05/free-open-source-software-in-government-with-codemil/",
-            "location": "remote",
+            "location": "(Virtual)",
             "date": "Jun 5 2018",
             "topics": [
                 "Open Sourcing the DoD"
@@ -1030,7 +979,7 @@
         {
             "name": "ATARC",
             "url": "https://atarc.org/event/devops_hurdles_in_2023/",
-            "location": "remote",
+            "location": "(Virtual)",
             "date": "Mar 2 2023",
             "topics": [
                 "DevOps Hurdles and How to Overcome Them"
@@ -1052,7 +1001,7 @@
         {
             "name": "Digital Services Coalition",
             "url": "https://digitalservicescoalition.org",
-            "location": "Washington, Dc",
+            "location": "Washington, DC",
             "date": "Feb 27 2024",
             "topics": [
                 "Open Source Software in Government"
@@ -1061,7 +1010,7 @@
         {
             "name": "CISA OSS Summit",
             "url": "https://cisa.gov/opensource",
-            "location": "Washington, Dc",
+            "location": "Washington, DC",
             "date": "Mar 5 2024",
             "topics": [
                 "Open Source Program Offices in Government"
@@ -1094,7 +1043,7 @@
             "location": "Las Vegas, NV",
             "date": "Aug 9 2024",
             "topics": [
-                "The Value of Trust in the Open-source Software Ecosystem"
+                "The Value of Trust in the Open Source Software Ecosystem"
             ]
         }
     ]

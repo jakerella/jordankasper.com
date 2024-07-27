@@ -23,6 +23,27 @@
                     {{> events events=pastEvents}}
                 </ul>
 
+                <aside id='event-stats'>
+                    <h3>Event Statistics</h3>
+                    <p>
+                        I have delivered {{ eventStats.totalTalks }} talks or sessions at {{ eventStats.totalEvents }} events. 
+                        These events were in {{ eventStats.locationCount }} different locations with 
+                        {{ eventStats.byLoc.Virtual }} events being virtual.
+                    </p>
+                    <p>These talks have covered many nuanced concepts, but the broad topics are below:</p>
+                    <ul>
+                        {{#each eventStats.byTopic}}
+                            <li>{{@key}} ({{this}})</li>
+                        {{/each}}
+                    </ul>
+                    <p>I have been giving conference talks since 2013, peaking in 2015-2016 as a professional Developer Advocate.</p>
+                    <ul>
+                        {{#each eventStats.byYear}}
+                            <li>{{@key}}: ({{this}})</li>
+                        {{/each}}
+                    </ul>
+                </aside>
+
             </article>
 
             {{> sidebar }}
