@@ -106,6 +106,12 @@ module.exports = function eventPlugin(opts){
         data[opts.targetPast].push(event);
       }
     });
+    data[opts.targetFuture] = data[opts.targetFuture].sort(function(a, b) {
+      a.timestamp = a.timestamp || (new Date(a.date)).getTime();
+      b.timestamp = b.timestamp || (new Date(b.date)).getTime();
+
+      return (a.timestamp - b.timestamp);
+    })
 
     logger.info('Events processed...');
     logger.info(`  there are ${data[opts.targetFuture].length} upcoming`);

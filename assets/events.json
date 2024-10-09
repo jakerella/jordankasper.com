@@ -1045,6 +1045,33 @@
             "topics": [
                 "The Value of Trust in the Open Source Software Ecosystem"
             ]
+        },
+        {
+            "name": "Nava Open Source Summit",
+            "url": "https://www.navapbc.com/events/open-source-summit-federal-health",
+            "location": "Washington, DC",
+            "date": "Oct 24 2024",
+            "topics": [
+                "Open Source at DHS"
+            ]
+        },
+        {
+            "name": "GovAI Summit",
+            "url": "https://www.govaisummit.com/",
+            "location": "Washington, DC",
+            "date": "Oct 29 2024",
+            "topics": [
+                "The Intersection of Open Source and AI"
+            ]
+        },
+        {
+            "name": "Linux Foundation Member Summit",
+            "url": "https://events.linuxfoundation.org/lf-member-summit/",
+            "location": "Napa, CA",
+            "date": "Nov 21 2024",
+            "topics": [
+                "The Essential Role of Curation in Open Source"
+            ]
         }
     ]
 }
