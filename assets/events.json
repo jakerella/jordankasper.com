@@ -1062,6 +1062,9 @@
             "date": "Oct 29 2024",
             "topics": [
                 "The Intersection of Open Source and AI"
+            ],
+            "media": [
+                { "type": "video", "href": "https://www.youtube.com/watch?v=yjBx8hbIwn0", "title": "Video of GovAI talk" }
             ]
         },
         {
