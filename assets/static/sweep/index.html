@@ -1,0 +1,203 @@
+<html>
+    <head></head>
+    <body>
+        <style>
+            html,body,section.aside { margin: 0; padding: 0; }
+            .row {
+                display: flex;
+                justify-content: space-between;
+                width: 27rem;
+            }
+            .spot {
+                width: 1rem;
+                height: 1rem;
+                margin: 0.05rem;
+                background-color: green;
+                box-shadow: 1px 1px 3px #666;
+                text-align: center;
+                font-size: 0.8em;
+                font-weight: bold;
+                color: #333;
+            }
+            .spot.reveal { background-color: white; }
+            .spot.reveal.bomb { background-color: red; }
+            .game-over { top: 10%; left: 0; }
+            .game-over footer { text-align: center; }
+        </style>
+        <main class='field'></main>
+        <p class='meta'>
+            Bombs: <span class='bomb-count'>0</span>
+            Timer: <span class='timer'>0</span>
+        </p>
+        <dialog class='game-over'>
+            <h2>Gane Over!</h2>
+            <p class='result'></p>
+            <aside>
+                <h3>Stats</h3>
+                <ul>
+                    <li>Played: <span class='stats-played'></span></li>
+                    <li>Won: <span class='stats-won'>0</span> (<span class='stats-win-percent'>0</span>%)</li>
+                    <li>Quickest Time: <span class='stats-quickest-time'>0</span></li>
+                    <li>Avg Win Time: <span class='stats-avg-time'>0</span></li>
+                </ul>
+            </aside>
+            <footer>
+                <button class='new-game'>New Game</button>
+            </footer>
+        </dialog>
+    </body>
+
+    <script>
+;(() => {
+    const ROWS = 25
+    const COLS = 25
+    const BOMBS = 99
+    const STATS_KEY = 'bombStats'
+
+    let gameStarted = false
+    let timerStart = 0
+    let timerEnd = 0
+    let timerHandler = null
+
+    document.querySelector('.bomb-count').innerText = BOMBS
+
+    const allLocations = []
+    const rowHtml = []
+    for (let y=0; y<ROWS; ++y) {
+        const colHtml = [`<section class="row" data-row="${y}">`]
+        for (let x=0; x<COLS; ++x) {
+            allLocations.push([x,y])
+            colHtml.push(`<aside class="spot" data-coord="${x},${y}"></aside>`)
+        }
+        colHtml.push('</section>')
+        rowHtml.push(colHtml.join(''))
+    }
+    const gameOver = document.querySelector('.game-over')
+    const field = document.querySelector('.field')
+    field.innerHTML = rowHtml.join('')
+
+    field.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('spot') || gameOver.getAttribute('open')) {
+            return
+        }
+        const coord = e.target.getAttribute('data-coord').split(',').map(Number)
+        if (!gameStarted) {
+            startGame(coord, Array.from(allLocations))
+        }
+        
+        if (e.target.classList.contains('spot') && !e.target.classList.contains('reveal')) {
+            e.target.classList.add('reveal')
+            const bomb = e.target.classList.contains('bomb')
+            if (bomb) {
+                return endGame(true)
+            } else {
+                const safeNeigbors = []
+                let bombNeighbors = 0
+                for (let y=coord[1]-1; y<coord[1]+2; ++y) {
+                    for (let x=coord[0]-1; x<coord[0]+2; ++x) {
+                        if (x === coord[0] && y === coord[1]) { continue }
+                        const elem = document.querySelector(`[data-coord="${x},${y}"]`)
+                        if (elem && elem.classList.contains('bomb')) {
+                            bombNeighbors++
+                        } else if (elem) {
+                            safeNeigbors.push([x,y])
+                        }
+                    }
+                }
+                e.target.innerHTML = (bombNeighbors > 0) ? bombNeighbors : ''
+                if (bombNeighbors < 1) {
+                    revealBlanks(safeNeigbors, [`${coord[0]},${coord[1]}`])
+                }
+            }
+        }
+    })
+
+    document.querySelector('.new-game').addEventListener('click', () => {
+        Array.from(document.querySelectorAll('.spot')).forEach((spot) => {
+            spot.innerText = ''
+            spot.classList.remove('reveal')
+            spot.classList.remove('bomb')
+        })
+        gameOver.removeAttribute('open')
+    })
+
+    function revealBlanks(locations, skip) {
+        if (!locations.length) { return }
+
+        locations.forEach((loc) => {
+            const locElem = document.querySelector(`[data-coord="${loc[0]},${loc[1]}"]`)
+            if (!locElem) { return }
+
+            const safeNeigbors = []
+            let bombNeighbors = 0
+            for (let y=loc[1]-1; y<loc[1]+2; ++y) {
+                for (let x=loc[0]-1; x<loc[0]+2; ++x) {
+                    if (x === loc[0] && y === loc[1]) { continue }
+                    const elem = document.querySelector(`[data-coord="${x},${y}"]`)
+                    if (elem && elem.classList.contains('bomb')) {
+                        bombNeighbors++
+                    } else if (elem) {
+                        safeNeigbors.push([x,y])
+                    }
+                }
+            }
+            
+            locElem.classList.add('reveal')
+            locElem.innerHTML = (bombNeighbors > 0) ? bombNeighbors : ''
+
+            if (bombNeighbors < 1) {
+                skip.push(`${loc[0]},${loc[1]}`)
+                revealBlanks(safeNeigbors.filter((loc) => {
+                    return !skip.includes(`${loc[0]},${loc[1]}`)
+                }), skip)
+            }
+        })
+    }
+
+    function startGame(startCoord, allLocations) {
+        const locations = allLocations.filter((loc) => loc[0] !== startCoord[0] || loc[1] !== startCoord[1])
+        for (let i=0; i<BOMBS; ++i) {
+            const locIndex = Math.floor(Math.random() * locations.length)
+            document.querySelector(`[data-coord="${locations[locIndex]}"]`).classList.add('bomb')
+            locations.splice(locIndex, 1)
+        }
+        gameStarted = true
+        timerStart = Date.now()
+        const timerElem = document.querySelector('.timer')
+        timerHandler = setInterval(() => {
+            timerElem.innerText = Math.round((Date.now() - timerStart) / 1000)
+        }, 1000)
+    }
+
+    function endGame(bomb) {
+        gameStarted = false
+        timerEnd = Date.now()
+        clearInterval(timerHandler)
+        timerHandler = null
+
+        let stats = JSON.parse(localStorage.getItem(STATS_KEY) || 'null')
+        if (!stats) {
+            stats = { played: 0, won: 0, quickest: 9999, avgTime: 0 }
+        }
+        stats.played++
+        stats.won += (bomb) ? 0 : 1
+        if (!bomb) {
+            const time = Math.round((timerEnd - timerStart) / 1000)
+            if (time < stats.quickest) {
+                stats.quickest = time
+            }
+            avgTime = math.round((avgTime + time) / 2)
+        }
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats))
+
+        gameOver.querySelector('.result').innerText = (bomb) ? 'You hit a bomb!' : 'You win!'
+        gameOver.querySelector('.stats-played').innerText = stats.played
+        gameOver.querySelector('.stats-won').innerText = stats.won
+        gameOver.querySelector('.stats-win-percent').innerText = Math.round((stats.won / stats.played) * 100)
+        gameOver.querySelector('.stats-quickest-time').innerText = stats.quickest
+        gameOver.querySelector('.stats-avg-time').innerText = stats.avgTime
+        gameOver.setAttribute('open', 'open')
+    }
+})()
+    </script>
+</html>
