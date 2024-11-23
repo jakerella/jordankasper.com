@@ -3,14 +3,21 @@
     <body>
         <style>
             html,body,section.aside { margin: 0; padding: 0; }
+            .field {
+                border: 2px solid darkgrey;
+                width: 43rem;
+                margin: 0.2rem;
+                border-radius: 0.2rem;
+            }
+            .field.complete { filter: blur(0.1rem); }
             .row {
                 display: flex;
                 justify-content: space-between;
-                width: 27rem;
+                width: 43rem;
             }
             .spot {
-                width: 1rem;
-                height: 1rem;
+                width: 1.3rem;
+                height: 1.3rem;
                 margin: 0.05rem;
                 background-color: green;
                 box-shadow: 1px 1px 3px #666;
@@ -18,10 +25,19 @@
                 font-size: 0.8em;
                 font-weight: bold;
                 color: #333;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                user-select: none;
             }
             .spot.reveal { background-color: white; }
-            .spot.reveal.bomb { background-color: red; }
-            .game-over { top: 10%; left: 0; }
+            .spot.reveal.bomb {
+                background-color: red;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9.5' cy='14.5' r='7.5' stroke='%231C274C' stroke-width='1.5'/%3E%3Cpath d='M17 7L15 9' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M19.5 7.5L20.5 8' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M16 3.5L16.5 4.5' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M19 5L20 4' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+            }
+            .game-over { top: 10%; left: 0; opacity: 80%; }
+            .game-over .close { float: right; color: #666; cursor: pointer; }
+            .game-over h2 { user-select: none; cursor: move; }
             .game-over footer { text-align: center; }
         </style>
         <main class='field'></main>
@@ -30,7 +46,8 @@
             Timer: <span class='timer'>0</span>
         </p>
         <dialog class='game-over'>
-            <h2>Gane Over!</h2>
+            <aside class='close'>X</aside>
+            <h2>Game Over!</h2>
             <p class='result'></p>
             <aside>
                 <h3>Stats</h3>
@@ -49,8 +66,8 @@
 
     <script>
 ;(() => {
-    const ROWS = 25
-    const COLS = 25
+    const ROWS = 16
+    const COLS = 30
     const BOMBS = 99
     const STATS_KEY = 'bombStats'
 
@@ -77,7 +94,7 @@
     field.innerHTML = rowHtml.join('')
 
     field.addEventListener('click', (e) => {
-        if (!e.target.classList.contains('spot') || gameOver.getAttribute('open')) {
+        if (!e.target.classList.contains('spot') || field.classList.contains('complete')) {
             return
         }
         const coord = e.target.getAttribute('data-coord').split(',').map(Number)
@@ -112,12 +129,17 @@
         }
     })
 
+    document.querySelector('.close').addEventListener('click', () => {
+        gameOver.removeAttribute('open')
+    })
+
     document.querySelector('.new-game').addEventListener('click', () => {
         Array.from(document.querySelectorAll('.spot')).forEach((spot) => {
             spot.innerText = ''
             spot.classList.remove('reveal')
             spot.classList.remove('bomb')
         })
+        field.classList.remove('complete')
         gameOver.removeAttribute('open')
     })
 
@@ -174,6 +196,8 @@
         timerEnd = Date.now()
         clearInterval(timerHandler)
         timerHandler = null
+
+        field.classList.add('complete')
 
         let stats = JSON.parse(localStorage.getItem(STATS_KEY) || 'null')
         if (!stats) {
