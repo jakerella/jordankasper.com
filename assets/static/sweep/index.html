@@ -9,7 +9,7 @@
                 margin: 0.2rem;
                 border-radius: 0.2rem;
             }
-            .field.complete { filter: blur(0.1rem); }
+            .field.complete { filter: blur(0.07rem); }
             .row {
                 display: flex;
                 justify-content: space-between;
@@ -35,7 +35,7 @@
                 background-color: red;
                 background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9.5' cy='14.5' r='7.5' stroke='%231C274C' stroke-width='1.5'/%3E%3Cpath d='M17 7L15 9' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M19.5 7.5L20.5 8' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M16 3.5L16.5 4.5' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M19 5L20 4' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
             }
-            .game-over { top: 10%; left: 0; opacity: 80%; }
+            .game-over { top: 10%; left: 0; opacity: 90%; }
             .game-over .close { float: right; color: #666; cursor: pointer; }
             .game-over h2 { user-select: none; cursor: move; }
             .game-over footer { text-align: center; }
@@ -68,7 +68,7 @@
 ;(() => {
     const ROWS = 16
     const COLS = 30
-    const BOMBS = 99
+    const BOMBS = 9
     const STATS_KEY = 'bombStats'
 
     let gameStarted = false
@@ -91,6 +91,7 @@
     }
     const gameOver = document.querySelector('.game-over')
     const field = document.querySelector('.field')
+    const timerElem = document.querySelector('.timer')
     field.innerHTML = rowHtml.join('')
 
     field.addEventListener('click', (e) => {
@@ -125,6 +126,15 @@
                 if (bombNeighbors < 1) {
                     revealBlanks(safeNeigbors, [`${coord[0]},${coord[1]}`])
                 }
+                let onlyBombs = true
+                Array.from(document.querySelectorAll('.spot:not(.reveal)')).forEach((spot) => {
+                    if (!spot.classList.contains('bomb')) {
+                        onlyBombs = false
+                    }
+                })
+                if (onlyBombs) {
+                    endGame(false)
+                }
             }
         }
     })
@@ -141,6 +151,7 @@
         })
         field.classList.remove('complete')
         gameOver.removeAttribute('open')
+        timerElem.innerText = '0'
     })
 
     function revealBlanks(locations, skip) {
@@ -185,7 +196,7 @@
         }
         gameStarted = true
         timerStart = Date.now()
-        const timerElem = document.querySelector('.timer')
+        timerElem.innerText = '0'
         timerHandler = setInterval(() => {
             timerElem.innerText = Math.round((Date.now() - timerStart) / 1000)
         }, 1000)
@@ -205,12 +216,14 @@
         }
         stats.played++
         stats.won += (bomb) ? 0 : 1
-        if (!bomb) {
+        if (bomb) {
+            Array.from(document.querySelectorAll('.bomb')).forEach((b) => b.classList.add('reveal'))
+        } else {
             const time = Math.round((timerEnd - timerStart) / 1000)
             if (time < stats.quickest) {
                 stats.quickest = time
             }
-            avgTime = math.round((avgTime + time) / 2)
+            stats.avgTime = (stats.avgTime) ? Math.round((stats.avgTime + time) / 2) : time
         }
         localStorage.setItem(STATS_KEY, JSON.stringify(stats))
 
