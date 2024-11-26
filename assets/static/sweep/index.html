@@ -33,7 +33,11 @@
             .spot.reveal { background-color: white; }
             .spot.reveal.bomb {
                 background-color: red;
-                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9.5' cy='14.5' r='7.5' stroke='%231C274C' stroke-width='1.5'/%3E%3Cpath d='M17 7L15 9' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M19.5 7.5L20.5 8' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M16 3.5L16.5 4.5' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M19 5L20 4' stroke='%231C274C' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9.5' cy='14.5' r='7.5' stroke='%231C274C' stroke-width='2.5'/%3E%3Cpath d='M17 7L15 9' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19.5 7.5L20.5 8' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M16 3.5L16.5 4.5' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19 5L20 4' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
+            }
+            .field.win .spot.bomb {
+                background-color: blue;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9.5' cy='14.5' r='7.5' stroke='%23FFFFFF' stroke-width='2.5'/%3E%3Cpath d='M17 7L15 9' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19.5 7.5L20.5 8' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M16 3.5L16.5 4.5' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19 5L20 4' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
             }
             .game-over { top: 10%; left: 0; opacity: 90%; }
             .game-over .close { float: right; color: #666; cursor: pointer; }
@@ -68,7 +72,7 @@
 ;(() => {
     const ROWS = 16
     const COLS = 30
-    const BOMBS = 9
+    const BOMBS = 99
     const STATS_KEY = 'bombStats'
 
     let gameStarted = false
@@ -150,6 +154,7 @@
             spot.classList.remove('bomb')
         })
         field.classList.remove('complete')
+        field.classList.remove('win')
         gameOver.removeAttribute('open')
         timerElem.innerText = '0'
     })
@@ -219,6 +224,7 @@
         if (bomb) {
             Array.from(document.querySelectorAll('.bomb')).forEach((b) => b.classList.add('reveal'))
         } else {
+            field.classList.add('win')
             const time = Math.round((timerEnd - timerStart) / 1000)
             if (time < stats.quickest) {
                 stats.quickest = time
