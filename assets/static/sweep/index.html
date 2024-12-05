@@ -9,7 +9,7 @@
                 margin: 0.2rem;
                 border-radius: 0.2rem;
             }
-            .field.complete { filter: blur(0.07rem); }
+            .field.obscure { filter: blur(0.07rem); }
             .row {
                 display: flex;
                 justify-content: space-between;
@@ -22,7 +22,6 @@
                 background-color: green;
                 box-shadow: 1px 1px 3px #666;
                 text-align: center;
-                font-size: 0.8em;
                 font-weight: bold;
                 color: #333;
                 display: flex;
@@ -31,6 +30,14 @@
                 user-select: none;
             }
             .spot.reveal { background-color: white; }
+            .spot.reveal.bomb-count-1 { color: #84c7a9; }
+            .spot.reveal.bomb-count-2 { color: #1fb6b7; }
+            .spot.reveal.bomb-count-3 { color: #ddd000; }
+            .spot.reveal.bomb-count-4 { color: #c58022; }
+            .spot.reveal.bomb-count-5 { color: #d2692b; }
+            .spot.reveal.bomb-count-6 { color: #da482a; }
+            .spot.reveal.bomb-count-7 { color: #a62506; }
+            .spot.reveal.bomb-count-8 { color: #000; }
             .spot.reveal.bomb {
                 background-color: red;
                 background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9.5' cy='14.5' r='7.5' stroke='%231C274C' stroke-width='2.5'/%3E%3Cpath d='M17 7L15 9' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19.5 7.5L20.5 8' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M16 3.5L16.5 4.5' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19 5L20 4' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -39,6 +46,7 @@
                 background-color: blue;
                 background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9.5' cy='14.5' r='7.5' stroke='%23FFFFFF' stroke-width='2.5'/%3E%3Cpath d='M17 7L15 9' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19.5 7.5L20.5 8' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M16 3.5L16.5 4.5' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19 5L20 4' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
             }
+            [name=bomb-count] { width: 2rem; }
             .game-over { top: 10%; left: 0; opacity: 90%; }
             .game-over .close { float: right; color: #666; cursor: pointer; }
             .game-over h2 { user-select: none; cursor: move; }
@@ -46,8 +54,9 @@
         </style>
         <main class='field'></main>
         <p class='meta'>
-            Bombs: <span class='bomb-count'>0</span>
+            Bombs: <input name='bomb-count' value='99'>
             Timer: <span class='timer'>0</span>
+            <button class='new-game'>New Game</button>
         </p>
         <dialog class='game-over'>
             <aside class='close'>X</aside>
@@ -72,15 +81,12 @@
 ;(() => {
     const ROWS = 16
     const COLS = 30
-    const BOMBS = 99
     const STATS_KEY = 'bombStats'
 
     let gameStarted = false
     let timerStart = 0
     let timerEnd = 0
     let timerHandler = null
-
-    document.querySelector('.bomb-count').innerText = BOMBS
 
     const allLocations = []
     const rowHtml = []
@@ -99,7 +105,9 @@
     field.innerHTML = rowHtml.join('')
 
     field.addEventListener('click', (e) => {
-        if (!e.target.classList.contains('spot') || field.classList.contains('complete')) {
+        if (!e.target.classList.contains('spot') || 
+            e.target.classList.contains('reveal') || 
+            field.classList.contains('complete')) {
             return
         }
         const coord = e.target.getAttribute('data-coord').split(',').map(Number)
@@ -126,7 +134,8 @@
                         }
                     }
                 }
-                e.target.innerHTML = (bombNeighbors > 0) ? bombNeighbors : ''
+                e.target.innerText = (bombNeighbors > 0) ? bombNeighbors : ''
+                e.target.classList.add(`bomb-count-${bombNeighbors}`)
                 if (bombNeighbors < 1) {
                     revealBlanks(safeNeigbors, [`${coord[0]},${coord[1]}`])
                 }
@@ -145,18 +154,40 @@
 
     document.querySelector('.close').addEventListener('click', () => {
         gameOver.removeAttribute('open')
+        field.classList.remove('obscure')
     })
 
-    document.querySelector('.new-game').addEventListener('click', () => {
-        Array.from(document.querySelectorAll('.spot')).forEach((spot) => {
-            spot.innerText = ''
-            spot.classList.remove('reveal')
-            spot.classList.remove('bomb')
+    Array.from(document.querySelectorAll('.new-game')).forEach((node) => {
+        node.addEventListener('click', () => {
+            if (gameStarted) {
+                const stats = getStats()
+                stats.abandoned++
+                localStorage.setItem(STATS_KEY, JSON.stringify(stats))
+
+                gameStarted = false
+                clearInterval(timerHandler)
+                timerHandler = null
+            }
+
+            Array.from(document.querySelectorAll('.spot')).forEach((spot) => {
+                spot.innerText = ''
+                spot.classList.remove('reveal')
+                spot.classList.remove('bomb')
+            })
+            field.classList.remove('complete')
+            field.classList.remove('obscure')
+            field.classList.remove('win')
+            gameOver.removeAttribute('open')
+            timerElem.innerText = '0'
         })
-        field.classList.remove('complete')
-        field.classList.remove('win')
-        gameOver.removeAttribute('open')
-        timerElem.innerText = '0'
+    })
+
+    window.addEventListener('beforeunload', () => {
+        if (gameStarted) {
+            const stats = getStats()
+            stats.abandoned++
+            localStorage.setItem(STATS_KEY, JSON.stringify(stats))
+        }
     })
 
     function revealBlanks(locations, skip) {
@@ -182,6 +213,7 @@
             
             locElem.classList.add('reveal')
             locElem.innerHTML = (bombNeighbors > 0) ? bombNeighbors : ''
+            locElem.classList.add(`bomb-count-${bombNeighbors}`)
 
             if (bombNeighbors < 1) {
                 skip.push(`${loc[0]},${loc[1]}`)
@@ -193,12 +225,15 @@
     }
 
     function startGame(startCoord, allLocations) {
+        const bombCount = Number(document.querySelector('[name=bomb-count]').value)
+
         const locations = allLocations.filter((loc) => loc[0] !== startCoord[0] || loc[1] !== startCoord[1])
-        for (let i=0; i<BOMBS; ++i) {
+        for (let i=0; i<bombCount; ++i) {
             const locIndex = Math.floor(Math.random() * locations.length)
             document.querySelector(`[data-coord="${locations[locIndex]}"]`).classList.add('bomb')
             locations.splice(locIndex, 1)
         }
+
         gameStarted = true
         timerStart = Date.now()
         timerElem.innerText = '0'
@@ -215,10 +250,7 @@
 
         field.classList.add('complete')
 
-        let stats = JSON.parse(localStorage.getItem(STATS_KEY) || 'null')
-        if (!stats) {
-            stats = { played: 0, won: 0, quickest: 9999, avgTime: 0 }
-        }
+        const stats = getStats()
         stats.played++
         stats.won += (bomb) ? 0 : 1
         if (bomb) {
@@ -240,6 +272,15 @@
         gameOver.querySelector('.stats-quickest-time').innerText = stats.quickest
         gameOver.querySelector('.stats-avg-time').innerText = stats.avgTime
         gameOver.setAttribute('open', 'open')
+        field.classList.add('obscure')
+    }
+
+    function getStats() {
+        let stats = JSON.parse(localStorage.getItem(STATS_KEY) || 'null')
+        if (!stats) {
+            stats = { played: 0, abandoned: 0, won: 0, quickest: 9999, avgTime: 0 }
+        }
+        return stats
     }
 })()
     </script>
