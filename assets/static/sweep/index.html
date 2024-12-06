@@ -2,10 +2,12 @@
     <head></head>
     <body>
         <style>
-            html,body,section.aside { margin: 0; padding: 0; }
+            html,body,main,section,aside { margin: 0; padding: 0; }
+            :root { --game-width: 43rem; }
+            main { position: relative; width: var(--game-width); }
             .field {
                 border: 2px solid darkgrey;
-                width: 43rem;
+                width: var(--game-width);
                 margin: 0.2rem;
                 border-radius: 0.2rem;
             }
@@ -13,7 +15,7 @@
             .row {
                 display: flex;
                 justify-content: space-between;
-                width: 43rem;
+                width: var(--game-width);
             }
             .spot {
                 width: 1.3rem;
@@ -38,6 +40,10 @@
             .spot.reveal.bomb-count-6 { color: #da482a; }
             .spot.reveal.bomb-count-7 { color: #a62506; }
             .spot.reveal.bomb-count-8 { color: #000; }
+            .spot.flag {
+                color: red;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 21V3.90002C5 3.90002 5.875 3 8.5 3C11.125 3 12.875 4.8 15.5 4.8C18.125 4.8 19 3.9 19 3.9V14.7C19 14.7 18.125 15.6 15.5 15.6C12.875 15.6 11.125 13.8 8.5 13.8C5.875 13.8 5 14.7 5 14.7' stroke='%23FF0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            }
             .spot.reveal.bomb {
                 background-color: red;
                 background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9.5' cy='14.5' r='7.5' stroke='%231C274C' stroke-width='2.5'/%3E%3Cpath d='M17 7L15 9' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19.5 7.5L20.5 8' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M16 3.5L16.5 4.5' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19 5L20 4' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -46,35 +52,44 @@
                 background-color: blue;
                 background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9.5' cy='14.5' r='7.5' stroke='%23FFFFFF' stroke-width='2.5'/%3E%3Cpath d='M17 7L15 9' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19.5 7.5L20.5 8' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M16 3.5L16.5 4.5' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19 5L20 4' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
             }
+            .meta {
+                margin-top: 1rem;
+                display: flex;
+                justify-content: space-around;
+            }
             [name=bomb-count] { width: 2rem; }
-            .game-over { top: 10%; left: 0; opacity: 90%; }
+            .game-over { top: 10%; opacity: 85%; }
             .game-over .close { float: right; color: #666; cursor: pointer; }
             .game-over h2 { user-select: none; cursor: move; }
             .game-over footer { text-align: center; }
         </style>
-        <main class='field'></main>
-        <p class='meta'>
-            Bombs: <input name='bomb-count' value='99'>
-            Timer: <span class='timer'>0</span>
-            <button class='new-game'>New Game</button>
-        </p>
-        <dialog class='game-over'>
-            <aside class='close'>X</aside>
-            <h2>Game Over!</h2>
-            <p class='result'></p>
-            <aside>
-                <h3>Stats</h3>
-                <ul>
-                    <li>Played: <span class='stats-played'></span></li>
-                    <li>Won: <span class='stats-won'>0</span> (<span class='stats-win-percent'>0</span>%)</li>
-                    <li>Quickest Time: <span class='stats-quickest-time'>0</span></li>
-                    <li>Avg Win Time: <span class='stats-avg-time'>0</span></li>
-                </ul>
-            </aside>
-            <footer>
-                <button class='new-game'>New Game</button>
-            </footer>
-        </dialog>
+
+        <main>
+            <section class='field'></section>
+            <section class='meta'>
+                <aside>Bombs: <input name='bomb-count' value='99'></aside>
+                <aside>Flags: <span class='flags'>0</span></aside>
+                <aside>Timer: <span class='timer'>0</span></aside>
+                <aside><button class='new-game'>New Game</button></aside>
+            </section>
+            <dialog class='game-over'>
+                <aside class='close'>X</aside>
+                <h2>Game Over!</h2>
+                <p class='result'></p>
+                <aside>
+                    <h3>Stats</h3>
+                    <ul>
+                        <li>Played: <span class='stats-played'></span></li>
+                        <li>Won: <span class='stats-won'>0</span> (<span class='stats-win-percent'>0</span>%)</li>
+                        <li>Quickest Time: <span class='stats-quickest-time'>0</span></li>
+                        <li>Avg Win Time: <span class='stats-avg-time'>0</span></li>
+                    </ul>
+                </aside>
+                <footer>
+                    <button class='new-game'>New Game</button>
+                </footer>
+            </dialog>
+        </main>
     </body>
 
     <script>
@@ -87,6 +102,7 @@
     let timerStart = 0
     let timerEnd = 0
     let timerHandler = null
+    let flags = 0
 
     const allLocations = []
     const rowHtml = []
@@ -107,6 +123,7 @@
     field.addEventListener('click', (e) => {
         if (!e.target.classList.contains('spot') || 
             e.target.classList.contains('reveal') || 
+            e.target.classList.contains('flag') ||
             field.classList.contains('complete')) {
             return
         }
@@ -115,41 +132,57 @@
             startGame(coord, Array.from(allLocations))
         }
         
-        if (e.target.classList.contains('spot') && !e.target.classList.contains('reveal')) {
-            e.target.classList.add('reveal')
-            const bomb = e.target.classList.contains('bomb')
-            if (bomb) {
-                return endGame(true)
-            } else {
-                const safeNeigbors = []
-                let bombNeighbors = 0
-                for (let y=coord[1]-1; y<coord[1]+2; ++y) {
-                    for (let x=coord[0]-1; x<coord[0]+2; ++x) {
-                        if (x === coord[0] && y === coord[1]) { continue }
-                        const elem = document.querySelector(`[data-coord="${x},${y}"]`)
-                        if (elem && elem.classList.contains('bomb')) {
-                            bombNeighbors++
-                        } else if (elem) {
-                            safeNeigbors.push([x,y])
-                        }
+        e.target.classList.add('reveal')
+        const bomb = e.target.classList.contains('bomb')
+        if (bomb) {
+            return endGame(true)
+        } else {
+            const safeNeigbors = []
+            let bombNeighbors = 0
+            for (let y=coord[1]-1; y<coord[1]+2; ++y) {
+                for (let x=coord[0]-1; x<coord[0]+2; ++x) {
+                    if (x === coord[0] && y === coord[1]) { continue }
+                    const elem = document.querySelector(`[data-coord="${x},${y}"]`)
+                    if (elem && elem.classList.contains('bomb')) {
+                        bombNeighbors++
+                    } else if (elem) {
+                        safeNeigbors.push([x,y])
                     }
-                }
-                e.target.innerText = (bombNeighbors > 0) ? bombNeighbors : ''
-                e.target.classList.add(`bomb-count-${bombNeighbors}`)
-                if (bombNeighbors < 1) {
-                    revealBlanks(safeNeigbors, [`${coord[0]},${coord[1]}`])
-                }
-                let onlyBombs = true
-                Array.from(document.querySelectorAll('.spot:not(.reveal)')).forEach((spot) => {
-                    if (!spot.classList.contains('bomb')) {
-                        onlyBombs = false
-                    }
-                })
-                if (onlyBombs) {
-                    endGame(false)
                 }
             }
+            e.target.innerText = (bombNeighbors > 0) ? bombNeighbors : ''
+            e.target.classList.add(`bomb-count-${bombNeighbors}`)
+            if (bombNeighbors < 1) {
+                revealBlanks(safeNeigbors, [`${coord[0]},${coord[1]}`])
+            }
+            let onlyBombs = true
+            Array.from(document.querySelectorAll('.spot:not(.reveal)')).forEach((spot) => {
+                if (!spot.classList.contains('bomb')) {
+                    onlyBombs = false
+                }
+            })
+            if (onlyBombs) {
+                endGame(false)
+            }
         }
+    })
+
+    field.addEventListener('contextmenu', (e) => {
+        if (!e.target.classList.contains('spot') || 
+            e.target.classList.contains('reveal') || 
+            field.classList.contains('complete')) {
+            return
+        }
+        e.preventDefault()
+
+        if (e.target.classList.contains('flag')) {
+            e.target.classList.remove('flag')
+            flags--
+        } else {
+            e.target.classList.add('flag')
+            flags++
+        }
+        document.querySelector('.flags').innerText = flags
     })
 
     document.querySelector('.close').addEventListener('click', () => {
@@ -173,12 +206,14 @@
                 spot.innerText = ''
                 spot.classList.remove('reveal')
                 spot.classList.remove('bomb')
+                spot.classList.remove('flag')
             })
             field.classList.remove('complete')
             field.classList.remove('obscure')
             field.classList.remove('win')
             gameOver.removeAttribute('open')
             timerElem.innerText = '0'
+            document.querySelector('.flags').innerText = '0'
         })
     })
 
@@ -236,6 +271,7 @@
 
         gameStarted = true
         timerStart = Date.now()
+        flags = 0
         timerElem.innerText = '0'
         timerHandler = setInterval(() => {
             timerElem.innerText = Math.round((Date.now() - timerStart) / 1000)
