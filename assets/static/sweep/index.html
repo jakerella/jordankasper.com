@@ -1,3 +1,4 @@
+
 <html>
     <head></head>
     <body>
@@ -30,8 +31,9 @@
                 align-items: center;
                 justify-content: center;
                 user-select: none;
+                font-size: 0rem;
             }
-            .spot.reveal { background-color: white; }
+            .spot.reveal { background-color: white; font-size: 1rem; }
             .spot.reveal.bomb-count-1 { color: #84c7a9; }
             .spot.reveal.bomb-count-2 { color: #1fb6b7; }
             .spot.reveal.bomb-count-3 { color: #ddd000; }
@@ -103,6 +105,8 @@
     let timerEnd = 0
     let timerHandler = null
     let flags = 0
+    let bombCount = 0;
+    let gameMap = {}
 
     const allLocations = []
     const rowHtml = []
@@ -127,41 +131,25 @@
             field.classList.contains('complete')) {
             return
         }
+
         const coord = e.target.getAttribute('data-coord').split(',').map(Number)
         if (!gameStarted) {
             startGame(coord, Array.from(allLocations))
         }
         
         e.target.classList.add('reveal')
-        const bomb = e.target.classList.contains('bomb')
-        if (bomb) {
+
+        const hit = gameMap[`${coord[0]},${coord[1]}`]
+        if (hit === 9) {
             return endGame(true)
         } else {
-            const safeNeigbors = []
-            let bombNeighbors = 0
-            for (let y=coord[1]-1; y<coord[1]+2; ++y) {
-                for (let x=coord[0]-1; x<coord[0]+2; ++x) {
-                    if (x === coord[0] && y === coord[1]) { continue }
-                    const elem = document.querySelector(`[data-coord="${x},${y}"]`)
-                    if (elem && elem.classList.contains('bomb')) {
-                        bombNeighbors++
-                    } else if (elem) {
-                        safeNeigbors.push([x,y])
-                    }
-                }
+            if (hit > 0) {
+                e.target.classList.add(`bomb-count-${hit}`)
+            } else {
+                revealBlanks(coord, [`${coord[0]},${coord[1]}`])
             }
-            e.target.innerText = (bombNeighbors > 0) ? bombNeighbors : ''
-            e.target.classList.add(`bomb-count-${bombNeighbors}`)
-            if (bombNeighbors < 1) {
-                revealBlanks(safeNeigbors, [`${coord[0]},${coord[1]}`])
-            }
-            let onlyBombs = true
-            Array.from(document.querySelectorAll('.spot:not(.reveal)')).forEach((spot) => {
-                if (!spot.classList.contains('bomb')) {
-                    onlyBombs = false
-                }
-            })
-            if (onlyBombs) {
+
+            if (Array.from(document.querySelectorAll('.spot:not(.reveal)')).length === bombCount) {
                 endGame(false)
             }
         }
@@ -204,9 +192,7 @@
 
             Array.from(document.querySelectorAll('.spot')).forEach((spot) => {
                 spot.innerText = ''
-                spot.classList.remove('reveal')
-                spot.classList.remove('bomb')
-                spot.classList.remove('flag')
+                spot.className = 'spot'
             })
             field.classList.remove('complete')
             field.classList.remove('obscure')
@@ -225,48 +211,60 @@
         }
     })
 
-    function revealBlanks(locations, skip) {
-        if (!locations.length) { return }
-
-        locations.forEach((loc) => {
-            const locElem = document.querySelector(`[data-coord="${loc[0]},${loc[1]}"]`)
-            if (!locElem) { return }
-
-            const safeNeigbors = []
-            let bombNeighbors = 0
-            for (let y=loc[1]-1; y<loc[1]+2; ++y) {
-                for (let x=loc[0]-1; x<loc[0]+2; ++x) {
-                    if (x === loc[0] && y === loc[1]) { continue }
-                    const elem = document.querySelector(`[data-coord="${x},${y}"]`)
-                    if (elem && elem.classList.contains('bomb')) {
-                        bombNeighbors++
-                    } else if (elem) {
-                        safeNeigbors.push([x,y])
-                    }
+    function revealBlanks(center, skip) {
+        const reveal = []
+        for (let y=center[1]-1; y<center[1]+2; ++y) {
+            for (let x=center[0]-1; x<center[0]+2; ++x) {
+                if ((x === center[0] && y === center[1]) ||
+                    skip.includes(`${x},${y}`)) {
+                    continue
                 }
+                reveal.push([x,y])
             }
-            
-            locElem.classList.add('reveal')
-            locElem.innerHTML = (bombNeighbors > 0) ? bombNeighbors : ''
-            locElem.classList.add(`bomb-count-${bombNeighbors}`)
+        }
+        if (!reveal.length) { return }
 
-            if (bombNeighbors < 1) {
-                skip.push(`${loc[0]},${loc[1]}`)
-                revealBlanks(safeNeigbors.filter((loc) => {
-                    return !skip.includes(`${loc[0]},${loc[1]}`)
-                }), skip)
+        reveal.forEach((loc) => {
+            const locElem = document.querySelector(`[data-coord="${`${loc[0]},${loc[1]}`}"]`)
+            if (locElem) {
+                locElem.classList.add('reveal')
+                if (gameMap[loc] === 0) {
+                    skip.push(`${loc[0]},${loc[1]}`)
+                    revealBlanks(loc, skip)
+                }
             }
         })
     }
 
     function startGame(startCoord, allLocations) {
-        const bombCount = Number(document.querySelector('[name=bomb-count]').value)
+        bombCount = Number(document.querySelector('[name=bomb-count]').value)
+        gameMap = {}
 
         const locations = allLocations.filter((loc) => loc[0] !== startCoord[0] || loc[1] !== startCoord[1])
         for (let i=0; i<bombCount; ++i) {
             const locIndex = Math.floor(Math.random() * locations.length)
             document.querySelector(`[data-coord="${locations[locIndex]}"]`).classList.add('bomb')
+            gameMap[locations[locIndex]] = 9
             locations.splice(locIndex, 1)
+        }
+
+        for (let y=0; y<ROWS; ++y) {
+            for (let x=0; x<COLS; ++x) {
+                if (gameMap[`${x},${y}`] === 9) {
+                    continue
+                }
+                let bombNeighbors = 0
+                for (let y2=y-1; y2<y+2; ++y2) {
+                    for (let x2=x-1; x2<x+2; ++x2) {
+                        if (x2 === x && y2 === y) { continue }
+                        bombNeighbors += (gameMap[`${x2},${y2}`] === 9) ? 1 : 0
+                    }
+                }
+                const elem = document.querySelector(`[data-coord="${x},${y}"]`)
+                elem.classList.add(`bomb-count-${bombNeighbors}`)
+                elem.innerText = bombNeighbors || ''
+                gameMap[`${x},${y}`] = bombNeighbors
+            }
         }
 
         gameStarted = true
