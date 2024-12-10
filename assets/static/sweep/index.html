@@ -59,6 +59,8 @@
                 display: flex;
                 justify-content: space-around;
             }
+            .meta.stat-list { font-size: 0.8rem; color: #333; }
+            .grace-note { font-size: 0.8rem; text-align: center; color: #666; }
             [name=bomb-count] { width: 2rem; }
             .game-over { top: 10%; opacity: 85%; }
             .game-over .close { float: right; color: #666; cursor: pointer; }
@@ -74,17 +76,27 @@
                 <aside>Timer: <span class='timer'>0</span></aside>
                 <aside><button class='new-game'>New Game</button></aside>
             </section>
+            <section class='meta stat-list'>
+                <aside>Stats for <span class='stats' data-stat='bomb'></span> bombs:</aside>
+                <aside>Played: <span class='stats' data-stat='playedGrace'>0</span>* (all: <span class='stats' data-stat='played'>0</span>)</aside>
+                <aside>Won: <span class='stats' data-stat='won'>0</span> (<span class='stats' data-stat='winPercent'>0</span>%*)</aside>
+                <aside>Quickest: <span class='stats' data-stat='quickest'>0</span>s</aside>
+                <aside>Avg: <span class='stats' data-stat='avgTime'>0</span>s</aside>
+                <aside>Median: <span class='stats' data-stat='medianTime'>0</span>s</aside>
+            </section>
+            <p class='grace-note'>(* Only includes games played past the grace period of <span class='grace'></span>s.)</p>
             <dialog class='game-over'>
                 <aside class='close'>X</aside>
                 <h2>Game Over!</h2>
                 <p class='result'></p>
                 <aside>
-                    <h3>Stats</h3>
+                    <h3>Stats for <span class='stats' data-stat='bomb'></span> bombs</h3>
                     <ul>
-                        <li>Played: <span class='stats-played'></span></li>
-                        <li>Won: <span class='stats-won'>0</span> (<span class='stats-win-percent'>0</span>%)</li>
-                        <li>Quickest Time: <span class='stats-quickest-time'>0</span></li>
-                        <li>Avg Win Time: <span class='stats-avg-time'>0</span></li>
+                        <li>Played: <span class='stats' data-stat='playedGrace'>0</span>* (all: <span class='stats' data-stat='played'>0</span>)</li>
+                        <li>Won: <span class='stats' data-stat='won'>0</span> (<span class='stats' data-stat='winPercent'>0</span>%*)</li>
+                        <li>Quickest: <span class='stats' data-stat='quickest'>0</span>s</li>
+                        <li>Avg Time: <span class='stats' data-stat='avgTime'>0</span>s</li>
+                        <li>Median Time: <span class='stats' data-stat='medianTime'>0</span>s</li>
                     </ul>
                 </aside>
                 <footer>
@@ -98,7 +110,11 @@
 ;(() => {
     const ROWS = 16
     const COLS = 30
-    const STATS_KEY = 'bombStats'
+    const GRACE_PERIOD = 5
+    const STATS_KEY = 'bombStatsv2'
+    const ABANDON_RESULT = 0
+    const BOMB_RESULT = 1
+    const WIN_RESULT = 2
 
     let gameStarted = false
     let timerStart = 0
@@ -123,6 +139,9 @@
     const field = document.querySelector('.field')
     const timerElem = document.querySelector('.timer')
     field.innerHTML = rowHtml.join('')
+
+    showStats()
+    document.querySelector('.grace').innerText = GRACE_PERIOD
 
     field.addEventListener('click', (e) => {
         if (!e.target.classList.contains('spot') || 
@@ -181,13 +200,7 @@
     Array.from(document.querySelectorAll('.new-game')).forEach((node) => {
         node.addEventListener('click', () => {
             if (gameStarted) {
-                const stats = getStats()
-                stats.abandoned++
-                localStorage.setItem(STATS_KEY, JSON.stringify(stats))
-
-                gameStarted = false
-                clearInterval(timerHandler)
-                timerHandler = null
+                addResult(bombs, getGameTime(), ABANDON_RESULT)
             }
 
             Array.from(document.querySelectorAll('.spot')).forEach((spot) => {
@@ -201,6 +214,10 @@
             timerElem.innerText = '0'
             document.querySelector('.flags').innerText = '0'
         })
+    })
+
+    document.querySelector('[name=bomb-count]').addEventListener('change', (e) => {
+        showStats(Number(e.target.value))
     })
 
     window.addEventListener('beforeunload', () => {
@@ -278,43 +295,73 @@
 
     function endGame(bomb) {
         gameStarted = false
-        timerEnd = Date.now()
-        clearInterval(timerHandler)
-        timerHandler = null
-
+        const time = getGameTime()
+        const bombs = Number(document.querySelector('[name=bomb-count]').value)
         field.classList.add('complete')
 
-        const stats = getStats()
-        stats.played++
-        stats.won += (bomb) ? 0 : 1
         if (bomb) {
             Array.from(document.querySelectorAll('.bomb')).forEach((b) => b.classList.add('reveal'))
+            addResult(bombs, time, BOMB_RESULT)
         } else {
             field.classList.add('win')
-            const time = Math.round((timerEnd - timerStart) / 1000)
-            if (time < stats.quickest) {
-                stats.quickest = time
-            }
-            stats.avgTime = (stats.avgTime) ? Math.round((stats.avgTime + time) / 2) : time
+            addResult(bombs, time, WIN_RESULT)
         }
-        localStorage.setItem(STATS_KEY, JSON.stringify(stats))
 
-        gameOver.querySelector('.result').innerText = (bomb) ? 'You hit a bomb!' : 'You win!'
-        gameOver.querySelector('.stats-played').innerText = stats.played
-        gameOver.querySelector('.stats-won').innerText = stats.won
-        gameOver.querySelector('.stats-win-percent').innerText = Math.round((stats.won / stats.played) * 100)
-        gameOver.querySelector('.stats-quickest-time').innerText = stats.quickest
-        gameOver.querySelector('.stats-avg-time').innerText = stats.avgTime
+        gameOver.querySelector('.result').innerHTML = (bomb) ? ((time < GRACE_PERIOD) ? 'That was quick...<br>this one won\'t count against your win percentage.' : 'You hit a bomb!') : 'You found them all!'
+        showStats(bombs)
+        
         gameOver.setAttribute('open', 'open')
         field.classList.add('obscure')
     }
 
-    function getStats() {
-        let stats = JSON.parse(localStorage.getItem(STATS_KEY) || 'null')
-        if (!stats) {
-            stats = { played: 0, abandoned: 0, won: 0, quickest: 9999, avgTime: 0 }
+    function getGameTime() {
+        timerEnd = Date.now()
+        clearInterval(timerHandler)
+        timerHandler = null
+        return Math.round((timerEnd - timerStart) / 1000)
+    }
+
+    function showStats(bombs) {
+        bombs = bombs || Number(document.querySelector('[name=bomb-count]').value) || 99
+        const stats = getStats(bombs)
+
+        console.log(stats)
+        
+        Array.from(document.querySelectorAll('.stats')).forEach((elem) => {
+            const stat = elem.getAttribute('data-stat')
+            if (stats[stat] !== undefined) {
+                elem.innerText = stats[stat]
+            } else if (stat === 'playedGrace') {
+                elem.innerText = stats.played - stats.quickLoss
+            } else if (stat === 'winPercent') {
+                elem.innerText = Math.round((stats.won / (stats.played - stats.quickLoss)) * 100) || '0'
+            } else if (stat === 'bomb') {
+                elem.innerText = bombs
+            }
+        })
+    }
+
+    function getStats(bombs = 99) {
+        let games = JSON.parse(localStorage.getItem(STATS_KEY) || 'null')
+        if (!games) { games = [] }
+        const played = games.filter((g) => !bombs || g[0] === bombs)
+        const won = played.filter((g) => g[2] === WIN_RESULT).sort((a, b) => a[1] - b[1])
+        return {
+            games,
+            played: played.length,
+            quickLoss: played.filter((g) => g[2] === BOMB_RESULT && g[1] < GRACE_PERIOD).length,
+            abandoned: played.filter((g) => g[2] === ABANDON_RESULT).length,
+            won: won.length,
+            quickest: won.length ? won.reduce((p, c) => { return (c[1] < p) ? c[1] : p }, 99999) : 'n/a',
+            avgTime: won.length ? Math.round(won.reduce((p, c) => { return p + c[1] }, 0) / won.length) : 0,
+            medianTime: (won.length % 2) ? won[Math.ceil(won.length / 2)-1][1] : ((won.length) ? Math.round((won[Math.ceil(won.length / 2)-1][1] + won[Math.ceil(won.length / 2)][1]) / 2) : 0)
         }
-        return stats
+    }
+
+    function addResult(bombs, time, result) {
+        const stats = getStats()
+        stats.games.push([bombs, time, result])
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats.games))
     }
 })()
     </script>
