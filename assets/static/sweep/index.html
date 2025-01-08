@@ -1,4 +1,3 @@
-
 <html>
     <head></head>
     <body>
@@ -13,6 +12,7 @@
                 border-radius: 0.2rem;
             }
             .field.obscure { filter: blur(0.07rem); }
+            .field.paused { filter: contrast(10%) blur(0.08rem) grayscale(100%); }
             .row {
                 display: flex;
                 justify-content: space-between;
@@ -45,12 +45,19 @@
             .spot.flag {
                 color: red;
                 background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 21V3.90002C5 3.90002 5.875 3 8.5 3C11.125 3 12.875 4.8 15.5 4.8C18.125 4.8 19 3.9 19 3.9V14.7C19 14.7 18.125 15.6 15.5 15.6C12.875 15.6 11.125 13.8 8.5 13.8C5.875 13.8 5 14.7 5 14.7' stroke='%23FF0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+                font-size: 0rem;
             }
-            .spot.reveal.bomb {
+            .field:not(.complete) .spot.flag {
+                background-color: green !important;
+            }
+            .field.complete .spot.flag:not(.bomb) {
+                background-color: #dd0;
+            }
+            .spot.reveal.hit.bomb {
                 background-color: red;
                 background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9.5' cy='14.5' r='7.5' stroke='%231C274C' stroke-width='2.5'/%3E%3Cpath d='M17 7L15 9' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19.5 7.5L20.5 8' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M16 3.5L16.5 4.5' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19 5L20 4' stroke='%231C274C' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
             }
-            .field.win .spot.bomb {
+            .field.win .spot.bomb, .spot.reveal.bomb {
                 background-color: blue;
                 background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='9.5' cy='14.5' r='7.5' stroke='%23FFFFFF' stroke-width='2.5'/%3E%3Cpath d='M17 7L15 9' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19.5 7.5L20.5 8' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M16 3.5L16.5 4.5' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M19 5L20 4' stroke='%23FFFFFF' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E");
             }
@@ -74,6 +81,7 @@
                 <aside>Bombs: <input name='bomb-count' value='99'></aside>
                 <aside>Flags: <span class='flags'>0</span></aside>
                 <aside>Timer: <span class='timer'>0</span></aside>
+                <aside><button class='pause' disabled='disabled'>Pause</button></aside>
                 <aside><button class='new-game'>New Game</button></aside>
             </section>
             <section class='meta stat-list'>
@@ -118,8 +126,9 @@
 
     let gameStarted = false
     let timerStart = 0
-    let timerEnd = 0
     let timerHandler = null
+    let pauseStart = 0
+    let pauseTotal = 0
     let flags = 0
     let bombCount = 0;
     let gameMap = {}
@@ -138,13 +147,15 @@
     const gameOver = document.querySelector('.game-over')
     const field = document.querySelector('.field')
     const timerElem = document.querySelector('.timer')
+    const pause = document.querySelector('.pause')
     field.innerHTML = rowHtml.join('')
 
     showStats()
     document.querySelector('.grace').innerText = GRACE_PERIOD
 
     field.addEventListener('click', (e) => {
-        if (!e.target.classList.contains('spot') || 
+        if (pauseStart ||
+            !e.target.classList.contains('spot') || 
             e.target.classList.contains('reveal') || 
             e.target.classList.contains('flag') ||
             field.classList.contains('complete')) {
@@ -160,6 +171,7 @@
 
         const hit = gameMap[`${coord[0]},${coord[1]}`]
         if (hit === 9) {
+            e.target.classList.add('hit')
             return endGame(true)
         } else {
             if (hit > 0) {
@@ -175,12 +187,13 @@
     })
 
     field.addEventListener('contextmenu', (e) => {
-        if (!e.target.classList.contains('spot') || 
+        e.preventDefault()
+        if (pauseStart ||
+            !e.target.classList.contains('spot') || 
             e.target.classList.contains('reveal') || 
             field.classList.contains('complete')) {
             return
         }
-        e.preventDefault()
 
         if (e.target.classList.contains('flag')) {
             e.target.classList.remove('flag')
@@ -195,6 +208,21 @@
     document.querySelector('.close').addEventListener('click', () => {
         gameOver.removeAttribute('open')
         field.classList.remove('obscure')
+    })
+
+    pause.addEventListener('click', () => {
+        if (!gameStarted) { return }
+
+        if (pauseStart) {
+            pauseTotal += Math.round((Date.now() - pauseStart) / 1000)
+            pauseStart = 0
+            pause.innerText = 'Pause'
+            field.classList.remove('paused')
+        } else {
+            pauseStart = Date.now()
+            pause.innerText = 'Resume'
+            field.classList.add('paused')
+        }
     })
 
     Array.from(document.querySelectorAll('.new-game')).forEach((node) => {
@@ -285,16 +313,23 @@
         }
 
         gameStarted = true
+        pause.removeAttribute('disabled')
+        pause.innerText = 'Pause'
+        pauseTotal = 0
         timerStart = Date.now()
         flags = 0
         timerElem.innerText = '0'
         timerHandler = setInterval(() => {
-            timerElem.innerText = Math.round((Date.now() - timerStart) / 1000)
+            if (!pauseStart) {
+                timerElem.innerText = Math.round((Date.now() - timerStart) / 1000) - pauseTotal
+            }
         }, 1000)
     }
 
     function endGame(bomb) {
         gameStarted = false
+        pause.setAttribute('disabled', 'disabled')
+        pause.innerText = 'Pause'
         const time = getGameTime()
         const bombs = Number(document.querySelector('[name=bomb-count]').value)
         field.classList.add('complete')
@@ -315,10 +350,10 @@
     }
 
     function getGameTime() {
-        timerEnd = Date.now()
+        const timerEnd = Date.now()
         clearInterval(timerHandler)
         timerHandler = null
-        return Math.round((timerEnd - timerStart) / 1000)
+        return Math.round((timerEnd - timerStart) / 1000) - pauseTotal
     }
 
     function showStats(bombs) {
@@ -343,7 +378,7 @@
 
     function getStats(bombs = 99) {
         let games = JSON.parse(localStorage.getItem(STATS_KEY) || 'null')
-        if (!games) { games = [] }
+        if (!Array.isArray(games)) { games = [] }
         const played = games.filter((g) => !bombs || g[0] === bombs)
         const won = played.filter((g) => g[2] === WIN_RESULT).sort((a, b) => a[1] - b[1])
         return {
