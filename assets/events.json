@@ -1075,6 +1075,15 @@
             "topics": [
                 "The Essential Role of Curation in Open Source"
             ]
+        },
+        {
+            "name": "Open Source Summit North America",
+            "url": "https://events.linuxfoundation.org/open-source-summit-north-america/program/schedule/",
+            "location": "Denver, CO",
+            "date": "Jun 23 2024",
+            "topics": [
+                "Open Source in the Federal Government"
+            ]
         }
     ]
 }
