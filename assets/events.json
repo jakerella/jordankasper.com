@@ -1043,7 +1043,8 @@
             "location": "Las Vegas, NV",
             "date": "Aug 9 2024",
             "topics": [
-                "The Value of Trust in the Open Source Software Ecosystem"
+                "Trust in the Open Source Ecosystem",
+                "[Badge Challenge]"
             ]
         },
         {
@@ -1077,12 +1078,30 @@
             ]
         },
         {
+            "name": "DistrictCon",
+            "url": "https://districtcon.org",
+            "location": "Washington, DC",
+            "date": "Feb 21 2025",
+            "topics": [
+                "[Badge Challenge]"
+            ]
+        },
+        {
             "name": "Open Source Summit North America",
-            "url": "https://events.linuxfoundation.org/open-source-summit-north-america/program/schedule/",
+            "url": "https://events.linuxfoundation.org/open-source-summit-north-america/",
             "location": "Denver, CO",
             "date": "Jun 23 2024",
             "topics": [
                 "Open Source in the Federal Government"
+            ]
+        },
+        {
+            "name": "DEF CON 33",
+            "url": "https://defcon.org/html/defcon-33/dc-33-index.html",
+            "location": "Las Vegas, NV",
+            "date": "Aug 7 2025",
+            "topics": [
+                "[Badge Challenge]"
             ]
         }
     ]
