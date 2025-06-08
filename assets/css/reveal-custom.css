@@ -168,8 +168,8 @@ footer.right {
     left: 0.5em;
 }
 footer .copyright {
-    font-size: 0.5em;
-    color: #666;
+    font-size: 0.7rem;
+    color: #bbb;
     vertical-align: middle;
     margin-left: 1em;
 }
@@ -206,4 +206,11 @@ pre {
     border-top: none;
     background-color: #e5e5e5;
     text-align: left;
+}
+
+.reveal li {
+    margin: 0.3em 0;
+}
+.reveal ul ul {
+    margin-left: 2em;
 }

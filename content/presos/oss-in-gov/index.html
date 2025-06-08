@@ -7,7 +7,7 @@ backgroundColor: white
 ---
 <style>
     .reveal section.has-dark-background h1, .reveal section.has-dark-background { color: #fff; }
-    .reveal section h1 { text-transform: none; }
+    .reveal section h1, .reveal section h2 { text-transform: none; }
     .reveal section h1.title { width: 75%; margin: 0 auto; line-height: 1.5em; }
     .reveal section .subtitle { color: #ddd; margin-top: 2em; font-size: 0.8em; line-height: 1.3em; }
     .reveal section .subtitle.light { color: #444; }
@@ -15,15 +15,15 @@ backgroundColor: white
     .reveal section .subtitle.light a:link, .reveal section .subtitle.light a:visited { color: #88d; }
     .reveal section sup { font-size: 0.6em; position: relative; top: -1em; }
     .octocat, .slide-image { width: 20rem; }
+    .reveal cite.no-prompt::before { content: ""; }
     .reveal section .dark-bg-header { color: #fff; font-weight: bold; text-shadow: 0.05em 0.05em 0.1em #000; }
-    .reveal section .code-site { position: relative; text-align: center; bottom: -2em;  }
-    .reveal .code-site:before { content: ""; }
     .reveal section cite { width: 100%; text-align: center; }
+    .reveal .controls { display: none; }
 </style>
 
 <section data-background='black'>
     <h1 class='title'>
-        State of Open Source in the Federal Government
+        State of Open Source<br>in the Federal Government
     </h1>
 
     <p class='subtitle'>
@@ -33,6 +33,26 @@ backgroundColor: white
 </section>
 
 <section>
+    <h1>Why me?</h1>
+    <p class='fragment'>OSS contributor & maintainer since ~2008</p>
+    <p class='fragment'>Helped write the DoD's 2022 open source policy</p>
+    <p class='fragment'>Wrote the 2023 DHS open source policy</p>
+</section>
+
+<section>
+    <ol style='width: 35%; margin: 2em auto;'>
+        <li>Why Open Source?</li>
+        <li class='fragment'>The Challenges</li>
+        <li class='fragment'>The Policy</li>
+        <li class='fragment'>The Reality</li>
+        <li class='fragment'>The Possibilities</li>
+    </ol>
+</section>
+
+
+<!-- **************************************************************** -->
+
+<section data-background='#ddeeff'>
     <h1>Open Source is good. <sup>[citation needed]</sup></h1>
 </section>
 
@@ -66,7 +86,10 @@ backgroundColor: white
     <img src='images/foundingfather_v2.png' alt='founding Father Octocat' class='octocat'>
 </section>
 
-<section>
+
+<!-- **************************************************************** -->
+
+<section data-background='#ddeeff'>
     <h1>The Challenges</h1>
 </section>
 
@@ -98,50 +121,273 @@ backgroundColor: white
     <cite>https://commons.wikimedia.org/wiki/File:III-A-12.jpg</cite>
 </section>
 
-<section>
-    <h1>The Reality</h1>
+
+<!-- **************************************************************** -->
+
+<section data-background='#ddeeff'>
+    <h1>The Policy</h1>
 </section>
 
-
-
 <section data-background='images/source-code.jpg'>
-    <h1 class='dark-bg-header' style='margin-top: -4em;'>Federal Source Code Policy</h1>
+    <h1 class='dark-bg-header' style='margin-top: -4em;'>
+        Federal Source Code Policy
+        (<a href='https://obamawhitehouse.archives.gov/sites/default/files/omb/memoranda/2016/m_16_21.pdf' title='Federal Source Code Policy (M-16-21)'>M-16-21</a>)
+    </h1>
 </section>
 
 <section>
     <h1>Section 5: Open Source Software</h1>
-    <h2 style='text-transform: none;'><a href='https://sourcecode.cio.gov'>sourcecode.cio.gov</a></h2>
+    <ul style='margin-top: 1.5em;'>
+        <li class='fragment'>Pilot program to release 20% of gov code as OSS <span class='fragment'><br>(ended in 2019)</span></li>
+        <li class='fragment'>
+            Participation in the community
+            <ul>
+                <li>Open development practices</li>
+                <li>Community engagement</li>
+                <li>Accepting code contributions</li>
+                <li>Focus on documentation</li>
+            </ul>
+        </li>
+    </ul>
 </section>
 
 <section>
-    <img src='images/code-gov.svg' alt='Code.gov logo' style='width: 10rem;'>
-    <h2 class='fragment'>Centralized Information</h2>
-    <h2 class='fragment'>Liason to Agencies</h2>
-    <h2 class='fragment'>Project Tracking</h2>
+    <h1>Section 4: Goverment-Wide Code Reuse</h1>
+
+    <ol style='width: 50%; margin: 2em auto;'>
+        <li class='fragment'>Data rights to share code</li>
+        <li class='fragment'>Code inventory</li>
+    </ol>
 </section>
 
-<section data-background='images/code-gov-compliance.png'></section>
+<section data-transition='none'>
+    <h1>Code.gov</h1>
+</section>
+
+<section data-transition='none'>
+    <h1 style='margin-top: 1.25em; text-decoration: line-through;'>Code.gov</h1>
+    <h1 class='fragment'>Digital.gov</h1>
+</section>
+
+<section>
+    <h1>SHARE IT Act</h1>
+    <p>
+        <a href='https://www.congress.gov/bill/118th-congress/house-bill/9566' title='SHARE IT Act legislation' target='_blank'>
+            congress.gov/bill/118th-congress/house-bill/9566
+        </a>
+    </p>
+    <ol style='width: 70%; margin: 2em auto;'>
+        <li class='fragment'>Data rights to share code</li>
+        <li class='fragment'>Goverment-wide code access and reuse</li>
+        <li class='fragment'>Code inventory</li>
+    </ol>
+</section>
+
+<section>
+    <h2>DHS Inventory: <a href='https://code.mil/code.json' target='_blank'>dhs.gov/code.json</a></h2>
+    <pre><code style='font-size: 0.65em;'>{
+  "agency": "DHS",
+  "releases": [
+    {
+      "name": "trustymail",
+      "contact": { ... },
+      "description": "Scan domains and return data based on trustworthy email best practices",
+      "homepageURL": "https://github.com/cisagov/trustymail",
+      "repositoryURL": "https://github.com/cisagov/trustymail.git",
+      "languages": [ "Python", "Shell", "Dockerfile" ],
+      "organization": "Cybersecurity and Infrastructure Security Agency",
+      "permissions": {
+        "licenses": [{ "name": "CC0-1.0" }]
+      },
+      "status": "Development",
+      "tags": [ ... ],
+      ...
+    },
+    { ... }
+  ]
+}</code></pre>
+</section>
+
+<section>
+    <h1>EO 14144 (January 2025)</h1>
+    <h2 style='text-transform: none;'><a href='https://www.federalregister.gov/documents/2025/01/17/2025-01470/strengthening-and-promoting-innovation-in-the-nations-cybersecurity' title='Strengthening and Promoting Innovation in the Nations Cybersecurity' target='_blank'>
+        Strengthening and Promoting Innovation in the Nation's Cybersecurity
+    </a></h2>
+
+    <p class='fragment'>
+        Section 2(e): 
+        CISA must create "recommendations to agencies on the use of security assessments and patching of 
+        open source software and <strong>best practices for contributing to open source software projects</strong>."
+    </p>
+
+    <aside class='notes'>
+        Contributing to upstream projects is essential for a secure ecosystem.
+    </aside>
+</section>
+
+<section>
+    <h1>Agency Open Source Policies &amp; Guidance</h1>
+    <ul style='width: 90%; margin: 2em auto;'>
+        <li><a href='https://www.dhs.gov/sites/default/files/2023-09/23_0913_ocio-policy-directive-142-04-rev-02.pdf' target='_blank'>Department of Homeland Security (DHS)</a></li>
+        <li><a href='https://dodcio.defense.gov/Portals/0/Documents/Library/SoftwareDev-OpenSource.pdf' target='_blank'>Department of Defense (DoD)</a></li>
+        <li><a href='https://github.com/CMSgov/cms-open-source-policy/blob/main/Policy.md' target='_blank'>Center for Medicare &amp; Medicaid Services (CMS)</a></li>
+        <li><a href='https://code.nasa.gov/#/guide' target='_blank'>National Aeronautics &amp; Space Administration (NASA)</a></li>
+        <li><a href='https://open.gsa.gov/oss-policy/' target='_blank'>General Services Administration</a></li>
+        <li><a href='https://github.com/cfpb/source-code-policy/blob/gh-pages/cfpb-source-code-policy.md' target='_blank'>Consumer Financial Protection Bureau (CFPB)</a></li>
+        <li><a href='https://github.com/cisagov/development-guide/blob/develop/open-source-policy/policy.md' target='_blank'>Cybersecurity &amp; Infrastructure Security Agency (CISA)</a></li>
+        <li><a href='https://github.com/CDCgov/template/blob/main/open_practices.md' target='_blank'>Centers for Disease Control (CDC)</a></li>
+    </ul>
+</section>
 
 
+<!-- **************************************************************** -->
 
-<section data-background='#555'>
-    <img src='images/femalecodertocat.png' alt='Coder Octocat' class='octocat'>
+<section data-background='#ddeeff'>
+    <h1>The Reality</h1>
+</section>
+
+<section>
+    <h2>Is anyone actually sharing code?</h2>
+    <div class='fragment'>
+        <iframe src='https://government.github.com/community/#governments-us-federal' frameborder='1' style='width: 102%; height: 60vh;'></iframe>
+        <p>https://government.github.com/community</p>
+    </div>
+</section>
+
+<section>
+    <h2>Some Examples</h2>
+
+    <ul style='width: 60%; margin: 2em auto;'>
+        <li class='fragment'>
+            <a href='https://github.com/SELinuxProject/selinux'>SE Linux (NSA)</a>
+        </li>
+        <li class='fragment'>
+            <a href='https://github.com/uswds/uswds'>U.S. Web Design System (GSA)</a>
+
+        </li>
+        <li class='fragment'>
+            <a href='https://github.com/cisagov/ScubaGear'>ScubaGear (CISA)</a>
+        </li>
+        <li class='fragment'>
+            <a href='https://github.com/transcom/mymove'>MyMove (DoD)</a>
+        </li>
+        <li class='fragment'>
+            <a href='https://github.com/IRS-Public/direct-file'>IRS Direct File (IRS)</a>
+        </li>
+        <li class='fragment'>
+            <a href='https://github.com/nasa/openmct'>Open MCT (NASA)</a>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2>How much is open?</h2>
+    <p class='fragment' style='font-size: 4em;'>😭</p>
+</section>
+
+<section>
+    <h2>What about upstream OSS?</h2>
+
+    <p class='fragment'>
+        Government is (arguably) the largest consumer of OSS ...
+    </p>
+    <p class='fragment'>
+        ... and might be the worst consumer of open source.
+    </p>
+</section>
+
+<section data-transition='none'>
+    <h2>1. Selection</h2>
+    <img src='images/manufacturetocat.png' alt='Manufacturing Octocat' class='octocat'>
+</section>
+
+<section data-transition='none'>
+    <h2>1. Selection</h2>
+    <img src='images/failcat.png' alt='Fail Octocat' class='octocat'>
+</section>
+
+<section data-transition='none'>
+    <h2>2. Consumption</h2>
+    <img src='images/electrocat.png' alt='Electric Octocat' class='octocat'>
+</section>
+
+<section data-transition='none'>
+    <h2>1. Consumption</h2>
+    <img src='images/failcat.png' alt='Fail Octocat' class='octocat'>
+</section>
+
+<section data-transition='none'>
+    <h2>3. Contribution</h2>
+    <img src='images/femalecodertocat.png' alt='Forking Octocat' class='octocat'>
+</section>
+
+<section data-transition='none'>
+    <h2>1. Contribution</h2>
+    <img src='images/failcat.png' alt='Fail Octocat' class='octocat'>
+</section>
+
+
+<!-- **************************************************************** -->
+
+<section data-background='#ddeeff'>
+    <h1>The Possibilities</h1>
+</section>
+
+<section>
+    <h2>Goal: <strong>Increase Open Source Publication</strong></h2>
+    <ul style='width: 70%; margin: 2em auto;'>
+        <li class='fragment'>Clear guidance on the process</li>
+        <li class='fragment'>Build modular, reusable components</li>
+        <li class='fragment'>Make it a contract requirement</li>
+        <li class='fragment'>Enforce secure coding practices</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Goal: <strong>Secure Government Systems</strong></h2>
+    <ul style='width: 70%; margin: 2em auto;'>
+        <li class='fragment'>Baseline OSS selection process</li>
+        <li class='fragment'>Automate OSS scanning &amp; approval</li>
+        <li class='fragment'>Use mirrors</li>
+        <li class='fragment'>Guidance on OSS updating</li>
+    </ul>
+</section>
+
+<section>
+    <h2>Goal: <strong>Support a Secure Ecosystem</strong></h2>
+    <ul style='width: 70%; margin: 2em auto;'>
+        <li class='fragment'>Contribute all security fixes upstream</li>
+        <li class='fragment'>Cotnributions to OSS we rely on</li>
+        <li class='fragment'>Grants for critical OSS infrastructure</li>
+        <li class='fragment'>Be an active participant in the community</li>
+    </ul>
+</section>
+
+
+<section data-background='#999999'>
     <h1 style='color: #fff;'>What can you do?</h1>
+    <img src='images/baracktocat.jpg' alt='Yes We Code Octocat' class='octocat'>
 </section>
 
-<section data-background='images/biden_coding.jpg'>
-    <h1 class='dark-bg-header' style=' margin-top: 4em; line-height: 1.5em;'>
-        Write some code!<br>Code.gov/browse-projects
-    </h1>
-    <cite class='code-site' style='color: #ddd;'>Official White House Photo by David Lienemann</cite>
+<section>
+    <h2>As a contractor...</h2>
+</section>
+
+<section>
+    <h2>As a federal employee...</h2>
+</section>
+
+<section>
+    <h2>As an indivudal...</h2>
 </section>
 
 
+<!-- **************************************************************** -->
 
-<section data-background='#f5ffff'>
+<section data-background='#ddeeff'>
     <h1 class='title' style='color: #000;'>Thank You!</h1>
     
-    <h2>Current State of Open Source in the Federal Government</h2>
+    <h2>State of Open Source<br>in the Federal Government</h2>
 
     <p class='subtitle light'>
         Jordan Kasper<br>
@@ -149,17 +395,24 @@ backgroundColor: white
         <a href='https://bsky.app/profile/jakerella.bsky.social' target='_blank' title='link to my Bluesky profile'>@jakerella.bsky.social</a>
     </p>
 
-    <cite class='code-site'>
-        All Octocats liberally sprung from https://octodex.github.com
+    <cite class='no-prompt' style='bottom: -8em; line-height: 1.3em;'>
+        All Octocats borrowed from https://octodex.github.com
         <br>
-        (This is <em>not an endorsement</em> of GitHub, I just like the Octocats.)
+        (This is not an endorsement of GitHub, I just like the Octocats.)
     </cite>
 </section>
 
 <section data-background='#000000'>
-    <h1>Referenes</h1>
+    <h1>Other Links &amp; Referenes</h1>
 
-    <ul>
-        <li><a href='#'>Link</a></li>
+    <ul style='column-count: 2;'>
+        <li><a href='https://obamawhitehouse.archives.gov/sites/default/files/omb/memoranda/2016/m_16_21.pdf' target='_blank'>Federal Source Code Policy (M-16-21)</a></li>
+        <li><a href='https://digital.gov/resources/requirements-for-achieving-efficiency-transparency-and-innovation-through-reusable-and-open-source-software/' target='_blank'>Digital.gov page on OSS</a></li>
+        <li><a href='https://dodcio.defense.gov/open-source-software-faq/' target='_blank'>DoD OSS FAQ</a></li>
+        <li><a href='https://bidenwhitehouse.archives.gov/wp-content/uploads/2024/01/Securing-the-Open-Source-Software-Ecosystem-OS3I-End-of-Year-Report-MASTERCOPY.pdf' target='_blank'>ONCD OSS Security Report</a></li>
+        <li><a href='https://www.federalregister.gov/documents/2025/01/17/2025-01470/strengthening-and-promoting-innovation-in-the-nations-cybersecurity' target='_blank'>EO 14144 on Cybersecurity</a></li>
+        <li><a href='https://www.cisa.gov/resources-tools/resources/cisa-open-source-software-security-roadmap' target='_blank'>CISA Open Source Security Roadmap</a></li>
+        <li><a href='https://github.com/cisagov/development-guide/blob/develop/open-source-policy/policy.md' target='_blank'>CISA OSS Policy</a></li>
+        <li><a href='https://github.com/IRS-Public/direct-file' target='_blank'>IRS Direct File</a></li>
     </ul>
 </section>
