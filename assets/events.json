@@ -1083,7 +1083,7 @@
             "location": "Washington, DC",
             "date": "Feb 21 2025",
             "topics": [
-                "(Badge Challenge)"
+                "[Badge Challenge]"
             ],
             "media": [
                 { "type": "code", "href": "https://github.com/jakerella/disco-zero", "title": "Code for the DisCo Zero badge challenge" }
@@ -1098,7 +1098,7 @@
                 "Open Source in the Federal Government"
             ],
             "media": [
-                { "type": "slides", "href": "/oss-in-gov", "title": "Slides for OSS in gov talk" }
+                { "type": "slides", "href": "https://jordankasper.com/oss-in-gov", "title": "Slides for OSS in gov talk" }
             ]
         },
         {
@@ -1107,7 +1107,8 @@
             "location": "Las Vegas, NV",
             "date": "Aug 7 2025",
             "topics": [
-                "(Badge Challenge)"
+                "Open Source in the Federal Government",
+                "[Badge Challenge]"
             ]
         }
     ]
