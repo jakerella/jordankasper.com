@@ -1098,7 +1098,8 @@
                 "Open Source in the Federal Government"
             ],
             "media": [
-                { "type": "slides", "href": "https://jordankasper.com/oss-in-gov", "title": "Slides for OSS in gov talk" }
+                { "type": "slides", "href": "https://jordankasper.com/oss-in-gov", "title": "Slides for OSS in gov talk" },
+                { "type": "video", "href": "https://youtu.be/4D8DZYNk4TA", "title": "Video of OS Summit 2025 talk" }
             ]
         },
         {
