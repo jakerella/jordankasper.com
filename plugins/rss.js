@@ -12,7 +12,7 @@ module.exports = function rss(opts){
   const categories = opts.categories || []
 
   return function (files, metalsmith, done) {
-    logger.debug('init RSS plugin');
+    logger.info('Generating RSS feed');
 
     const data = metalsmith.metadata();
 
@@ -32,6 +32,7 @@ module.exports = function rss(opts){
     });
 
     data.posts.forEach(function(post) {
+      logger.debug(`Created RSS entry for post: ${post.title}`)
       feed.item({
         title:  post.title,
         description: post.excerpt,
@@ -52,7 +53,8 @@ module.exports = function rss(opts){
       fs.mkdirSync(buildDir);
     }
 
-    logger.info('Writing blog post XML to', location);
+    logger.debug('Writing blog post XML to', location);
+    
     fs.writeFile(location, xml, function functionName(err) {
       if (err) { return done(err); }
       logger.debug('Wrote XML content to destination');

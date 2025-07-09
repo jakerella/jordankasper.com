@@ -8,8 +8,8 @@
   "description": "Static homepage for me",
   "scripts": {
     "clean": "rm -rf build/",
-    "build": "DEBUGLEVEL=WARN npm run clean && npx metalsmith && npx pagefind && cp -r build/presos/* build/ && rm -rf build/presos/ && rm -rf build/static/",
-    "debug": "DEBUG=metalsmith:*,@metalsmith/*,metalsmith-* DEBUGLEVEL=DEBUG npm run clean && npx metalsmith && npx pagefind --verbose && cp -r build/presos/* build/ && rm -rf build/presos/ && rm -rf build/static/",
+    "build": "npm run clean && DEBUGLEVEL=INFO npx metalsmith && npx pagefind && cp -r build/presos/* build/ && rm -rf build/presos/ && rm -rf build/static/",
+    "debug": "npm run clean && DEBUG=metalsmith:*,@metalsmith/*,metalsmith-* DEBUGLEVEL=DEBUG npx metalsmith && npx pagefind --verbose && cp -r build/presos/* build/ && rm -rf build/presos/ && rm -rf build/static/",
     "watch": "npm-watch build"
   },
   "watch": {

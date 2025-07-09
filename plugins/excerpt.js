@@ -6,8 +6,10 @@ module.exports = function excerpts(opts) {
     const length = opts.length || 500;
 
     return function(files, metalsmith, done) {
+        logger.info('Generating post excerpts');
+
         Object.keys(files).forEach(function(filename) {
-            if (!/\.html$/.test(filename)) { return; }
+            if (files[filename].collection !== 'posts') { return; }
             
             logger.debug('getting excerpt for file:', filename)
 
