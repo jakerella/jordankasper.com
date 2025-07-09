@@ -1,7 +1,7 @@
 ---
 title: An Overview of the Open Source Ecosystem
 collection: posts
-date: 2025-07-07
+date: 2025-07-09
 tags: development, open source
 ---
 
@@ -11,9 +11,9 @@ In this (unapologetically long) article, I attempt to provide an overview of the
 
 To make it more approachable, I've broken this article up into two sections: Producers and Consumers. There's an introduction below as well, and at the end I discuss a few strategies I think would help us support the ecosystem to ensure this critical set of software remains secure and is available to all of us for a long time.
 
-> Jump to "[Producers and the Supply Chain](#producers-and-the-supply-chain)"  
-> Jump to "[Open Source Consumers](#open-source-consumers)"  
-> Jump to "[Options for a Better Ecosystem](#options-for-a-better-ecosystem)"  
+> Jump to "[Producers and the Supply Chain](#producers-and-the-supply-chain)"<br>
+> Jump to "[Open Source Consumers](#open-source-consumers)"<br>
+> Jump to "[Options for a Better Ecosystem](#options-for-a-better-ecosystem)"<br>
 
 
 ### What is Open Source?
@@ -33,9 +33,14 @@ In general, there are four "freedoms" that are required for something to be open
 * **Share**: A consumer of the the software must be able to share it with others for their use with or without modifications. In other words, if I build a piece of software on top of another piece of software, I must be able to distribute my own software (with the underlying open source piece). That said, there can be restrictions on how I do so, for example, I might need to attach a similar open source license to my software, or might not be able to do so for commercial purposes.
 * **Study**: Anyone must be able to study how the software works and inspect its components. Among other things, this means that a free release of a software binary (without the underlying source) would not count as "open source" because the source code cannot be inspected.
 
-### Value of Open Source
+#### Value of Open Source
 
-@TODO: add content
+This article is going to point out a number of flaws in the open source ecosystem. I believe it is important to not hide these topics, but I also am a staunch believer in the value of open source software - not just the monetary value, but the value to society. That said, some very smart people have actually looked at the financial value of open source software, and so I wanted to call that out before you, dear reader, finish this article and believe me to be a nay-sayer.
+
+In their paper titled ["The Value of Open Source Software" from January 2024](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4693148), Frank Nagle, Manuel Hoffman, and Yanuo Zhou of Harvard Business School highlight that if the world were to rebuild all of the open source software themselves, the cost would be around $8.8 Trillion US dollars. You can read the paper yourself (linked above), but the key here is that rebuilding all of this from scratch would take an immense amount of time.
+
+Even this extremely high value is _exceptionally low_, as is noted by the authors, because it does not include the (re)development of open source operating systems such as Linux. Considering Linux runs the vast majority of Internet servers, the cost to rewrite it (many times over for each company) would be immense.
+
 
 #### Examples of Open Source Software
 
@@ -186,27 +191,25 @@ There is no single model for long-term maintenance of an open source code librar
 
 That said, there is a general pattern that you see repeated regularly, which is outlined below. The reader should be warned, however, that this is by no means a "standard" or even necessarily the best approach. Many projects have different requirements that demand different processes.
 
+<img src='/images/oss-maintenance-model.png' title='One possible OSS maintenance model' alt='A workflow diagram showing one possible model for open source maintenance. The main points are described in the article text.'>
 
-[TODO: insert diagram]
-
-
-1\. **Issue Raised**  
+#### 1\. Issue Raised
 An issue is raised on the projects main issue board. This could be in a tool only accessible to the core team or even an email distribution list, but often it is a public-facing issue tracker such as GitHub.com has under the "Issues" tab for a repository. These issues could be bug reports, feature requests, security reports, or even just questions about the workings of the codebase under certain conditions.
 
 Generally speaking, anyone can raise an issue about the code library in this manner. This is important, because it means that open source maintainers can sometimes be inundated with requests, sometimes for valid concerns, and other times as an intentional, dedicated campaign for radical change. But remember: these maintainers are often _unpaid volunteers_.
 
-2\. **Validation**  
+#### 2\. Validation
 For valid issues, there will be discussion in the issue's comment thread about validity, nuances, potential resolutions, etc. Ultimately a decision might be made to close the issue for various reasons (for example, it might be a duplicate of another issue). Feature requests will typically have discussion about whether the library is suited for that feature or if it should belong elsewhere (in another code library, perhaps). Typically you will see some early prioritization of issues here as well.
 For bug reports, the conversation usually centers around more traditional "validity" - that is, does the bug really exist, or was the issue due to some other factor, possibly user error. In most cases, unless the bug can be replicated by someone (with well documented steps), the bug will be closed or deprioritized.
 
-3\. **Work the Issue**  
+#### 3\. Work the Issue
 Once an issue has been validated, anyone can work on it - not just core team members (those with direct commit access), but anyone in the world. The path will likely be different depending on whether the incoming code change originated within the core team versus an external party.
 
 If the core team intends to work the issue, it will need to be prioritized. This process might happen in private, but sometimes an open source repository will mark issues with their priority level or a target milestone for completion. More established, structured teams may have a full Software Development LifeCycle (SDLC) process with typical agile development activities.
 
 Regardless of the internal process, if there is significant external interest, an outside contributor or organization may do the work themselves. This might happen even if the issue is prioritized by the core team.
 
-4\. **Code Review**  
+#### 4\. Code Review
 In mature codebases there will be many automated and manual checks before code gets merged back into the upstream source repository's trunk. These checks may differ a bit depending on the origin of the code contribution, but generally they will be similar regardless of who created the change. The final check is typically a manual, human review of the code performed by a core team member.
 
 The first line of defense for code quality will be any pre-built unit and integration tests that a developer can run on their own before even submitting a request to merge the code. Additionally, there may be some code style guides, code quality tools, and other automated processes in the repository's Continuous Integration (CI) automation.
@@ -215,7 +218,7 @@ Once a request to merge is submitted, automated checks will run the tests, code 
 
 If the request is from an external contributor, the core team will need to prioritize the review in their own schedule. This can cause delays, but is necessary to protect the codebase. This last point should not be dismissed quickly. The amount of time to properly review code changes before being merged is significant, and again, these maintainers are _unpaid volunteers_, which means they must prioritize this work in addition to everything else going on in their lives.
 
-5\. **Release Process**  
+#### 5\. Release Process
 This is the last step in the process and varies widely. There is such discrepancy in release processes that it doesn't even make sense to try and elaborate on them here. The only real consistent piece is that the final, fully built code is available for public download on some platform.
 
 For environments like Node.js, Python, and Java this might mean publishing the distributable code package to a package manager service like npm, PyPi, or Maven (respectively).
@@ -263,31 +266,8 @@ In highly permissive licenses the consumer is able to use _and modify_ the open 
 * **Do I care about the license used on derivative works?**  
 This is a fairly specialized category, but if a producer not only wants modifications to be made open source, but also wants those derivative works to be under a similarly permissive license, then they may choose the [Lesser GPLv3 (LGPL) license](https://opensource.org/licenses/LGPL-3.0).
 
-If none of these questions is relevant to the producer, they may go with an extremely permissive license such as [MIT](https://opensource.org/licenses/MIT) or [BSD-3](https://opensource.org/licenses/BSD-3-Clause). The Apache 2.0 and MIT licenses are the most popular, and thus tend to be used on newer projects. Together those two comprise over 50% of licenses on open source software.
-TODO: citation for above?
+If none of these questions is relevant to the producer, they may go with an extremely permissive license such as [MIT](https://opensource.org/licenses/MIT) or [BSD-3](https://opensource.org/licenses/BSD-3-Clause). The MIT, BSD-3, and Apache 2.0 licenses were the [most popular by visitor count to the relevant OSI webpages in 2024](https://opensource.org/blog/top-open-source-licenses-in-2024), accounting for around 77% of all traffic.
 
-
-### Producer Journey Example
-
-@TODO: consider cutting this?
-
-_Let's look at a simplified path for a single OSS producer and their end product._
-
-Mary is a software engineer creating a simple web application for the startup she works for. In the course of her work she identifies a need to display a widget in a certain way on one page, but in a different way on another page. She thinks this may be a common problem and looks for existing solutions online first (no need to recreate the wheel).
-
-After scouring StackOverflow, GitHub, and Google search results, she feels that this may not be an already solved problem. She starts writing the code for the solution and realizes that what she has created could easily solve other developer's problems as well. She takes just this one piece of the overall system, abstracts it a bit, and adds some configuration options. She uses a few other packages in this abstracted solution so that she doesn't need to write it all from scratch.
-
-Mary talks to her boss and ultimately gets approval to open source the module. She had to provide a little justification, but the company doesn't see that module as a source of revenue, so they agree. She pushes the code up to GitHub under her own account and adds an MIT license. She then publishes the module in the Node Package Manager (npm) so others can easily install and use it within their projects.
-
-After finishing the original project for her company, Mary revisits the module she open sourced and sees that a couple of other developers have downloaded it and there are a couple of questions and issues reported on GitHub. She reviews them, and makes a couple of changes to the code to support the new use case someone has and fix a bug someone else reported. She releases this new version of the code as version `1.1.0` and publishes it to npm.
-
-A few months later, someone writes a blog post about solving a similar problem to Mary's and they reference her open source project as a good starting point for other people to solve the same problem. The GitHub repository begins to receive more and more issues, and Mary is occupied with her regular job, thus is unable to review them in a reasonable timeframe.
-
-Another developer named John submits a Pull Request (PR) to solve one of the issues his project was having while using the module. Mary reviews this code contribution and thinks it is good, but asks John to add a regression test for the bug fix and to add a note in the documentation about the intended use of that particular feature. John updates his PR, Mary reviews the changes and approves the merge. She then bumps the version of the module to `1.1.1` and publishes again to npm so that other developers can make sure of the improvements.
-
-This continues on for a while and soon Mary has added John and another developer, Susie, to be maintainers of the code repository. This means they can make changes without Mary having to specifically review and merge the changes, taking load off of her. As the module grows in popularity it is included in other projects downstream and becomes a critical dependency to many projects.
-
-The core group of maintainers spend a lot of their free time handling bug reports and adding features, but most of them have also moved on to other projects and technologies and no longer use the module itself. The core group of maintainers rotates through various members.
 
 ---
 
@@ -305,9 +285,7 @@ This lack of change isn't necessarily a conscious one: often a downstream develo
 
 Let's look at a possible supply chain that ends in a finished product (a notional "Scheduling Application" at the bottom of the diagram below):
 
-[TODO: insert diagram]
-
-@TODO: remove file system helper as direct dep
+<img src='/images/oss-notional-application.png' title='Notional application dependency diagram' alt='A diagram showing a notional "scheduling application" at the bottom and its open source dependencies moving upward. There are six direct and four indirect dependencies in the diagram, but many lines criss-crossing, showing how interdependent things can be even for a small application. The diagram also shows how these open source projects can be hosted on myriad different platforms.'>
 
 In the diagram above you can see that our application uses a number of other modules as dependencies, which in turn use other modules as their own dependencies. These dependencies can be hosted on multiple different platforms, and often times a single module can be a dependency of many other modules. In this manner, we can easily see how a vulnerability or bug in the **Collection Helper** codebase in the diagram can have a wide-reaching effect.
 
@@ -336,7 +314,7 @@ Here is what an npm manifest might look like:
     "dialog-widget": "^3.12.1",
     "table-helper": "2.0.0",
     "logging-helper": "^0.8.3",
-    "authentication-helper": "^12.4.23"
+    "authentication-module": "^12.4.23"
   }
 }
 ```
@@ -354,19 +332,19 @@ Unfortunately, the criteria for choosing an OSS project to solve a small problem
 
 Broadly speaking, there are five big criteria that tend to be used when making the big choices in OSS (like a big web framework). These criteria are presented below in an ordered list as they are often approached by a developer or team, with the caveat that different organizations will obviously structure their decision making differently.
 
-1\. **Functionality**  
+#### 1\. Functionality
 Answering the question: does this piece of open source code do what I need done? But this criteria also extends to: can I configure it to solve my problem in other ways?
 
-2\. **Popularity**  
+#### 2\. Popularity
 The number of "stars" on GitHub or download counts can often be a proxy for the support that this code library has within the community. Two modules equal in functionality but one with 500 stars and one with 10 stars typically makes for an easy decision. Of course, these metrics are often paired with other criteria like velocity.
 
-3\. **Documentation**  
+#### 3\. Documentation
 How easy is it for a developer to know how to use this code library? If a developer spends more than an hour trying to figure out how to solve their problem they are likely to move on to a different library. Aside from functional documentation, an experienced software engineer will also be looking for strong contribution guidelines, build and test metrics, security protocols, etc. Lastly, this category also applies to the OSS license used; however, it is exceedingly rare that a developer will choose one library over another based on the license. This is more likely to come up in a review by organization lawyers or compliance officials, forcing a change.
 
-4\. **Velocity**  
+#### 4\. Velocity
 When was the last release of this code? How often are contributions accepted and how quickly are issues addressed and resolved? Related to this category is the number of contributors on the repository. If it is a single developer maintaining it, there will be some concerns. More contributors means higher velocity, but it also means more eyes on problems and thus generally better solutions.
 
-5\. **Testing & Security**  
+#### 5\. Testing & Security
 Often testing and security are after thoughts in the decision making process. A good senior developer will be looking for this, but often the first three criteria above are enough to make the decision of whether to use an open source module. In almost all cases, large organizational reviews don't even catch this criteria outside of known, reported common vulnerabilities and exploits (CVEs).
 
 
@@ -423,37 +401,37 @@ Refer back to our [notional application dependency tree](#notional-application-d
 
 Let's take a look at one possible flow for a bug fix in an upstream project. In the explanation and diagram below, assume that the **"Root Module"** is a piece of open source software that not only do we not control, but is not actually a direct dependency of our software application. In this case, how will we ensure our own application is stable and secure?
 
-1\. **Identification & Documentation**  
+<img src='/images/oss-upstream-fix.png' title='The interplay of dependencies for an upstream fix' alt='A diagram to support the upstream fix workflow below. It displays the different modules and their connections to one another.'>
+
+#### 1\. Identification & Documentation
 
 > _I see the issue in my code, but where in the dependency chain is the root of the issue?_
 
 The first step is to identify where the root cause of the issue is. Often times a developer downstream might submit a bug report to a direct dependency (in the diagram below, "Module Four"), but the core maintainers of that module might pass that issue up their dependency chain. This results in delays fixing the root cause.
 
-2\. **Remediation**  
+#### 2\. Remediation
 
 > _What code needs to change to fix the issue?_
 
 Now that we've isolated the root cause of the bug in the "Root Module", it needs to be fixed. However, if you refer to the section on Maintenance Models from earlier you might see an issue: the prioritization of this particular bug is solely up to the core team of that root module. An outside contributor (maybe even our own software developers) could come up with a fix, but it's still up to that core team to review and merge the fix.
 
-3\. **Publication**  
+#### 3\. Publication
 
 > _Is a new version of the dependency available?_
 
 Even if there is a fix merged into the Root Module source code, there may not yet be a new release. Depending on the release process and schedule of that project there may not be a fix for days, weeks, or even months. This new release would need to be published in whatever package manager or platform that project is using.
 
-4\. **Downstream Dependency Updates**  
+#### 4\. Downstream Dependency Updates
 
 _Are my direct dependencies updated and new versions published?_
 
 With the Root Module updated, Module One and Module Four (see diagram below) need to both update their dependency manifest and publish their own new versions to their chosen package managers or platforms. Critically, this must occur _in order_, otherwise the broken code might still be in our software application as a "pinned" version of the previously buggy dependency.
 
-5\. **Rebuilding & Deployment**  
+#### 5\. Rebuilding & Deployment
 
 _Is our code updated, verified, and ready to deploy?_
 
 Now that all of the dependency tree has been updated, we can update our own dependency manifest to the new version of Module Four and then rebuild our code, test it thoroughly (specifically for the previously known issue) and redeploy our new version.
-
-[TODO: insert diagram]
 
 This process is common to nearly every programming language and software platform. There are some workarounds and shortcuts when critically necessary, but this is why it can take so long to fix a seemingly simple issue.
 
@@ -465,9 +443,7 @@ The workarounds tend to include things like including the "Root Module" as a dir
 Given all of the issues in the ecosystem discussed above, why do so many organizations rely so heavily on open source software in their final applications? There are three main drivers for this:
 
 ##### Total Cost of Ownership
-Even though there are many hidden costs of using open source software - and things organizations _should_ spend money on, supporting the open source software they rely on - the total cost of ownership (TCO) for commercial software is immensely lower when all things are considered. The simple fact that the programming languages we all rely on are open source should be proof enough of that. There are some [academic articles](https://www.sciencedirect.com/science/article/pii/S1877050916313631) and papers that suggest that open source can lower the TCO of a software project by 80%.
-
-@TODO: refer back to value of OSS
+Even though there are many hidden costs of using open source software - and things organizations _should_ spend money on, supporting the open source software they rely on - the total cost of ownership (TCO) for commercial software is immensely lower when all things are considered. The simple fact that the programming languages we all rely on are open source should be proof enough of that. There are some [academic articles](https://www.sciencedirect.com/science/article/pii/S1877050916313631) and papers that suggest that open source can lower the TCO of a software project by 80%. Additionally, consider the number stated at the top of this article about the value of open source software. If a company had to write _everything_ from scratch, they would spend many times more than the actually value-add piece they develop.
 
 ##### Time to Market
 This is likely the easiest - and most obvious - win for open source software. If someone else has already built it, why spend time doing the work again? While this is immensely important in the technology startup community, it applies just as much to larger organizations trying to stay ahead of the game. That said, organizations must keep in mind that incorporating open source software in their final products does require effort. Time - and money - should be allotted for evaluation of, selection for, and contribution upstream to open source dependencies.
@@ -481,10 +457,44 @@ While we discussed many risks in the sections above, even with such risks, the s
 ---
 
 
-## Options for a Better Ecosystem
+### Options for a Better Ecosystem
 
-Understanding of the true nature
-Adoption of OSPOs
-Corporate consumer support
-Government support
+I've raised a number of issues in this article, but I also have thoughts on how we as a community can better support our open source ecosystem. While these ideas are not necessarily new, I believe that adding more voices to the call can help.
 
+#### Broader Understanding
+
+One of the reasons I've written this article - and why I [speak at conferences](/events) on the topic - is to raise awareness and understanding of the core issues facing the open source ecosystem. As I stated at the beginning of this (very long) blog post, I have had to explain the nuances, players, motivations, and critical issues of open source to organizational leaders over and over.
+
+Hopefully, with a better understanding of the issues, leaders in our industry will step up to support the open source software we all rely on.
+
+#### Adoption of OSPO's
+
+An Open Source Program Office (OSPO) is a great way for organizations to ensure that they are being good members of the open source community and good stewards of their own open source projects. Generally these offices are only found at larger organizations as they require personnel to staff them; however, I believe that even small organizations can start with a single-person OSPO and make great improvement in their approach to both consuming and producing open source software.
+
+Any startup that wants to make the leap to the next stage in their company's evolution should consider investing in how the think about open source software, and this is the best starting point.
+
+#### Corporate Support
+
+While an OSPO is a great place for a company to start, they can - and should - do more. While this list is not exhaustive, these are some of the more impactful and, in my opinion, easier to implement items.
+
+* Company employees should be allowed to contribute upstream changes to open source software the company relies on - and do so on company time. Far too often a company approves an employee to work on an open source project, but then forces them to do so on personal time.
+* Companies should sponsor, where possible, the financial needs of open source projects critical to their success. While some open source projects already have corporate or foundation support as discussed earlier, there are thousands of projects that do not and which could benefit from funds to pay for simple things like DevOps infrastructure, cloud hosting costs, or even a domain name.
+* Companies should adopt standard processes when publishing their own open source projects to create an ecosystem where it is easier to determine cross-platform dependencies, easier to discover vulnerabilities, and easier to consume upstream software. Having an OSPO is a great way to discover and define these processes.
+
+#### Government Support
+
+As a former U.S. government employee at both the state and federal level, I have seen first hand how reliant the software that runs critical infrastructure is on the open source ecosystem. Our governments can do so much more to support the ecosystem, and unsurprisingly, it looks a lot like the corporate support discussed above.
+
+That said, there are a number of ways that governments - especially the U.S. government - can do better:
+
+* Establish a centralized OSPO, and with "branches" within key agencies, which establish guidelines for safe and secure consumption and publication of open source projects.
+* Financially support key open source projects with grant funding. A great example of this is [Germany's Sovereign Tech Fund](https://www.sovereign.tech/programs/fund).
+* Require government IT project contractors to contribute any bug or security fixes to open source projects upstream.
+* For the U.S., use Other Direct Costs (ODC's) in IT contracts to require contractors to spend time supporting open source projects the government relies on as part of their standard development practice. This is in addition to contractually requiring bug and security fixes to be pushed upstream.
+
+
+### A Call to Action
+
+I hope that this article has helped you to better understand the open source ecosystem, and more over, I hope it helps organizations of all sizes to do better in supporting this critical infrastructure that underpins our entire modern digital world. I encourage you to take this material and share it with your organization's leadership, and use it to influence their decisions on open source.
+
+Use the risks and issues highlighted here as a call to action!
