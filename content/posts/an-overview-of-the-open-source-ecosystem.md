@@ -1,7 +1,7 @@
 ---
 title: An Overview of the Open Source Ecosystem
 collection: posts
-date: 2025-07-09
+date: 2025-07-13
 tags: development, open source
 ---
 
