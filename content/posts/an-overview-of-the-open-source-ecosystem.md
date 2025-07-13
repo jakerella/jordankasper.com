@@ -13,7 +13,7 @@ To make it more approachable, I've broken this article up into two sections: Pro
 
 > Jump to "[Producers and the Supply Chain](#producers-and-the-supply-chain)"<br>
 > Jump to "[Open Source Consumers](#open-source-consumers)"<br>
-> Jump to "[Options for a Better Ecosystem](#options-for-a-better-ecosystem)"<br>
+> Jump to "[A Call to Action](#a-call-to-action)"
 
 
 ### What is Open Source?
@@ -24,7 +24,7 @@ And at its core, the Open Source Software (OSS) _ecosystem_ is a distributed and
 
 > Note that OSS and FOSS (_Free_ and Open Source Software) are not the same. The fundamental difference is that FOSS is, of course, "Free". In common parlance, however, this is what we mean when we say "open source". However, technically it does not have to be "free" to be open source.
 
-There is a good explanation of the various aspects of what makes something "Open Source" on [opensource.org, the homepage for the Open Source Initiative](https://opensource.org). This is a good overall resource for open source definitions and information.
+There is a good explanation of the various aspects of what makes something "Open Source" on [opensource.org, the homepage for the Open Source Initiative](https://opensource.org) (OSI). This is a good overall resource for open source definitions and information.
 
 In general, there are four "freedoms" that are required for something to be open source:
 
@@ -131,7 +131,7 @@ These are typically full systems that are specific to their producers and mainta
 
 ### Producers and the Supply Chain
 
-When we talk about "producers" in the open source community we typically mean individuals and organizations that create and maintain specific pieces of code. They are almost always consumers of open source as well: their code uses other OSS modules as dependencies. Typically, a producer will also use their own OSS modules in final software systems like full web or mobile applications or embedded system code.
+When we talk about "producers" in the open source community we typically mean individuals and organizations that create and maintain specific pieces of code. Importantly, **they are almost always consumers of open source as well**: their code uses other OSS modules as dependencies. Typically, a producer will also use their own OSS modules in final software systems like full web or mobile applications or embedded system code.
 
 There are lots of questions inherent in this "producer" role: why do they do it? How do they keep up with the pace of development? How do they market their product? Who has the ability do this? Where is the code stored and how is it accessed? I won't be able to fully answer all of these, but we'll at least tackle some of them.
 
@@ -167,20 +167,20 @@ Many people in the open source community consider themselves to be altruistic: t
 
 Somewhat in contrast to the altruism reasoning is notoriety. There are some OSS contributors that want the attention. They strive to create something popular that will get them conference speaking engagements, clout among their peers, or even prestigious jobs. This is not to say that these people aren't also creating things out of need - the two reasons can coexist.
 
-#### <span style='text-decoration: line-through;'>Money</span>
+#### Money?
 
-To be blunt, no one supports open source software expecting to make money. The money simply isn't there for most projects and contributors. This is relevant because incentivizing open source contributors to continue their support often cannot be purely financial. That's not to say that contributors couldn't be motivated by money in the future, but the understanding is that one should not expect to be paid for OSS contributions.
+To be blunt, most people that support open source software do so without the expectation of making money with that particular work. The money simply isn't there for most projects and contributors. Of course, that experience can propel some developers into good jobs, and there are a number of companies that do in fact make money - and pay developers on staff - supporting open source projects. Organizations like the Linux Foundation, open source companies like RedHat, and big tech companies like Google all do this; however, those opportunities are few.
 
-Additionally, it's important to note that their are jobs in the open source industry. These exist at organizations like the Linux Foundation, open source companies like RedHat, and big tech companies like Google. However, those are few, and it is not the motivation for an individual developer to open source a project.
+If we're talking about initial motivations for a producer to open source a project, it simply isn't a financial decision. This is relevant because incentivizing open source contributors to continue their support often cannot be purely financial. That's not to say that contributors couldn't be motivated by money in the future, but the understanding is that one should not expect to be paid for OSS contributions.
 
 
 #### The role of Software "Foundations"
 
-The vast majority of open source projects are owned (in terms of copyright), run, and managed by individuals. A number of open source projects are run by corporate entities (React (Facebook), RedHat Linux, Firefox (Mozilla)), typically growing out of the organization's need for the functionality and desire to engage with the wider developer community. A third category exists that is a hybrid of sorts: software foundations.
+The vast majority of open source projects are owned (in terms of copyright), run, and managed by individuals. A number of open source projects are run by corporate entities (Facebook's React library, RedHat's Enterprise Linux distribution, Mozilla's Firefox web browser), typically growing out of the organization's need for the functionality and desire to engage with the wider developer community. A third category exists that is a hybrid of sorts: software foundations.
 
 One of the oldest foundations is the [Apache Software Foundation (ASF)](https://www.apache.org/foundation). This (as with most foundations) is a non-profit (501(c)3) and does not take ownership of the projects under it, but rather provides them with some amount of resources and legal protection.
 
-For example, a project under ASF can get hardware, communication tools, and business infrastructure provided for them (under certain conditions). Because ASF is an independent legal entity, it can provide some shelter from legal suits directed at a project (and its maintainers) under the foundation. In addition, foundations can offer companies and individuals an entity to donate resources to and be assured that those resources will be used for the public benefit.
+For example, a project under the auspices of the ASF can get hardware, communication tools, and business infrastructure provided for them (under certain conditions). Because ASF is an independent legal entity, it can provide some shelter from legal suits directed at a project (and its maintainers) under the protection of the foundation. In addition, foundations can offer companies and individuals an entity to donate resources to and be assured that those resources will be used for the public benefit.
 
 In nearly most cases, projects under a foundation like ASF do not need to follow terribly strict development, testing, security, or licensing guidelines. This differs from one foundation to another, but in general this means that while the collaboration and resourcing may be regulated by the foundation, the quality of code is not necessarily so.
 
@@ -194,15 +194,19 @@ That said, there is a general pattern that you see repeated regularly, which is 
 <img src='/images/oss-maintenance-model.png' title='One possible OSS maintenance model' alt='A workflow diagram showing one possible model for open source maintenance. The main points are described in the article text.'>
 
 #### 1\. Issue Raised
-An issue is raised on the projects main issue board. This could be in a tool only accessible to the core team or even an email distribution list, but often it is a public-facing issue tracker such as GitHub.com has under the "Issues" tab for a repository. These issues could be bug reports, feature requests, security reports, or even just questions about the workings of the codebase under certain conditions.
 
-Generally speaking, anyone can raise an issue about the code library in this manner. This is important, because it means that open source maintainers can sometimes be inundated with requests, sometimes for valid concerns, and other times as an intentional, dedicated campaign for radical change. But remember: these maintainers are often _unpaid volunteers_.
+An issue is raised on one of the project's communication channels. This could be in an issue-tracker tool only accessible to the core team, an email distribution list, or even someone ranting on social media. Often it is a public-facing (i.e. open source) issue tracker such as the "Issues" on a GitHub.com repository. These issues could be bug reports, feature requests, security reports, or even just questions about the workings of the codebase under certain conditions.
+
+Generally speaking, anyone can raise an issue about the code library in this manner. This is important, because it means that open source maintainers can sometimes be inundated with requests, sometimes for valid concerns, and other times as an intentional, dedicated campaign for radical change. But remember: these maintainers may be unpaid volunteers who do not think of themselves as your vendor, highly business-centered corporate employees who do not think of you as their customers, or anything in between. The initial response to the issue may very much depend on who reported it and how, coupled with who received the report and how it meshes with their motivations.
 
 #### 2\. Validation
-For valid issues, there will be discussion in the issue's comment thread about validity, nuances, potential resolutions, etc. Ultimately a decision might be made to close the issue for various reasons (for example, it might be a duplicate of another issue). Feature requests will typically have discussion about whether the library is suited for that feature or if it should belong elsewhere (in another code library, perhaps). Typically you will see some early prioritization of issues here as well.
+
+There may very well be discussion in the issue's comment thread about validity, nuances, potential resolutions, etc. Importantly, the "validity" of an issue is very subjective to the maintainer's motivations. Ultimately a decision might be made to close the issue for various reasons (for example, it might be a duplicate of another issue). Feature requests will typically have discussion about whether the library is suited for that feature or if it should belong elsewhere (in another code library, perhaps). Typically you will see some early prioritization of issues here as well.
+
 For bug reports, the conversation usually centers around more traditional "validity" - that is, does the bug really exist, or was the issue due to some other factor, possibly user error. In most cases, unless the bug can be replicated by someone (with well documented steps), the bug will be closed or deprioritized.
 
 #### 3\. Work the Issue
+
 Once an issue has been validated, anyone can work on it - not just core team members (those with direct commit access), but anyone in the world. The path will likely be different depending on whether the incoming code change originated within the core team versus an external party.
 
 If the core team intends to work the issue, it will need to be prioritized. This process might happen in private, but sometimes an open source repository will mark issues with their priority level or a target milestone for completion. More established, structured teams may have a full Software Development LifeCycle (SDLC) process with typical agile development activities.
@@ -210,20 +214,26 @@ If the core team intends to work the issue, it will need to be prioritized. This
 Regardless of the internal process, if there is significant external interest, an outside contributor or organization may do the work themselves. This might happen even if the issue is prioritized by the core team.
 
 #### 4\. Code Review
-In mature codebases there will be many automated and manual checks before code gets merged back into the upstream source repository's trunk. These checks may differ a bit depending on the origin of the code contribution, but generally they will be similar regardless of who created the change. The final check is typically a manual, human review of the code performed by a core team member.
+
+In mature codebases there will be many automated and manual checks before code gets merged back into the upstream source repository's trunk. These checks may differ a bit depending on the origin of the code contribution, but generally they will be similar regardless of who created the change - that is, whether it's an internal contribution or an external one. The final check is typically a manual, human review of the contribution performed by a core team member.
 
 The first line of defense for code quality will be any pre-built unit and integration tests that a developer can run on their own before even submitting a request to merge the code. Additionally, there may be some code style guides, code quality tools, and other automated processes in the repository's Continuous Integration (CI) automation.
 
 Once a request to merge is submitted, automated checks will run the tests, code quality scans, and any other automated processes (such as security scans, if they exist). A failure here means the developer (internal or external) has more work to do, and it prevents unnecessary human time spent on reviewing the code.
 
-If the request is from an external contributor, the core team will need to prioritize the review in their own schedule. This can cause delays, but is necessary to protect the codebase. This last point should not be dismissed quickly. The amount of time to properly review code changes before being merged is significant, and again, these maintainers are _unpaid volunteers_, which means they must prioritize this work in addition to everything else going on in their lives.
+If the request is from an external contributor, the core team will need to prioritize the review in their own schedule. This can cause delays, but is necessary to protect the codebase. This last point should not be dismissed quickly. **The amount of time to properly review a contribution is significant**, and again, these maintainers are often _unpaid volunteers_, which means they must prioritize this work in addition to everything else going on in their lives. A good review involves not just checking automated test output, but reading every line of the code submitted, associated tests and coverage, documentation and other non-technical artifacts, and comparing against architectural decisions and style guides.
+
+A common fault of novice contributors is assuming the review of their contribution is easy, but it often is not, especially if the contributor did not put extra effort into crafting a well documented changeset.
 
 #### 5\. Release Process
+
 This is the last step in the process and varies widely. There is such discrepancy in release processes that it doesn't even make sense to try and elaborate on them here. The only real consistent piece is that the final, fully built code is available for public download on some platform.
 
 For environments like Node.js, Python, and Java this might mean publishing the distributable code package to a package manager service like npm, PyPi, or Maven (respectively).
 
-In all cases the version number of the distributed package will need to be updated. While not all projects use it, the "[Semantic Versioning](https://semver.org/)" (or "semver") pattern is often used. This versioning mechanism allows downstream consumers to understand the impact of changes made and then create rules for which versions of the upstream project they will allow in their downstream systems. The semver pattern generally states that there are three parts to the version number: major, minor, and patch. This might be represented as `2.12.3` for some example project.
+In all cases the version number of the distributed package should be updated. Sadly, this does not always happen, but for this example maintenance model we will assume that it does.
+
+While not all projects use it, the "[Semantic Versioning](https://semver.org/)" (or "semver") pattern is often used. This versioning mechanism allows downstream consumers to understand the impact of changes made and then create rules for which versions of the upstream project they will allow in their downstream systems. The semver pattern generally states that there are three parts to the version number: major, minor, and patch. This might be represented as `2.12.3` for some example project.
 
 When the maintainers decide it is time for a release, they can bump up either the patch, minor, or major number indicating minor fixes, new features or functionality, or serious breaking changes, respectively. For example, a small bug fix that does not change the interface might indicate the new version is `2.12.4`, but a new feature (that does not break pre-existing features) would warrant a minor update to `2.13.0`, and a serious change to the interface would like result in `3.0.0` being the release. A downstream consumer can then decide if they want to accept any of these new releases.
 
@@ -232,7 +242,10 @@ When the maintainers decide it is time for a release, they can bump up either th
 
 #### Vetting of Contributors
 
-_The open source community is a meritocracy._ If you write good code that solves a problem and abides by the contribution guidelines, your submission will generally be accepted. This elevates you from random community member (and consumer) to code contributor (producer), but does not necessarily grant you any control over the underlying code repository such as changing security settings or reviewing other inbound contributions.
+_The open source community is a meritocracy._  
+(Yes, yes we can argue and debate over how true this may actually be. Nothing is ever perfect, but generally, this statement holds true for much of the open source community.)
+
+That is to say, if you write good code that solves a problem and abides by the contribution guidelines, your submission will generally be accepted. This elevates you from random community member (and consumer) to code contributor (producer), but does not necessarily grant you any control over the underlying code repository such as changing security settings or reviewing other inbound contributions.
 
 Most core teams for popular open source repositories have guidelines on who can be added as a core team member. These guidelines are often not published, but rather some internal understanding or agreement among current members. This means that those guidelines can change over time as core team members change. That said, in most cases permissions are gradually increased, giving the user very limited access at first.
 
@@ -243,9 +256,13 @@ More established open source projects such as OpenSSL or Debian Linux have well 
 
 #### Open Source Licenses
 
-Posting code publicly does **not** necessarily mean others can use it, and that alone does not meet the definition of "open source." This is a common misconception. In the United States (and a number of other countries), as soon as a work is created (for example, the code is written) a copyright is created and possessed by the author. In order to protect that copyright the author might need to file for a certificate with the US Patent and Trademark Office (USPTO), but the copyright exists regardless, and could be enforced later.
+**Warning: I am not a lawyer.** You should seek legal counsel for any real decisions on intellectual property.
 
-In common use, we (the developer community) don't generally consider something to be "open source" unless an open source license is attached in some way. For example, there could be a text file in the root directory of the code repository called "LICENSE" which has the text of a [common open source license](https://opensource.org/licenses) in it. Often times the manifest file (there's an example of this later) also specifies a license by name (for example, "MIT" or "GPLv3").
+In general, intellectual property falls into one of four types: copyright, trademark, patent, and trade secrets. We're mostly going to focus on the first (copyright) as it is the collection of rights that an open source license generally releases to the public. An open source license is a legal agreement between the producer and consumer, by which the producer sets the rights and responsibilities conveyed to the consumer by using their software. Notably, trademark and patent issues are also a concern in open source software, but I will not be covering those in this article.
+
+First off, posting code publicly does **not** necessarily mean others can use it, and that alone does not meet the definition of "open source." This is a common misconception. In the United States (and a number of other countries), as soon as a work is created (for example, the code is written) a copyright is created and possessed by the author. In order to protect that copyright the author might need to file for a certificate with the US Patent and Trademark Office (USPTO), but the copyright exists regardless, and could be enforced later.
+
+In common use, we (the developer community) don't generally consider something to be "open source" unless an open source license is attached in some way. For example, there could be a text file in the root directory of the code repository called "LICENSE" which has the text of a [common open source license](https://opensource.org/licenses) in it. Often times the manifest file (there's an example of this later) also specifies a license by name (for example, "[MIT](https://mit-license.org/)" or "[GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html)").
 
 If no license is specified within the code repository, the website for the code, or some other related document or artifact, then **the code is likely not open source software** (even if the source code is published online). It's also important to note that the _copyright_ is independent of the _license_. Attaching an open source license to a code repository does not change who holds the copyright.
 
@@ -253,20 +270,18 @@ If no license is specified within the code repository, the website for the code,
 
 #### Choosing an Open Source License
 
-Developers are able to choose any license they wish, or none (thus retaining all rights). There are some [helpful tools](https://choosealicense.com/licenses/) for developers to select a license based on various criteria and things they wish to protect. Licenses generally fall into [a few broad categories](https://opensource.org/licenses/category), and in many cases an open source author will choose a very permissive license when they start their open source journey. They might then pull back to a less permissive license later, but that often does not happen.
+Developers are able to choose any license they wish, or none (thus retaining all rights). Every license falls somewhere on a spectrum from highly permissive to  very restrictive. The "MIT" license referenced above is very permissive because it releases nearly every right a consumer could want. Of course, it comes with absolutely no warranty and is provided 100% as-is with no expectation of support of any kind. You can view many [licenses in a categorized fashion](https://opensource.org/licenses/category) on the OSI website.
 
-Open source developers are just that: developers. They are (usually) not lawyers and have no background in intellectual property rights and protections. Often times this means the developer will simply choose a license they see on a popular code repository they use, replicating it without thinking.
+In many cases an open source developer will choose a very permissive license when they start their open source journey. They might then pull back to a less permissive license later, but that often does not happen. An important thing to remember is that open source developers are just that: developers. They are (usually) not lawyers and have no background in intellectual property rights and protections. Often times this means the developer will simply choose a license they see on a popular code repository they use, replicating it without thinking.
 
 If a developer _does_ take time to think about the license they use, there are a few questions they might ask themselves:
 
-* **Do I care about patent rights on any of this work?**  
-If so, they might choose the [Apache 2.0 license](https://opensource.org/licenses/Apache-2.0) which specifically discusses patent licensure and protections of the same.
-* **Do I care about requiring improvements to my software to also be open source?**  
-In highly permissive licenses the consumer is able to use _and modify_ the open source software with no restriction. However, if the producer chooses the [GPLv3 license](https://opensource.org/licenses/GPL-3.0) then modifications must also be distributed as open source software.
-* **Do I care about the license used on derivative works?**  
-This is a fairly specialized category, but if a producer not only wants modifications to be made open source, but also wants those derivative works to be under a similarly permissive license, then they may choose the [Lesser GPLv3 (LGPL) license](https://opensource.org/licenses/LGPL-3.0).
+* Do I care about patent rights on any of this work?
+* Do I care about requiring improvements to my software to also be open source?
+* Do I care about the license used on derivative works?
+* Do I care about compatibility within another project or platform?
 
-If none of these questions is relevant to the producer, they may go with an extremely permissive license such as [MIT](https://opensource.org/licenses/MIT) or [BSD-3](https://opensource.org/licenses/BSD-3-Clause). The MIT, BSD-3, and Apache 2.0 licenses were the [most popular by visitor count to the relevant OSI webpages in 2024](https://opensource.org/blog/top-open-source-licenses-in-2024), accounting for around 77% of all traffic.
+> This is another reminder that **I am not a lawyer** and you should consult with one if you have questions on open source licenses. That said, here's an interesting set of data on the [most popular licenses (by pageview and visitors) to the relevant OSI webpages in 2024](https://opensource.org/blog/top-open-source-licenses-in-2024), with the MIT, BSD-3, and Apache 2.0 licenses accounting for around 77% of all traffic.
 
 
 ---
@@ -276,7 +291,9 @@ If none of these questions is relevant to the producer, they may go with an extr
 
 As you may have already read above, _producers are almost always consumers_ as well. Most open source repositories try to not repeat the work of others by incorporating smaller chunks of functionality from existing open source modules. This truism is not reciprocal - there are many consumers that have no role in the producer journey. This fact is actually one of the biggest issues in the open source ecosystem: the imbalance of consumers to producers.
 
-A consumer of OSS will typically find available upstream projects by searching online. Results could come from many places including hosting platforms like GitHub and GitLab, question and answer sites like StackOverflow or Reddit, or from their language's package manager (like npm for JavaScript or PyPi for Python). Once the developer finds a solution to the particular problem they were trying to solve within their own project, they will typically not seek a different solution unless there is very good reason to do so. In other words, _it is rare for a consumer to switch from a chosen OSS dependency to a new one, even if the original has a severe security flaw_.
+The primary motivation of a consumer is reuse. The ability reuse software written by another is extremely valuable. Of course, their selection of an open source project to include in their own should include a review of their intended use. If you recall the license conversation immediately above, the way an open source project is allowed to be used may be dictated by the license. However, often such considerations are an after thought.
+
+A consumer of OSS will typically find available upstream projects by simply searching online. Results could come from many places including hosting platforms like GitHub and GitLab, question and answer sites like StackOverflow or Reddit, or from their language's package manager (like npm for JavaScript or PyPi for Python). Once the developer finds a solution to the particular problem they were trying to solve within their own project, they will typically not seek a different solution unless there is very good reason to do so. In other words, _it is rare for a consumer to switch from a chosen OSS dependency to a new one, even if the original has a severe security flaw_.
 
 This lack of change isn't necessarily a conscious one: often a downstream developer simply does not know that one of their upstream dependencies has a critical vulnerability. However, this **lack of security awareness is in fact a massive problem** in the ecosystem! It allows insecure projects to continue to be used well after they should be retired.
 
@@ -323,7 +340,7 @@ Other programming languages and frameworks have similar commands and manifests, 
 
 Note above how the "semver" format is used to track both the version of this "scheduling-application" and each dependency. The `^` symbol you see above will allow npm to install more recent versions of those dependencies, for example, installing "clock-widget" version `1.1.0` once it is released, even without the need to update the manifest itself. This is the reason developers often use a "lock file" to nail down ("lock") specific versions of upstream libraries.
 
-Finally, note that this list does not include 100% of the upstream software we need, because it does not include the _indirect_ dependencies: those installed because they are needed by the direct dependencies. They're still part of our Scheduling Application!
+Finally, note that this list does not include 100% of the upstream software we need, because it does not include the _indirect or transitive_ dependencies: those installed because they are needed by the direct dependencies. They're still part of our Scheduling Application!
 
 
 #### Choosing the Upstream Dependencies
@@ -333,22 +350,27 @@ Unfortunately, the criteria for choosing an OSS project to solve a small problem
 Broadly speaking, there are five big criteria that tend to be used when making the big choices in OSS (like a big web framework). These criteria are presented below in an ordered list as they are often approached by a developer or team, with the caveat that different organizations will obviously structure their decision making differently.
 
 #### 1\. Functionality
+
 Answering the question: does this piece of open source code do what I need done? But this criteria also extends to: can I configure it to solve my problem in other ways?
 
 #### 2\. Popularity
+
 The number of "stars" on GitHub or download counts can often be a proxy for the support that this code library has within the community. Two modules equal in functionality but one with 500 stars and one with 10 stars typically makes for an easy decision. Of course, these metrics are often paired with other criteria like velocity.
 
 #### 3\. Documentation
+
 How easy is it for a developer to know how to use this code library? If a developer spends more than an hour trying to figure out how to solve their problem they are likely to move on to a different library. Aside from functional documentation, an experienced software engineer will also be looking for strong contribution guidelines, build and test metrics, security protocols, etc. Lastly, this category also applies to the OSS license used; however, it is exceedingly rare that a developer will choose one library over another based on the license. This is more likely to come up in a review by organization lawyers or compliance officials, forcing a change.
 
 #### 4\. Velocity
+
 When was the last release of this code? How often are contributions accepted and how quickly are issues addressed and resolved? Related to this category is the number of contributors on the repository. If it is a single developer maintaining it, there will be some concerns. More contributors means higher velocity, but it also means more eyes on problems and thus generally better solutions.
 
 #### 5\. Testing & Security
+
 Often testing and security are after thoughts in the decision making process. A good senior developer will be looking for this, but often the first three criteria above are enough to make the decision of whether to use an open source module. In almost all cases, large organizational reviews don't even catch this criteria outside of known, reported common vulnerabilities and exploits (CVEs).
 
 
-#### Risks to Consumers
+### Risks to Consumers
 
 If an open source consumer does their due diligence and selects only good, well maintained, well tested, and secure open source dependencies following the guidance above, then where is the risk?
 
@@ -356,7 +378,7 @@ If an open source consumer does their due diligence and selects only good, well 
 
 Refer back to our [notional application dependency tree](#notional-application-dependency-tree) from earlier. While the developers of the downstream project (our "Scheduling Application") might make good decisions about which dependencies to include _directly_, their code is ultimately at the mercy of every other - and developer - upstream. If we look at a very simple application dependency tree with six direct dependencies (like our notional application) we could easily be dependent on dozens or even hundreds of sub-dependencies, and thus hundreds or thousands of other developers.
 
-There are tools to get insight into this deep dependency tree, but at some point we accept some amount of risk when building software this way. All of the other risks in using open source software are _amplified_ by this one aspect.
+There are tools to get insight into this deep dependency tree, but at some point we accept some amount of risk when building software this way. All of the other risks in using open source software are _amplified_ by this one aspect. A downstream project can partially mitigate this risk by ensuring that they have automated processes in place to review their full dependency tree for issues not just on new builds, but continuously.
 
 #### Lack of Participation
 
@@ -376,6 +398,8 @@ Building up on the last point, open source projects are highly susceptible to si
 
 However, the "single point of failure" issue is not just about the contributors, it also manifests in some upstream dependencies that many, many code projects rely on. When one of these critical - and [often small](https://xkcd.com/2347/) - projects faulters, the entire system can get thrown into chaos. This was put on display in 2016 when [an 11-line code library was abruptly unpublished](https://www.theregister.com/2016/03/23/npm_left_pad_chaos/) resulting in thousands of downstream projects failing to build properly.
 
+The best mitigation for this risk is to either change to a better supported library, or possibly to create a fork and maintain it. There are cases where an otherwise unsupported piece of code has been forked and then that fork becomes the primary library in use for that purpose.
+
 #### Lax Software Development Processes
 
 For older, larger open source projects, especially those maintained by larger companies, there is usually a fairly standard software development lifecycle that includes the processes many companies would follow for their own code. This could include automated testing, scanning of code for quality and security issues, and a thorough code review step.
@@ -384,11 +408,11 @@ However, for smaller projects, and especially for those with a small number of m
 
 It's also worth mentioning that downstream consumers do not necessarily have good development practices either. Thus hiding potential issues with upstream dependencies that might have security vulnerabilities going unchecked.
 
-The solution here is better overall software development practices at all points in the supply chain, but also increased participation in open source projects by the broader community. If a company's product relies on a particular open source project, that company should get involved to espouse good development processes and thus better secure their own code.
+The solution here is better overall software development practices at all points in the supply chain, but also **increased participation in open source projects by the broader community**. If a company's product relies on a particular open source project, that company should get involved to espouse good development processes and thus better secure their own code.
 
 #### License and Copyright Issues
 
-One last issue that mostly affects for-profit organizations is conflicts in licenses and potential copyright issues. As discussed in the Open Source Licenses section above, there can be issues with using certain open source libraries _if an organization modifies that code_. This comes into play for "copyleft" licenses such as the LGPL (among others).
+One last issue that mostly affects for-profit organizations is conflicts in licenses and potential copyright issues. As discussed in the Open Source Licenses section above, there can be issues with using certain open source libraries _if an organization modifies that code_. This comes into play for restrictive licenses such as the LGPL (among others).
 
 In nearly every case, a downstream consumer is required to keep the license and copyright information in tact when redistributing their own code. With some development processes it's possible that the licenses and copyrights can get stripped from a code dependency during the build process. This can open up organizations to legal issues.
 
@@ -440,24 +464,29 @@ The workarounds tend to include things like including the "Root Module" as a dir
 
 #### So why use open source dependencies at all?
 
-Given all of the issues in the ecosystem discussed above, why do so many organizations rely so heavily on open source software in their final applications? There are three main drivers for this:
+Given all of the issues in the ecosystem discussed above, why do so many organizations rely so heavily on open source software in their final applications? Most of this comes down to reuse and the many benefits it brings.
 
 ##### Total Cost of Ownership
+
 Even though there are many hidden costs of using open source software - and things organizations _should_ spend money on, supporting the open source software they rely on - the total cost of ownership (TCO) for commercial software is immensely lower when all things are considered. The simple fact that the programming languages we all rely on are open source should be proof enough of that. There are some [academic articles](https://www.sciencedirect.com/science/article/pii/S1877050916313631) and papers that suggest that open source can lower the TCO of a software project by 80%. Additionally, consider the number stated at the top of this article about the value of open source software. If a company had to write _everything_ from scratch, they would spend many times more than the actually value-add piece they develop.
 
 ##### Time to Market
+
 This is likely the easiest - and most obvious - win for open source software. If someone else has already built it, why spend time doing the work again? While this is immensely important in the technology startup community, it applies just as much to larger organizations trying to stay ahead of the game. That said, organizations must keep in mind that incorporating open source software in their final products does require effort. Time - and money - should be allotted for evaluation of, selection for, and contribution upstream to open source dependencies.
 
 ##### Hive Mind Problem Solving
+
 The time to market benefit exists not only because someone has already built a similar mouse trap and open sourced it, but because they have likely built a _better_ mouse trap. The "hive mind" or "group thought" aspect of open source software means that downstream consumers can benefit from having many other developers looking at - and improving - the technology they would otherwise have to build in house. This almost always results in better software that can solve a range of problems versus singular use case development.
 
 ##### Security
+
 While we discussed many risks in the sections above, even with such risks, the security of open source software can still be better than some closed source alternatives. Consider the "hive mind" benefit mentioned directly above: having more people looking at a problem makes the solution better. In this case, the problem is potential vulnerabilities. With more people looking at them, more people can offer solutions and fix those issues before they get exploited. David Wheeler has a fantastic [chapter on the security of open source software](https://dwheeler.com/secure-programs/Secure-Programs-HOWTO/open-source-security.html) in his open sourced book: "[Secure Programming HOWTO](https://dwheeler.com/secure-programs/Secure-Programs-HOWTO)" (chapter 2.4, specifically). One of the most compelling arguments is that closing software source code does not halt attacks. And on the contrary, closing source code can likely hide a vulnerability from your own organization, thus leaving the door open for attackers.
+
 
 ---
 
 
-### Options for a Better Ecosystem
+### A Call to Action
 
 I've raised a number of issues in this article, but I also have thoughts on how we as a community can better support our open source ecosystem. While these ideas are not necessarily new, I believe that adding more voices to the call can help.
 
@@ -471,7 +500,7 @@ Hopefully, with a better understanding of the issues, leaders in our industry wi
 
 An Open Source Program Office (OSPO) is a great way for organizations to ensure that they are being good members of the open source community and good stewards of their own open source projects. Generally these offices are only found at larger organizations as they require personnel to staff them; however, I believe that even small organizations can start with a single-person OSPO and make great improvement in their approach to both consuming and producing open source software.
 
-Any startup that wants to make the leap to the next stage in their company's evolution should consider investing in how the think about open source software, and this is the best starting point.
+Any startup that wants to make the leap to the next stage in their company's evolution should consider investing in how they think about open source software, and this is the best starting point.
 
 #### Corporate Support
 
@@ -493,8 +522,6 @@ That said, there are a number of ways that governments - especially the U.S. gov
 * For the U.S., use Other Direct Costs (ODC's) in IT contracts to require contractors to spend time supporting open source projects the government relies on as part of their standard development practice. This is in addition to contractually requiring bug and security fixes to be pushed upstream.
 
 
-### A Call to Action
-
-I hope that this article has helped you to better understand the open source ecosystem, and more over, I hope it helps organizations of all sizes to do better in supporting this critical infrastructure that underpins our entire modern digital world. I encourage you to take this material and share it with your organization's leadership, and use it to influence their decisions on open source.
-
-Use the risks and issues highlighted here as a call to action!
+> I hope that this article has helped you to better understand the open source ecosystem, and more over, I hope it helps organizations of all sizes to do better in supporting this critical infrastructure that underpins our entire modern digital world. I encourage you to take this material and share it with your organization's leadership, and use it to influence their decisions on open source.
+>  
+> A big thank you to [Tim Pepper](https://tpepper.github.io/) for his review and edits!
