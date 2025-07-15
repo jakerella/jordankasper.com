@@ -3,6 +3,7 @@
     setupHobbesHover()
     adjustContentHeight()
     setupSearch()
+    setupImageLinks()
 
     function setupHobbesHover() {
         const hobbes = $('.hobbes-hover')
@@ -42,6 +43,12 @@
             if (!$(e.target).parents('.search').length) {
                 $('.pagefind-ui__search-clear').trigger('click')
             }
+        })
+    }
+
+    function setupImageLinks() {
+        Array.from($('.blog-post img')).forEach((n) => {
+            $(n).after(`<p class='view-image'><a href='${n.getAttribute('src')}' target='_blank'>[view]</a></p>`)
         })
     }
 

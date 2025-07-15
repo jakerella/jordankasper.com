@@ -459,6 +459,16 @@ body>footer .rss:active {
     }
 }
 
+.blog-post img {
+    max-width: 100%;
+}
+.blog-post .view-image {
+    text-align: right;
+}
+.blog-post .view-image a {
+    color: #888;
+}
+
 .blog-post p {
     line-height: 1.4em;
 }
