@@ -1,10 +1,13 @@
 (async function () {
 
+    const LOCAL_ANALYTIC_KEY = 'jk-hits'
+    const ANALYTIC_TIMEOUT = 1000 * 30 // (1000 * 60 * 60 * 2)
+
     setupHobbesHover()
     adjustContentHeight()
     setupSearch()
     setupImageLinks()
-    await setupAnalytics()
+    await initAnalytics()
 
     function setupHobbesHover() {
         const hobbes = $('.hobbes-hover')
@@ -54,32 +57,52 @@
         })
     }
 
-    async function setupAnalytics() {
+    async function initAnalytics() {
         var fp = await (await FingerprintJS.load()).get()
 
-        const visitData = {
+        const visitor = {
             id: fp.visitorId,
-            p: window.location.path,
+            tz: Intl.DateTimeFormat().resolvedOptions().timeZone
+        }
+        const hit = {
+            p: window.location.pathname || '/',
             q: window.location.search,
-            ref: document.referrer,
-            ua: navigator.userAgent,
-            ts: Date.now(),
-            tz: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            bounce: 0
+            r: document.referrer,
+            t: Date.now()
         }
 
-        // TODO:
-        // Store data in localStorage, send on interval (after X amount of time has passed)
-        //  - need to track pages and page _views_ (count), but maybe with a timeout?
-        //  - track searches?
-        // Check for window unload, send data (and indicate bounce, but just on that last page)
-
-        const resp = await fetch(`/.netlify/functions/processVisit?data=${btoa(JSON.stringify(visitData))}`)
-        if (resp.status === 200) {
-            console.log(await resp.json())
-        } else {
-            console.debug(`analytic API failed: ${resp.status}: ${await resp.text()}`)
+        let data = localStorage.getItem(LOCAL_ANALYTIC_KEY) || null
+        if (data) {
+            try {
+                data = JSON.parse(atob(data))
+                if (data.v.id !== visitor.id) {
+                    data = null
+                } else {
+                    // console.debug('Previous analytic data:', JSON.stringify(data, null, 2))
+                    data.h.push(hit)
+                }
+            } catch(err) { /* we'll have to start over */ }
         }
+        if (!data) {
+            data = {
+                last: 0,
+                v: visitor,
+                h: [hit]
+            }
+        }
+
+        if ((Date.now() - data.last) > ANALYTIC_TIMEOUT) {
+            // console.debug(`Last analytic send was more than ${Math.round(ANALYTIC_TIMEOUT / 1000)} seconds ago...`)
+            const resp = await fetch(`/.netlify/functions/processVisit?data=${btoa(JSON.stringify(data))}`)
+            if (resp.status === 200) {
+                // console.debug(`Analytics sent: ${resp.status}`, JSON.stringify(data, null, 2))
+                data.last = Date.now()
+                data.h = []
+            } else {
+                console.debug(`Analytic API call failed: ${resp.status}`)
+            }
+        }
+        localStorage.setItem(LOCAL_ANALYTIC_KEY, btoa(JSON.stringify(data)))
     }
 
 })()

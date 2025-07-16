@@ -1,0 +1,14 @@
+{
+  "name": "jordankasper-api",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": "22.x"
+  },
+  "description": "API functions for Netlify deployment of my site",
+  "author": "Jordan Kasper",
+  "license": "MIT",
+  "dependencies": {
+    "@netlify/blobs": "^10.0.5"
+  }
+}

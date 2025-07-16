@@ -1,32 +1,85 @@
-// Docs on event and context https://docs.netlify.com/functions/build/#code-your-function-2
+const blobs = require('@netlify/blobs')
+
+/**
+VISIT DATA SCHEMA:
+keys: CCYY/MM/DD
+data within a key:
+{
+    'fp': {
+        g: String,       // geolocation (country code)
+        f: Number,       // timestamp of first visit
+        l: Number        // timestamp of latest visit
+    }
+    '/path': {           // unique paths visited on the website
+        p: Number,       // number of page views
+        v: [...String],  // unique visitor fingerprints
+        q: [...String],  // search query terms used to reach this path
+        r: [...String],  // unique referral URLs
+        b: Number        // number of bounces from this path
+    }
+}
+**/
+
 const handler = async (req, context) => {
+    /**
+    INCOMING DATA QUERY (?data=base64 json):
+    {
+        v: { id: String, tz: String },
+        h: [ ...{ p: String, q: String, r: String, t: Number } ]
+    }
+    */
+
     let data = {}
     try {
         data = JSON.parse(atob(req.queryStringParameters.data || '') || '{}')
     } catch (err) {
-        console.warn(`Unable to parse data: ${err.message || err}`)
+        console.warn(`Unable to parse analytic data: ${err.message || err}`)
         return { statusCode: 500, body: err.message || err.toString() }
     }
-    console.log('Visitor data:', data)
+    
+    if (!data.v || !data.v.id || !Array.isArray(data.h)) {
+        return { statusCode: 400, body: 'Invalid analytic data payload' }
+    }
 
     if (context.geo && context.geo.country) {
-        data.geo = context.geo.country.name
+        data.v.g = context.geo.country.code
     } else {
-        data.geo = getCountryFromTZ(data.tz || '')
+        data.v.g = getCountryFromTZ(data.v.tz || '')
     }
 
-    // TODO:
-    // Parse query to store search terms, if present
-    // Use https://github.com/faisalman/ua-parser-js to parse UA for browser, OS, mobile
-    // Store data...... somewhere?!?!?
-    //  - maybe 1 week (or 1 month?) rolling Netlify Blobs?  (is there a cost?!)
-    //    https://docs.netlify.com/build/data-and-storage/netlify-blobs/ (setjson maybe?)
-    //    https://www.netlify.com/blog/introducing-netlify-blobs-beta/
+    const TRACKED_PARAMS = ['q']
+    data.h = data.h.map((h) => {
+        if (h.q) {
+            const q = []
+            h.q.split('?')[1]?.split('&').forEach((p) => {
+                const [k, v] = p.split('=')
+                if (TRACKED_PARAMS.includes(k)) {
+                    q.push(v)
+                }
+            })
+            h.q = q.join('; ')
+        }
+        return h
+    })
 
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ message: `Stored analytic for visitor: ${data.id}`, data })
-    }
+
+    // const store = blobs.getStore({
+    //     name: 'analytics',
+    //     siteID: process.env.NETLIFY_SITE_ID || undefined,
+    //     edgeURL: process.env.NETLIFY_EDGE_URL || undefined,
+    //     token: process.env.NETLIFY_BLOBS_TOKEN || undefined
+    // })
+
+    console.debug('Storing analytic data:', data)
+
+    // TODO: retrieve the appropriate (existing) analytic data (or create it), then fit this new data into that
+
+    // const result = await store.setJSON('testkey', {ts: Date.now()})
+    // console.log('set result:', result)
+    // const value = await store.get('testkey', 'json')
+    // console.log('store value:', value)
+
+    return { statusCode: 200, body: '' }
 }
 
 module.exports = { handler }
