@@ -1,44 +1,78 @@
+
+const crypto = require('node:crypto')
 const blobs = require('@netlify/blobs')
+const timezones = require('../timezones.json')
+
+const c = require('../constants.json')
+const TRACKED_SEARCH_PARAMS = ['q']
+
+module.exports = { handler }
 
 /**
-VISIT DATA SCHEMA:
-keys: CCYY/MM/DD
-data within a key:
-{
-    'fp': {
-        g: String,       // geolocation (country code)
-        f: Number,       // timestamp of first visit
-        l: Number        // timestamp of latest visit
-    }
-    '/path': {           // unique paths visited on the website
-        p: Number,       // number of page views
-        v: [...String],  // unique visitor fingerprints
-        q: [...String],  // search query terms used to reach this path
-        r: [...String],  // unique referral URLs
-        b: Number        // number of bounces from this path
+ * This is the main handler for the analytics processor. The Request object needs to have
+ * a query param called "data" which contains a BASE64 ENCODED JSON OBJECT (stringified).
+ * The structure of that JSON object is:
+ *   {
+ *     v: {           // the visitor for this analytic data set
+ *       id: String,  // device fingerprint
+ *       tz: String   // device timezone as text (i.e. "America/New_York")
+ *     },
+ *     h: [{          // an array fo the hits for from this device since the last analytic payload sent
+ *       p: String,   // the pathname for the hit
+ *       t: Number,   // the timestamp of the hit
+ *       q: String,   // the query string (optional)
+ *       r: String    // the referral URL (optional)
+ *     }, ...]
+ *   }
+ * 
+ * @param {*} req The HTTP Request object from Netlify
+ * @param {*} context The Netlify context
+ * @returns 
+ */
+async function handler(req, context) {
+    try {
+        const analytics = extractRequestData(req.queryStringParameters, context)
+        if (!analytics) {
+            return { statusCode: 400, body: 'Invalid analytic data payload' }
+        }
+
+        console.debug('Storing analytic data:', analytics)
+
+        const store = blobs.getStore({
+            name: 'analytics',
+            siteID: process.env.NETLIFY_SITE_ID || undefined,
+            edgeURL: process.env.NETLIFY_EDGE_URL || undefined,
+            token: process.env.NETLIFY_BLOBS_TOKEN || undefined
+        })
+
+        await updateVisitorData(analytics, store)
+
+        const result = await updatePageHits(analytics, store)
+        if (!result) {
+            return { statusCode: 500, body: 'Unable to save analytic data' }
+        }
+        return { statusCode: 200, body: '' }
+    } catch(err) {
+        console.err(`Hit catch all block: ${err.message || err.toString()}`)
+        return { statusCode: 500, body: 'Unable to save analytic data' }
     }
 }
-**/
 
-const handler = async (req, context) => {
-    /**
-    INCOMING DATA QUERY (?data=base64 json):
-    {
-        v: { id: String, tz: String },
-        h: [ ...{ p: String, q: String, r: String, t: Number } ]
+function extractRequestData(queryParams, context) {
+    if (!queryParams.data) {
+        return null
     }
-    */
 
     let data = {}
     try {
-        data = JSON.parse(atob(req.queryStringParameters.data || '') || '{}')
+        data = JSON.parse(atob(queryParams.data))
     } catch (err) {
-        console.warn(`Unable to parse analytic data: ${err.message || err}`)
-        return { statusCode: 500, body: err.message || err.toString() }
+        console.warn(`Unable to parse analytic data in query string: ${err.message || err}`)
+        return null
     }
     
     if (!data.v || !data.v.id || !Array.isArray(data.h)) {
-        return { statusCode: 400, body: 'Invalid analytic data payload' }
+        return null
     }
 
     if (context.geo && context.geo.country) {
@@ -47,847 +81,121 @@ const handler = async (req, context) => {
         data.v.g = getCountryFromTZ(data.v.tz || '')
     }
 
-    const TRACKED_PARAMS = ['q']
-    data.h = data.h.map((h) => {
-        if (h.q) {
-            const q = []
-            h.q.split('?')[1]?.split('&').forEach((p) => {
-                const [k, v] = p.split('=')
-                if (TRACKED_PARAMS.includes(k)) {
-                    q.push(v)
-                }
-            })
-            h.q = q.join('; ')
-        }
-        return h
+    data.h = data.h
+        .map((h) => {
+            if (h.p === '') { h.p = '/' }
+            if (h.q) {
+                const q = []
+                h.q.split('?')[1]?.split('&').forEach((p) => {
+                    const [k, v] = p.split('=')
+                    if (TRACKED_SEARCH_PARAMS.includes(k)) {
+                        q.push(decodeURIComponent(v).replaceAll(/\+/g, ' '))
+                    }
+                })
+                h.q = q.join('; ')
+            }
+            return h
+        })
+        .filter((h) => { return h.p && Number(h.t) && Number(h.t) > 0 })
+    
+    if (!data.h.length) {
+        console.debug('No valid hits in analytic payload')
+        return null
+    }
+
+    return data
+}
+
+async function updateVisitorData(analytics, store) {
+    const visitors = (await store.get(c.VISITORS_KEY, { type: 'json' })) || {}
+    if (!visitors[analytics.v.id]) {
+        visitors[analytics.v.id] = {}
+    }
+    
+    visitors[analytics.v.id].g = (analytics.v.g) ? analytics.v.g : (visitors[analytics.v.id].g || 0)
+    let earliest = Date.now() + 1000
+    let latest = 0
+    analytics.h.forEach((h) => {
+        if (h.t < earliest) { earliest = h.t }
+        if (h.t > latest) { latest = h.t }
     })
+    if (!visitors[analytics.v.id].f) { visitors[analytics.v.id].f = Math.floor(earliest / 1000) }
+    visitors[analytics.v.id].l = Math.floor(latest / 1000)
 
-
-    // const store = blobs.getStore({
-    //     name: 'analytics',
-    //     siteID: process.env.NETLIFY_SITE_ID || undefined,
-    //     edgeURL: process.env.NETLIFY_EDGE_URL || undefined,
-    //     token: process.env.NETLIFY_BLOBS_TOKEN || undefined
-    // })
-
-    console.debug('Storing analytic data:', data)
-
-    // TODO: retrieve the appropriate (existing) analytic data (or create it), then fit this new data into that
-
-    // const result = await store.setJSON('testkey', {ts: Date.now()})
-    // console.log('set result:', result)
-    // const value = await store.get('testkey', 'json')
-    // console.log('store value:', value)
-
-    return { statusCode: 200, body: '' }
+    const result = await store.setJSON(c.VISITORS_KEY, visitors)
+    if (!result) {
+        console.warn(`unable to update visitor data in blobs for ${analytics.v.id}, will try to update analytics anyway...`)
+    }
+    return result
 }
 
-module.exports = { handler }
+async function updatePageHits(analytics, store) {
+    const hitsByDate = {}
+    const dateKeysUpdated = []
+    const pathIndex = (await store.get(c.PATHS_KEY, { type: 'json' })) || {}
 
+    for (let i=0; i<analytics.h.length; ++i) {
+        const dateKey = c.HITS_KEY_PREFIX + (new Date(Number(analytics.h[i].t))).toISOString().split('T')[0]
+        if (!hitsByDate[dateKey]) {
+            hitsByDate[dateKey] = (await store.get(dateKey, { type: 'json' })) || {}
+        }
+        let pathId = pathIndex[analytics.h[i].p]
+        if (!pathId) {
+            pathId = generatePathKey(pathIndex)
+            pathIndex[analytics.h[i].p] = pathId
+            const result = await store.setJSON(c.PATHS_KEY, pathIndex)
+            if (!result) {
+                console.error(`unable to update path index in blobs for ${analytics.h[i].p}`)
+                return false
+            }
+        }
 
-const countries = {
-    AD: 'Andorra',
-    AE: 'United Arab Emirates',
-    AF: 'Afghanistan',
-    AG: 'Antigua and Barbuda',
-    AI: 'Anguilla',
-    AL: 'Albania',
-    AM: 'Armenia',
-    AO: 'Angola',
-    AQ: 'Antarctica',
-    AR: 'Argentina',
-    AS: 'American Samoa',
-    AT: 'Austria',
-    AU: 'Australia',
-    AW: 'Aruba',
-    AX: 'Åland Islands',
-    AZ: 'Azerbaijan',
-    BA: 'Bosnia and Herzegovina',
-    BB: 'Barbados',
-    BD: 'Bangladesh',
-    BE: 'Belgium',
-    BF: 'Burkina Faso',
-    BG: 'Bulgaria',
-    BH: 'Bahrain',
-    BI: 'Burundi',
-    BJ: 'Benin',
-    BL: 'Saint Barthélemy',
-    BM: 'Bermuda',
-    BN: 'Brunei',
-    BO: 'Bolivia',
-    BQ: 'Caribbean Netherlands',
-    BR: 'Brazil',
-    BS: 'Bahamas',
-    BT: 'Bhutan',
-    BV: 'Bouvet Island',
-    BW: 'Botswana',
-    BY: 'Belarus',
-    BZ: 'Belize',
-    CA: 'Canada',
-    CC: 'Cocos Islands',
-    CD: 'Democratic Republic of the Congo',
-    CF: 'Central African Republic',
-    CG: 'Republic of the Congo',
-    CH: 'Switzerland',
-    CI: 'Ivory Coast',
-    CK: 'Cook Islands',
-    CL: 'Chile',
-    CM: 'Cameroon',
-    CN: 'China',
-    CO: 'Colombia',
-    CR: 'Costa Rica',
-    CU: 'Cuba',
-    CV: 'Cabo Verde',
-    CW: 'Curaçao',
-    CX: 'Christmas Island',
-    CY: 'Cyprus',
-    CZ: 'Czechia',
-    DE: 'Germany',
-    DJ: 'Djibouti',
-    DK: 'Denmark',
-    DM: 'Dominica',
-    DO: 'Dominican Republic',
-    DZ: 'Algeria',
-    EC: 'Ecuador',
-    EE: 'Estonia',
-    EG: 'Egypt',
-    EH: 'Western Sahara',
-    ER: 'Eritrea',
-    ES: 'Spain',
-    ET: 'Ethiopia',
-    FI: 'Finland',
-    FJ: 'Fiji',
-    FK: 'Falkland Islands',
-    FM: 'Micronesia',
-    FO: 'Faroe Islands',
-    FR: 'France',
-    GA: 'Gabon',
-    GB: 'United Kingdom',
-    GD: 'Grenada',
-    GE: 'Georgia',
-    GF: 'French Guiana',
-    GG: 'Guernsey',
-    GH: 'Ghana',
-    GI: 'Gibraltar',
-    GL: 'Greenland',
-    GM: 'Gambia',
-    GN: 'Guinea',
-    GP: 'Guadeloupe',
-    GQ: 'Equatorial Guinea',
-    GR: 'Greece',
-    GS: 'South Georgia and the South Sandwich Islands',
-    GT: 'Guatemala',
-    GU: 'Guam',
-    GW: 'Guinea-Bissau',
-    GY: 'Guyana',
-    HK: 'Hong Kong',
-    HM: 'Heard Island and McDonald Islands',
-    HN: 'Honduras',
-    HR: 'Croatia',
-    HT: 'Haiti',
-    HU: 'Hungary',
-    ID: 'Indonesia',
-    IE: 'Ireland',
-    IL: 'Israel',
-    IM: 'Isle of Man',
-    IN: 'India',
-    IO: 'British Indian Ocean Territory',
-    IQ: 'Iraq',
-    IR: 'Iran',
-    IS: 'Iceland',
-    IT: 'Italy',
-    JE: 'Jersey',
-    JM: 'Jamaica',
-    JO: 'Jordan',
-    JP: 'Japan',
-    KE: 'Kenya',
-    KG: 'Kyrgyzstan',
-    KH: 'Cambodia',
-    KI: 'Kiribati',
-    KM: 'Comoros',
-    KN: 'Saint Kitts and Nevis',
-    KP: 'North Korea',
-    KR: 'South Korea',
-    KW: 'Kuwait',
-    KY: 'Cayman Islands',
-    KZ: 'Kazakhstan',
-    LA: 'Laos',
-    LB: 'Lebanon',
-    LC: 'Saint Lucia',
-    LI: 'Liechtenstein',
-    LK: 'Sri Lanka',
-    LR: 'Liberia',
-    LS: 'Lesotho',
-    LT: 'Lithuania',
-    LU: 'Luxembourg',
-    LV: 'Latvia',
-    LY: 'Libya',
-    MA: 'Morocco',
-    MC: 'Monaco',
-    MD: 'Moldova',
-    ME: 'Montenegro',
-    MF: 'Saint Martin',
-    MG: 'Madagascar',
-    MH: 'Marshall Islands',
-    MK: 'North Macedonia',
-    ML: 'Mali',
-    MM: 'Myanmar',
-    MN: 'Mongolia',
-    MO: 'Macao',
-    MP: 'Northern Mariana Islands',
-    MQ: 'Martinique',
-    MR: 'Mauritania',
-    MS: 'Montserrat',
-    MT: 'Malta',
-    MU: 'Mauritius',
-    MV: 'Maldives',
-    MW: 'Malawi',
-    MX: 'Mexico',
-    MY: 'Malaysia',
-    MZ: 'Mozambique',
-    NA: 'Namibia',
-    NC: 'New Caledonia',
-    NE: 'Niger',
-    NF: 'Norfolk Island',
-    NG: 'Nigeria',
-    NI: 'Nicaragua',
-    NL: 'Netherlands',
-    NO: 'Norway',
-    NP: 'Nepal',
-    NR: 'Nauru',
-    NU: 'Niue',
-    NZ: 'New Zealand',
-    OM: 'Oman',
-    PA: 'Panama',
-    PE: 'Peru',
-    PF: 'French Polynesia',
-    PG: 'Papua New Guinea',
-    PH: 'Philippines',
-    PK: 'Pakistan',
-    PL: 'Poland',
-    PM: 'Saint Pierre and Miquelon',
-    PN: 'Pitcairn',
-    PR: 'Puerto Rico',
-    PS: 'Palestine',
-    PT: 'Portugal',
-    PW: 'Palau',
-    PY: 'Paraguay',
-    QA: 'Qatar',
-    RE: 'Réunion',
-    RO: 'Romania',
-    RS: 'Serbia',
-    RU: 'Russia',
-    RW: 'Rwanda',
-    SA: 'Saudi Arabia',
-    SB: 'Solomon Islands',
-    SC: 'Seychelles',
-    SD: 'Sudan',
-    SE: 'Sweden',
-    SG: 'Singapore',
-    SH: 'Saint Helena, Ascension and Tristan da Cunha',
-    SI: 'Slovenia',
-    SJ: 'Svalbard and Jan Mayen',
-    SK: 'Slovakia',
-    SL: 'Sierra Leone',
-    SM: 'San Marino',
-    SN: 'Senegal',
-    SO: 'Somalia',
-    SR: 'Suriname',
-    SS: 'South Sudan',
-    ST: 'Sao Tome and Principe',
-    SV: 'El Salvador',
-    SX: 'Sint Maarten',
-    SY: 'Syria',
-    SZ: 'Eswatini',
-    TC: 'Turks and Caicos Islands',
-    TD: 'Chad',
-    TF: 'French Southern Territories',
-    TG: 'Togo',
-    TH: 'Thailand',
-    TJ: 'Tajikistan',
-    TK: 'Tokelau',
-    TL: 'Timor-Leste',
-    TM: 'Turkmenistan',
-    TN: 'Tunisia',
-    TO: 'Tonga',
-    TR: 'Turkey',
-    TT: 'Trinidad and Tobago',
-    TV: 'Tuvalu',
-    TW: 'Taiwan',
-    TZ: 'Tanzania',
-    UA: 'Ukraine',
-    UG: 'Uganda',
-    UM: 'United States Minor Outlying Islands',
-    US: 'United States of America',
-    UY: 'Uruguay',
-    UZ: 'Uzbekistan',
-    VA: 'Holy See',
-    VC: 'Saint Vincent and the Grenadines',
-    VE: 'Venezuela',
-    VG: 'Virgin Islands (UK)',
-    VI: 'Virgin Islands (US)',
-    VN: 'Vietnam',
-    VU: 'Vanuatu',
-    WF: 'Wallis and Futuna',
-    WS: 'Samoa',
-    YE: 'Yemen',
-    YT: 'Mayotte',
-    ZA: 'South Africa',
-    ZM: 'Zambia',
-    ZW: 'Zimbabwe'
+        if (!hitsByDate[dateKey][pathId]) {
+            hitsByDate[dateKey][pathId] = { h: 0, v: [], q: [], r: [] }
+        }
+        hitsByDate[dateKey][pathId].h++
+        if (!hitsByDate[dateKey][pathId].v.includes(analytics.v.id)) {
+            hitsByDate[dateKey][pathId].v.push(analytics.v.id)
+        }
+        if (analytics.h[i].q && !hitsByDate[dateKey][pathId].q.includes(analytics.h[i].q)) {
+            hitsByDate[dateKey][pathId].q.push(analytics.h[i].q)
+        }
+        if (analytics.h[i].r && !hitsByDate[dateKey][pathId].r.includes(analytics.h[i].r)) {
+            hitsByDate[dateKey][pathId].r.push(analytics.h[i].r)
+        }
+        dateKeysUpdated.push(dateKey)
+    }
+
+    let allSucceeded = true
+    for (let i=0; i<dateKeysUpdated.length; ++i) {
+        try {
+            const result = await store.setJSON(dateKeysUpdated[i], hitsByDate[dateKeysUpdated[i]])
+            if (!result) {
+                allSucceeded = false
+                console.error(`unable to update analytics data for${dateKeysUpdated[i]}`)
+            }
+        } catch(err) {
+            allSucceeded = false
+            console.error(`unable to update analytics data for${dateKeysUpdated[i]}: ${err.message || err}`)
+        }
+    }
+
+    return allSucceeded
 }
-const timezones = {
-    'Africa/Abidjan': { c: ['CI', 'BF', 'GH', 'GM', 'GN', 'ML', 'MR', 'SH', 'SL', 'SN', 'TG'] },
-    'Africa/Accra': { c: ['GH'] },
-    'Africa/Addis_Ababa': { c: ['ET'] },
-    'Africa/Algiers': { c: ['DZ'] },
-    'Africa/Asmara': { c: ['ER'] },
-    'Africa/Asmera': { c: ['ER'] },
-    'Africa/Bamako': { c: ['ML'] },
-    'Africa/Bangui': { c: ['CF'] },
-    'Africa/Banjul': { c: ['GM'] },
-    'Africa/Bissau': { c: ['GW'] },
-    'Africa/Blantyre': { c: ['MW'] },
-    'Africa/Brazzaville': { c: ['CG'] },
-    'Africa/Bujumbura': { c: ['BI'] },
-    'Africa/Cairo': { c: ['EG'] },
-    'Africa/Casablanca': { c: ['MA'] },
-    'Africa/Ceuta': { c: ['ES'] },
-    'Africa/Conakry': { c: ['GN'] },
-    'Africa/Dakar': { c: ['SN'] },
-    'Africa/Dar_es_Salaam': { c: ['TZ'] },
-    'Africa/Djibouti': { c: ['DJ'] },
-    'Africa/Douala': { c: ['CM'] },
-    'Africa/El_Aaiun': { c: ['EH'] },
-    'Africa/Freetown': { c: ['SL'] },
-    'Africa/Gaborone': { c: ['BW'] },
-    'Africa/Harare': { c: ['ZW'] },
-    'Africa/Johannesburg': { c: ['ZA', 'LS', 'SZ'] },
-    'Africa/Juba': { c: ['SS'] },
-    'Africa/Kampala': { c: ['UG'] },
-    'Africa/Khartoum': { c: ['SD'] },
-    'Africa/Kigali': { c: ['RW'] },
-    'Africa/Kinshasa': { c: ['CD'] },
-    'Africa/Lagos': { c: ['NG', 'AO', 'BJ', 'CD', 'CF', 'CG', 'CM', 'GA', 'GQ', 'NE'] },
-    'Africa/Libreville': { c: ['GA'] },
-    'Africa/Lome': { c: ['TG'] },
-    'Africa/Luanda': { c: ['AO'] },
-    'Africa/Lubumbashi': { c: ['CD'] },
-    'Africa/Lusaka': { c: ['ZM'] },
-    'Africa/Malabo': { c: ['GQ'] },
-    'Africa/Maputo': { c: ['MZ', 'BI', 'BW', 'CD', 'MW', 'RW', 'ZM', 'ZW'] },
-    'Africa/Maseru': { c: ['LS'] },
-    'Africa/Mbabane': { c: ['SZ'] },
-    'Africa/Mogadishu': { c: ['SO'] },
-    'Africa/Monrovia': { c: ['LR'] },
-    'Africa/Nairobi': { c: ['KE', 'DJ', 'ER', 'ET', 'KM', 'MG', 'SO', 'TZ', 'UG', 'YT'] },
-    'Africa/Ndjamena': { c: ['TD'] },
-    'Africa/Niamey': { c: ['NE'] },
-    'Africa/Nouakchott': { c: ['MR'] },
-    'Africa/Ouagadougou': { c: ['BF'] },
-    'Africa/Porto-Novo': { c: ['BJ'] },
-    'Africa/Sao_Tome': { c: ['ST'] },
-    'Africa/Timbuktu': { c: ['ML'] },
-    'Africa/Tripoli': { c: ['LY'] },
-    'Africa/Tunis': { c: ['TN'] },
-    'Africa/Windhoek': { c: ['NA'] },
-    'America/Adak': { c: ['US'] },
-    'America/Anchorage': { c: ['US'] },
-    'America/Anguilla': { c: ['AI'] },
-    'America/Antigua': { c: ['AG'] },
-    'America/Araguaina': { c: ['BR'] },
-    'America/Argentina/Buenos_Aires': { c: ['AR'] },
-    'America/Argentina/Catamarca': { c: ['AR'] },
-    'America/Argentina/ComodRivadavia': { c: ['AR'] },
-    'America/Argentina/Cordoba': { c: ['AR'] },
-    'America/Argentina/Jujuy': { c: ['AR'] },
-    'America/Argentina/La_Rioja': { c: ['AR'] },
-    'America/Argentina/Mendoza': { c: ['AR'] },
-    'America/Argentina/Rio_Gallegos': { c: ['AR'] },
-    'America/Argentina/Salta': { c: ['AR'] },
-    'America/Argentina/San_Juan': { c: ['AR'] },
-    'America/Argentina/San_Luis': { c: ['AR'] },
-    'America/Argentina/Tucuman': { c: ['AR'] },
-    'America/Argentina/Ushuaia': { c: ['AR'] },
-    'America/Aruba': { c: ['AW'] },
-    'America/Asuncion': { c: ['PY'] },
-    'America/Atikokan': { c: ['CA'] },
-    'America/Atka': { c: ['US'] },
-    'America/Bahia': { c: ['BR'] },
-    'America/Bahia_Banderas': { c: ['MX'] },
-    'America/Barbados': { c: ['BB'] },
-    'America/Belem': { c: ['BR'] },
-    'America/Belize': { c: ['BZ'] },
-    'America/Blanc-Sablon': { c: ['CA'] },
-    'America/Boa_Vista': { c: ['BR'] },
-    'America/Bogota': { c: ['CO'] },
-    'America/Boise': { c: ['US'] },
-    'America/Buenos_Aires': { c: ['AR'] },
-    'America/Cambridge_Bay': { c: ['CA'] },
-    'America/Campo_Grande': { c: ['BR'] },
-    'America/Cancun': { c: ['MX'] },
-    'America/Caracas': { c: ['VE'] },
-    'America/Catamarca': { c: ['AR'] },
-    'America/Cayenne': { c: ['GF'] },
-    'America/Cayman': { c: ['KY'] },
-    'America/Chicago': { c: ['US'] },
-    'America/Chihuahua': { c: ['MX'] },
-    'America/Coral_Harbour': { c: ['CA'] },
-    'America/Cordoba': { c: ['AR'] },
-    'America/Costa_Rica': { c: ['CR'] },
-    'America/Creston': { c: ['CA'] },
-    'America/Cuiaba': { c: ['BR'] },
-    'America/Curacao': { c: ['CW'] },
-    'America/Danmarkshavn': { c: ['GL'] },
-    'America/Dawson': { c: ['CA'] },
-    'America/Dawson_Creek': { c: ['CA'] },
-    'America/Denver': { c: ['US'] },
-    'America/Detroit': { c: ['US'] },
-    'America/Dominica': { c: ['DM'] },
-    'America/Edmonton': { c: ['CA'] },
-    'America/Eirunepe': { c: ['BR'] },
-    'America/El_Salvador': { c: ['SV'] },
-    'America/Ensenada': { c: ['MX'] },
-    'America/Fort_Nelson': { c: ['CA'] },
-    'America/Fort_Wayne': { c: ['US'] },
-    'America/Fortaleza': { c: ['BR'] },
-    'America/Glace_Bay': { c: ['CA'] },
-    'America/Godthab': { c: ['GL'] },
-    'America/Goose_Bay': { c: ['CA'] },
-    'America/Grand_Turk': { c: ['TC'] },
-    'America/Grenada': { c: ['GD'] },
-    'America/Guadeloupe': { c: ['GP'] },
-    'America/Guatemala': { c: ['GT'] },
-    'America/Guayaquil': { c: ['EC'] },
-    'America/Guyana': { c: ['GY'] },
-    'America/Halifax': { c: ['CA'] },
-    'America/Havana': { c: ['CU'] },
-    'America/Hermosillo': { c: ['MX'] },
-    'America/Indiana/Indianapolis': { c: ['US'] },
-    'America/Indiana/Knox': { c: ['US'] },
-    'America/Indiana/Marengo': { c: ['US'] },
-    'America/Indiana/Petersburg': { c: ['US'] },
-    'America/Indiana/Tell_City': { c: ['US'] },
-    'America/Indiana/Vevay': { c: ['US'] },
-    'America/Indiana/Vincennes': { c: ['US'] },
-    'America/Indiana/Winamac': { c: ['US'] },
-    'America/Indianapolis': { c: ['US'] },
-    'America/Inuvik': { c: ['CA'] },
-    'America/Iqaluit': { c: ['CA'] },
-    'America/Jamaica': { c: ['JM'] },
-    'America/Jujuy': { c: ['AR'] },
-    'America/Juneau': { c: ['US'] },
-    'America/Kentucky/Louisville': { c: ['US'] },
-    'America/Kentucky/Monticello': { c: ['US'] },
-    'America/Knox_IN': { c: ['US'] },
-    'America/Kralendijk': { c: ['BQ'] },
-    'America/La_Paz': { c: ['BO'] },
-    'America/Lima': { c: ['PE'] },
-    'America/Los_Angeles': { c: ['US'] },
-    'America/Louisville': { c: ['US'] },
-    'America/Lower_Princes': { c: ['SX'] },
-    'America/Maceio': { c: ['BR'] },
-    'America/Managua': { c: ['NI'] },
-    'America/Manaus': { c: ['BR'] },
-    'America/Marigot': { c: ['MF'] },
-    'America/Martinique': { c: ['MQ'] },
-    'America/Matamoros': { c: ['MX'] },
-    'America/Mazatlan': { c: ['MX'] },
-    'America/Mendoza': { c: ['AR'] },
-    'America/Menominee': { c: ['US'] },
-    'America/Merida': { c: ['MX'] },
-    'America/Metlakatla': { c: ['US'] },
-    'America/Mexico_City': { c: ['MX'] },
-    'America/Miquelon': { c: ['PM'] },
-    'America/Moncton': { c: ['CA'] },
-    'America/Monterrey': { c: ['MX'] },
-    'America/Montevideo': { c: ['UY'] },
-    'America/Montreal': { c: ['CA'] },
-    'America/Montserrat': { c: ['MS'] },
-    'America/Nassau': { c: ['BS'] },
-    'America/New_York': { c: ['US'] },
-    'America/Nipigon': { c: ['CA'] },
-    'America/Nome': { c: ['US'] },
-    'America/Noronha': { c: ['BR'] },
-    'America/North_Dakota/Beulah': { c: ['US'] },
-    'America/North_Dakota/Center': { c: ['US'] },
-    'America/North_Dakota/New_Salem': { c: ['US'] },
-    'America/Nuuk': { c: ['GL'] },
-    'America/Ojinaga': { c: ['MX'] },
-    'America/Panama': { c: ['PA', 'CA', 'KY'] },
-    'America/Pangnirtung': { c: ['CA'] },
-    'America/Paramaribo': { c: ['SR'] },
-    'America/Phoenix': { c: ['US', 'CA'] },
-    'America/Port-au-Prince': { c: ['HT'] },
-    'America/Port_of_Spain': { c: ['TT'] },
-    'America/Porto_Acre': { c: ['BR'] },
-    'America/Porto_Velho': { c: ['BR'] },
-    'America/Puerto_Rico': { c: [ 'PR','AG', 'CA', 'AI', 'AW', 'BL', 'BQ', 'CW', 'DM', 'GD', 'GP', 'KN', 'LC', 'MF', 'MS', 'SX', 'TT', 'VC', 'VG', 'VI' ] },
-    'America/Punta_Arenas': { c: ['CL'] },
-    'America/Rainy_River': { c: ['CA'] },
-    'America/Rankin_Inlet': { c: ['CA'] },
-    'America/Recife': { c: ['BR'] },
-    'America/Regina': { c: ['CA'] },
-    'America/Resolute': { c: ['CA'] },
-    'America/Rio_Branco': { c: ['BR'] },
-    'America/Rosario': { c: ['AR'] },
-    'America/Santa_Isabel': { c: ['MX'] },
-    'America/Santarem': { c: ['BR'] },
-    'America/Santiago': { c: ['CL'] },
-    'America/Santo_Domingo': { c: ['DO'] },
-    'America/Sao_Paulo': { c: ['BR'] },
-    'America/Scoresbysund': { c: ['GL'] },
-    'America/Shiprock': { c: ['US'] },
-    'America/Sitka': { c: ['US'] },
-    'America/St_Barthelemy': { c: ['BL'] },
-    'America/St_Johns': { c: ['CA'] },
-    'America/St_Kitts': { c: ['KN'] },
-    'America/St_Lucia': { c: ['LC'] },
-    'America/St_Thomas': { c: ['VI'] },
-    'America/St_Vincent': { c: ['VC'] },
-    'America/Swift_Current': { c: ['CA'] },
-    'America/Tegucigalpa': { c: ['HN'] },
-    'America/Thule': { c: ['GL'] },
-    'America/Thunder_Bay': { c: ['CA'] },
-    'America/Tijuana': { c: ['MX'] },
-    'America/Toronto': { c: ['CA', 'BS'] },
-    'America/Tortola': { c: ['VG'] },
-    'America/Vancouver': { c: ['CA'] },
-    'America/Virgin': { c: ['VI'] },
-    'America/Whitehorse': { c: ['CA'] },
-    'America/Winnipeg': { c: ['CA'] },
-    'America/Yakutat': { c: ['US'] },
-    'America/Yellowknife': { c: ['CA'] },
-    'Antarctica/Casey': { c: ['AQ'] },
-    'Antarctica/Davis': { c: ['AQ'] },
-    'Antarctica/DumontDUrville': { c: ['AQ'] },
-    'Antarctica/Macquarie': { c: ['AU'] },
-    'Antarctica/Mawson': { c: ['AQ'] },
-    'Antarctica/McMurdo': { c: ['AQ'] },
-    'Antarctica/Palmer': { c: ['AQ'] },
-    'Antarctica/Rothera': { c: ['AQ'] },
-    'Antarctica/South_Pole': { c: ['AQ'] },
-    'Antarctica/Syowa': { c: ['AQ'] },
-    'Antarctica/Troll': { c: ['AQ'] },
-    'Antarctica/Vostok': { c: ['AQ'] },
-    'Arctic/Longyearbyen': { c: ['SJ'] },
-    'Asia/Aden': { c: ['YE'] },
-    'Asia/Almaty': { c: ['KZ'] },
-    'Asia/Amman': { c: ['JO'] },
-    'Asia/Anadyr': { c: ['RU'] },
-    'Asia/Aqtau': { c: ['KZ'] },
-    'Asia/Aqtobe': { c: ['KZ'] },
-    'Asia/Ashgabat': { c: ['TM'] },
-    'Asia/Ashkhabad': { c: ['TM'] },
-    'Asia/Atyrau': { c: ['KZ'] },
-    'Asia/Baghdad': { c: ['IQ'] },
-    'Asia/Bahrain': { c: ['BH'] },
-    'Asia/Baku': { c: ['AZ'] },
-    'Asia/Bangkok': { c: ['TH', 'KH', 'LA', 'VN'] },
-    'Asia/Barnaul': { c: ['RU'] },
-    'Asia/Beirut': { c: ['LB'] },
-    'Asia/Bishkek': { c: ['KG'] },
-    'Asia/Brunei': { c: ['BN'] },
-    'Asia/Calcutta': { c: ['IN'] },
-    'Asia/Chita': { c: ['RU'] },
-    'Asia/Choibalsan': { c: ['MN'] },
-    'Asia/Chongqing': { c: ['CN'] },
-    'Asia/Chungking': { c: ['CN'] },
-    'Asia/Colombo': { c: ['LK'] },
-    'Asia/Dacca': { c: ['BD'] },
-    'Asia/Damascus': { c: ['SY'] },
-    'Asia/Dhaka': { c: ['BD'] },
-    'Asia/Dili': { c: ['TL'] },
-    'Asia/Dubai': { c: ['AE', 'OM'] },
-    'Asia/Dushanbe': { c: ['TJ'] },
-    'Asia/Famagusta': { c: ['CY'] },
-    'Asia/Gaza': { c: ['PS'] },
-    'Asia/Harbin': { c: ['CN'] },
-    'Asia/Hebron': { c: ['PS'] },
-    'Asia/Ho_Chi_Minh': { c: ['VN'] },
-    'Asia/Hong_Kong': { c: ['HK'] },
-    'Asia/Hovd': { c: ['MN'] },
-    'Asia/Irkutsk': { c: ['RU'] },
-    'Asia/Istanbul': { c: ['TR'] },
-    'Asia/Jakarta': { c: ['ID'] },
-    'Asia/Jayapura': { c: ['ID'] },
-    'Asia/Jerusalem': { c: ['IL'] },
-    'Asia/Kabul': { c: ['AF'] },
-    'Asia/Kamchatka': { c: ['RU'] },
-    'Asia/Karachi': { c: ['PK'] },
-    'Asia/Kashgar': { c: ['CN'] },
-    'Asia/Kathmandu': { c: ['NP'] },
-    'Asia/Katmandu': { c: ['NP'] },
-    'Asia/Khandyga': { c: ['RU'] },
-    'Asia/Kolkata': { c: ['IN'] },
-    'Asia/Krasnoyarsk': { c: ['RU'] },
-    'Asia/Kuala_Lumpur': { c: ['MY'] },
-    'Asia/Kuching': { c: ['MY'] },
-    'Asia/Kuwait': { c: ['KW'] },
-    'Asia/Macao': { c: ['CN'] },
-    'Asia/Macau': { c: ['MO'] },
-    'Asia/Magadan': { c: ['RU'] },
-    'Asia/Makassar': { c: ['ID'] },
-    'Asia/Manila': { c: ['PH'] },
-    'Asia/Muscat': { c: ['OM'] },
-    'Asia/Nicosia': { c: ['CY'] },
-    'Asia/Novokuznetsk': { c: ['RU'] },
-    'Asia/Novosibirsk': { c: ['RU'] },
-    'Asia/Omsk': { c: ['RU'] },
-    'Asia/Oral': { c: ['KZ'] },
-    'Asia/Phnom_Penh': { c: ['KH'] },
-    'Asia/Pontianak': { c: ['ID'] },
-    'Asia/Pyongyang': { c: ['KP'] },
-    'Asia/Qatar': { c: ['QA', 'BH'] },
-    'Asia/Qostanay': { c: ['KZ'] },
-    'Asia/Qyzylorda': { c: ['KZ'] },
-    'Asia/Rangoon': { c: ['MM'] },
-    'Asia/Riyadh': { c: ['SA', 'AQ', 'KW', 'YE'] },
-    'Asia/Saigon': { c: ['VN'] },
-    'Asia/Sakhalin': { c: ['RU'] },
-    'Asia/Samarkand': { c: ['UZ'] },
-    'Asia/Seoul': { c: ['KR'] },
-    'Asia/Shanghai': { c: ['CN'] },
-    'Asia/Singapore': { c: ['SG', 'MY'] },
-    'Asia/Srednekolymsk': { c: ['RU'] },
-    'Asia/Taipei': { c: ['TW'] },
-    'Asia/Tashkent': { c: ['UZ'] },
-    'Asia/Tbilisi': { c: ['GE'] },
-    'Asia/Tehran': { c: ['IR'] },
-    'Asia/Tel_Aviv': { c: ['IL'] },
-    'Asia/Thimbu': { c: ['BT'] },
-    'Asia/Thimphu': { c: ['BT'] },
-    'Asia/Tokyo': { c: ['JP'] },
-    'Asia/Tomsk': { c: ['RU'] },
-    'Asia/Ujung_Pandang': { c: ['ID'] },
-    'Asia/Ulaanbaatar': { c: ['MN'] },
-    'Asia/Ulan_Bator': { c: ['MN'] },
-    'Asia/Urumqi': { c: ['CN'] },
-    'Asia/Ust-Nera': { c: ['RU'] },
-    'Asia/Vientiane': { c: ['LA'] },
-    'Asia/Vladivostok': { c: ['RU'] },
-    'Asia/Yakutsk': { c: ['RU'] },
-    'Asia/Yangon': { c: ['MM'] },
-    'Asia/Yekaterinburg': { c: ['RU'] },
-    'Asia/Yerevan': { c: ['AM'] },
-    'Atlantic/Azores': { c: ['PT'] },
-    'Atlantic/Bermuda': { c: ['BM'] },
-    'Atlantic/Canary': { c: ['ES'] },
-    'Atlantic/Cape_Verde': { c: ['CV'] },
-    'Atlantic/Faeroe': { c: ['FO'] },
-    'Atlantic/Faroe': { c: ['FO'] },
-    'Atlantic/Jan_Mayen': { c: ['SJ'] },
-    'Atlantic/Madeira': { c: ['PT'] },
-    'Atlantic/Reykjavik': { c: ['IS'] },
-    'Atlantic/South_Georgia': { c: ['GS'] },
-    'Atlantic/St_Helena': { c: ['SH'] },
-    'Atlantic/Stanley': { c: ['FK'] },
-    'Australia/ACT': { c: ['AU'] },
-    'Australia/Adelaide': { c: ['AU'] },
-    'Australia/Brisbane': { c: ['AU'] },
-    'Australia/Broken_Hill': { c: ['AU'] },
-    'Australia/Canberra': { c: ['AU'] },
-    'Australia/Currie': { c: ['AU'] },
-    'Australia/Darwin': { c: ['AU'] },
-    'Australia/Eucla': { c: ['AU'] },
-    'Australia/Hobart': { c: ['AU'] },
-    'Australia/LHI': { c: ['AU'] },
-    'Australia/Lindeman': { c: ['AU'] },
-    'Australia/Lord_Howe': { c: ['AU'] },
-    'Australia/Melbourne': { c: ['AU'] },
-    'Australia/NSW': { c: ['AU'] },
-    'Australia/North': { c: ['AU'] },
-    'Australia/Perth': { c: ['AU'] },
-    'Australia/Queensland': { c: ['AU'] },
-    'Australia/South': { c: ['AU'] },
-    'Australia/Sydney': { c: ['AU'] },
-    'Australia/Tasmania': { c: ['AU'] },
-    'Australia/Victoria': { c: ['AU'] },
-    'Australia/West': { c: ['AU'] },
-    'Australia/Yancowinna': { c: ['AU'] },
-    'Brazil/Acre': { c: ['BR'] },
-    'Brazil/DeNoronha': { c: ['BR'] },
-    'Brazil/East': { c: ['BR'] },
-    'Brazil/West': { c: ['BR'] },
-    'Canada/Atlantic': { c: ['CA'] },
-    'Canada/Central': { c: ['CA'] },
-    'Canada/Eastern': { c: ['CA'] },
-    'Canada/Mountain': { c: ['CA'] },
-    'Canada/Newfoundland': { c: ['CA'] },
-    'Canada/Pacific': { c: ['CA'] },
-    'Canada/Saskatchewan': { c: ['CA'] },
-    'Canada/Yukon': { c: ['CA'] },
-    'Chile/Continental': { c: ['CL'] },
-    'Chile/EasterIsland': { c: ['CL'] },
-    Cuba: { c: ['CU'] },
-    Egypt: { c: ['EG'] },
-    Eire: { c: ['IE'] },
-    'Europe/Amsterdam': { c: ['NL'] },
-    'Europe/Andorra': { c: ['AD'] },
-    'Europe/Astrakhan': { c: ['RU'] },
-    'Europe/Athens': { c: ['GR'] },
-    'Europe/Belfast': { c: ['GB'] },
-    'Europe/Belgrade': { c: ['RS', 'BA', 'HR', 'ME', 'MK', 'SI'] },
-    'Europe/Berlin': { c: ['DE'] },
-    'Europe/Bratislava': { c: ['SK'] },
-    'Europe/Brussels': { c: ['BE'] },
-    'Europe/Bucharest': { c: ['RO'] },
-    'Europe/Budapest': { c: ['HU'] },
-    'Europe/Busingen': { c: ['DE'] },
-    'Europe/Chisinau': { c: ['MD'] },
-    'Europe/Copenhagen': { c: ['DK'] },
-    'Europe/Dublin': { c: ['IE'] },
-    'Europe/Gibraltar': { c: ['GI'] },
-    'Europe/Guernsey': { c: ['GG'] },
-    'Europe/Helsinki': { c: ['FI', 'AX'] },
-    'Europe/Isle_of_Man': { c: ['IM'] },
-    'Europe/Istanbul': { c: ['TR'] },
-    'Europe/Jersey': { c: ['JE'] },
-    'Europe/Kaliningrad': { c: ['RU'] },
-    'Europe/Kiev': { c: ['UA'] },
-    'Europe/Kirov': { c: ['RU'] },
-    'Europe/Lisbon': { c: ['PT'] },
-    'Europe/Ljubljana': { c: ['SI'] },
-    'Europe/London': { c: ['GB', 'GG', 'IM', 'JE'] },
-    'Europe/Luxembourg': { c: ['LU'] },
-    'Europe/Madrid': { c: ['ES'] },
-    'Europe/Malta': { c: ['MT'] },
-    'Europe/Mariehamn': { c: ['AX'] },
-    'Europe/Minsk': { c: ['BY'] },
-    'Europe/Monaco': { c: ['MC'] },
-    'Europe/Moscow': { c: ['RU'] },
-    'Europe/Nicosia': { c: ['CY'] },
-    'Europe/Oslo': { c: ['NO', 'SJ', 'BV'] },
-    'Europe/Paris': { c: ['FR'] },
-    'Europe/Podgorica': { c: ['ME'] },
-    'Europe/Prague': { c: ['CZ', 'SK'] },
-    'Europe/Riga': { c: ['LV'] },
-    'Europe/Rome': { c: ['IT', 'SM', 'VA'] },
-    'Europe/Samara': { c: ['RU'] },
-    'Europe/San_Marino': { c: ['SM'] },
-    'Europe/Sarajevo': { c: ['BA'] },
-    'Europe/Saratov': { c: ['RU'] },
-    'Europe/Simferopol': { c: ['RU', 'UA'] },
-    'Europe/Skopje': { c: ['MK'] },
-    'Europe/Sofia': { c: ['BG'] },
-    'Europe/Stockholm': { c: ['SE'] },
-    'Europe/Tallinn': { c: ['EE'] },
-    'Europe/Tirane': { c: ['AL'] },
-    'Europe/Tiraspol': { c: ['MD'] },
-    'Europe/Ulyanovsk': { c: ['RU'] },
-    'Europe/Uzhgorod': { c: ['UA'] },
-    'Europe/Vaduz': { c: ['LI'] },
-    'Europe/Vatican': { c: ['VA'] },
-    'Europe/Vienna': { c: ['AT'] },
-    'Europe/Vilnius': { c: ['LT'] },
-    'Europe/Volgograd': { c: ['RU'] },
-    'Europe/Warsaw': { c: ['PL'] },
-    'Europe/Zagreb': { c: ['HR'] },
-    'Europe/Zaporozhye': { c: ['UA'] },
-    'Europe/Zurich': { c: ['CH', 'DE', 'LI'] },
-    GB: { c: ['GB'] },
-    'GB-Eire': { c: ['GB'] },
-    GMT: { c: ['UK'] },
-    'GMT+0': { c: ['UK'] },
-    'GMT-0': { c: ['UK'] },
-    GMT0: { c: ['UK'] },
-    Greenwich: { c: ['UK'] },
-    Hongkong: { c: ['HK'] },
-    Iceland: { c: ['IS'] },
-    'Indian/Antananarivo': { c: ['MG'] },
-    'Indian/Chagos': { c: ['IO'] },
-    'Indian/Christmas': { c: ['CX'] },
-    'Indian/Cocos': { c: ['CC'] },
-    'Indian/Comoro': { c: ['KM'] },
-    'Indian/Kerguelen': { c: ['TF', 'HM'] },
-    'Indian/Mahe': { c: ['SC'] },
-    'Indian/Maldives': { c: ['MV'] },
-    'Indian/Mauritius': { c: ['MU'] },
-    'Indian/Mayotte': { c: ['YT'] },
-    'Indian/Reunion': { c: ['RE', 'TF'] },
-    Iran: { c: ['IR'] },
-    Israel: { c: ['IL'] },
-    Jamaica: { c: ['JM'] },
-    Japan: { c: ['JP'] },
-    Kwajalein: { c: ['MH'] },
-    Libya: { c: ['LY'] },
-    'Mexico/BajaNorte': { c: ['MX'] },
-    'Mexico/BajaSur': { c: ['MX'] },
-    'Mexico/General': { c: ['MX'] },
-    NZ: { c: ['NZ'] },
-    'NZ-CHAT': { c: ['NZ'] },
-    Navajo: { c: ['US'] },
-    PRC: { c: ['CN'] },
-    'Pacific/Apia': { c: ['WS'] },
-    'Pacific/Auckland': { c: ['NZ', 'AQ'] },
-    'Pacific/Bougainville': { c: ['PG'] },
-    'Pacific/Chatham': { c: ['NZ'] },
-    'Pacific/Chuuk': { c: ['FM'] },
-    'Pacific/Easter': { c: ['CL'] },
-    'Pacific/Efate': { c: ['VU'] },
-    'Pacific/Enderbury': { c: ['KI'] },
-    'Pacific/Fakaofo': { c: ['TK'] },
-    'Pacific/Fiji': { c: ['FJ'] },
-    'Pacific/Funafuti': { c: ['TV'] },
-    'Pacific/Galapagos': { c: ['EC'] },
-    'Pacific/Gambier': { c: ['PF'] },
-    'Pacific/Guadalcanal': { c: ['SB'] },
-    'Pacific/Guam': { c: ['GU', 'MP'] },
-    'Pacific/Honolulu': { c: ['US', 'UM'] },
-    'Pacific/Johnston': { c: ['UM'] },
-    'Pacific/Kanton': { c: ['KI'] },
-    'Pacific/Kiritimati': { c: ['KI'] },
-    'Pacific/Kosrae': { c: ['FM'] },
-    'Pacific/Kwajalein': { c: ['MH'] },
-    'Pacific/Majuro': { c: ['MH'] },
-    'Pacific/Marquesas': { c: ['PF'] },
-    'Pacific/Midway': { c: ['UM'] },
-    'Pacific/Nauru': { c: ['NR'] },
-    'Pacific/Niue': { c: ['NU'] },
-    'Pacific/Norfolk': { c: ['NF'] },
-    'Pacific/Noumea': { c: ['NC'] },
-    'Pacific/Pago_Pago': { c: ['AS', 'UM'] },
-    'Pacific/Palau': { c: ['PW'] },
-    'Pacific/Pitcairn': { c: ['PN'] },
-    'Pacific/Pohnpei': { c: ['FM'] },
-    'Pacific/Ponape': { c: ['FM'] },
-    'Pacific/Port_Moresby': { c: ['PG', 'AQ'] },
-    'Pacific/Rarotonga': { c: ['CK'] },
-    'Pacific/Saipan': { c: ['MP'] },
-    'Pacific/Samoa': { c: ['WS'] },
-    'Pacific/Tahiti': { c: ['PF'] },
-    'Pacific/Tarawa': { c: ['KI'] },
-    'Pacific/Tongatapu': { c: ['TO'] },
-    'Pacific/Truk': { c: ['FM'] },
-    'Pacific/Wake': { c: ['UM'] },
-    'Pacific/Wallis': { c: ['WF'] },
-    'Pacific/Yap': { c: ['FM'] },
-    Poland: { c: ['PL'] },
-    Portugal: { c: ['PT'] },
-    ROC: { c: ['TW'] },
-    ROK: { c: ['KR'] },
-    Singapore: { c: ['SG'] },
-    Turkey: { c: ['TR'] },
-    'US/Alaska': { c: ['US'] },
-    'US/Aleutian': { c: ['US'] },
-    'US/Arizona': { c: ['US'] },
-    'US/Central': { c: ['US'] },
-    'US/East-Indiana': { c: ['US'] },
-    'US/Eastern': { c: ['US'] },
-    'US/Hawaii': { c: ['US'] },
-    'US/Indiana-Starke': { c: ['US'] },
-    'US/Michigan': { c: ['US'] },
-    'US/Mountain': { c: ['US'] },
-    'US/Pacific': { c: ['US'] },
-    'US/Samoa': { c: ['WS'] }
+
+function generatePathKey(paths) {
+    const pathId = `p-${crypto.randomInt(1, 99999)}`
+    if (paths[pathId]) {
+        return generatePathKey(paths)
+    }
+    return pathId
 }
 
 function getCountryFromTZ(tz) {
     if (!tz) { return '?' }
-    const countryCodes = timezones[tz].c
-    if (countryCodes.length === 1 || countryCodes.length < 3) {
-        return countries[countryCodes[0]]
-    } else if ( /\\/.test(tz)) {
+    if (timezones[tz].length < 3) {
+        return timezones[tz][0]
+    } else if ( /\//.test(tz)) {
         return tz.split('/')[0]
     } else {
         return '?'

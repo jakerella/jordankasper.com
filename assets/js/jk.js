@@ -1,7 +1,4 @@
-(async function () {
-
-    const LOCAL_ANALYTIC_KEY = 'jk-hits'
-    const ANALYTIC_TIMEOUT = 1000 * 30 // (1000 * 60 * 60 * 2)
+;(async function () {
 
     setupHobbesHover()
     adjustContentHeight()
@@ -53,11 +50,15 @@
 
     async function setupImageLinks() {
         Array.from($('.blog-post img')).forEach((n) => {
-            $(n).after(`<p class='view-image'><a href='${n.getAttribute('src')}' target='_blank'>[view]</a></p>`)
+            // On tablet or mobile, and for images more than 2/3 the width, show "view" links
+            if (window.innerWidth < 800 && (n.width / window.innerWidth) > 0.66) {
+                $(n).before(`<p class='view-image'><a href='${n.getAttribute('src')}' target='_blank'>[view image]</a></p>`)
+            }
         })
     }
 
     async function initAnalytics() {
+        if (window.NO_TRACK === true) { return }
         var fp = await (await FingerprintJS.load()).get()
 
         const visitor = {
@@ -66,43 +67,14 @@
         }
         const hit = {
             p: window.location.pathname || '/',
-            q: window.location.search,
-            r: document.referrer,
+            q: window.location.search || '',
+            r: document.referrer?.replace(window.location.origin, ''),
             t: Date.now()
         }
 
-        let data = localStorage.getItem(LOCAL_ANALYTIC_KEY) || null
-        if (data) {
-            try {
-                data = JSON.parse(atob(data))
-                if (data.v.id !== visitor.id) {
-                    data = null
-                } else {
-                    // console.debug('Previous analytic data:', JSON.stringify(data, null, 2))
-                    data.h.push(hit)
-                }
-            } catch(err) { /* we'll have to start over */ }
-        }
-        if (!data) {
-            data = {
-                last: 0,
-                v: visitor,
-                h: [hit]
-            }
-        }
+        navigator.sendBeacon(`/.netlify/functions/processVisit?data=${btoa(JSON.stringify({ v: visitor, h: [hit] }))}`)
 
-        if ((Date.now() - data.last) > ANALYTIC_TIMEOUT) {
-            // console.debug(`Last analytic send was more than ${Math.round(ANALYTIC_TIMEOUT / 1000)} seconds ago...`)
-            const resp = await fetch(`/.netlify/functions/processVisit?data=${btoa(JSON.stringify(data))}`)
-            if (resp.status === 200) {
-                // console.debug(`Analytics sent: ${resp.status}`, JSON.stringify(data, null, 2))
-                data.last = Date.now()
-                data.h = []
-            } else {
-                console.debug(`Analytic API call failed: ${resp.status}`)
-            }
-        }
-        localStorage.setItem(LOCAL_ANALYTIC_KEY, btoa(JSON.stringify(data)))
+        // TODO: prevent quick repeat hits (like a quick refresh)
     }
 
-})()
+})();
