@@ -36,10 +36,10 @@ async function handler(req, context) {
             return { statusCode: 400, body: 'Invalid analytic data payload' }
         }
 
-        console.debug('Storing analytic data:', analytics)
+        // console.debug('Storing analytic data:', analytics)
 
         const store = blobs.getStore({
-            name: 'analytics',
+            name: c.ANALYTICS_STORE,
             siteID: process.env.NETLIFY_SITE_ID || undefined,
             edgeURL: process.env.NETLIFY_EDGE_URL || undefined,
             token: process.env.NETLIFY_BLOBS_TOKEN || undefined

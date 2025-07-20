@@ -7,7 +7,78 @@ analytics: true
 
 <script>window.NO_TRACK = true;</script>
 
-<section class='site-analytics'>
+<main class='site-analytics'>
     <h2>Site Analytics</h2>
     
-</section>
+    <section>
+        <h3>Views and Visitors in Time Range</h3>
+        <canvas id='stats-by-time'></canvas>
+    </section>
+
+    <section>
+        <h3>Stats by Page</h3>
+        <table id='stats-by-path'>
+            <thead>
+                <tr>
+                    <th>Path</th>
+                    <th>Views</th>
+                    <th>Unique<br>Visitors</th>
+                    <th>Referrer URLs</th>
+                    <th>Search Terms</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <section>
+        <h3>Referreral URLs</h3>
+        <table id='stats-by-referrer'>
+            <thead>
+                <tr>
+                    <th>Referring URL</th>
+                    <th>Unique<br>Visitors</th>
+                    <th>Unique<br>Pages</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <section>
+        <h3>Search Terms</h3>
+        <table id='stats-by-query'>
+            <thead>
+                <tr>
+                    <th>Search Term</th>
+                    <th>Count</th>
+                    <th>Unique<br>Visitors</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <section>
+        <h3>Visitor Stats</h3>
+        <ul>
+            <li><span class='list-value total-unique'></span> Total Unique Visitors (all time)</li>
+            <li><span class='list-value range-unique'></span> Unique Visitors in date range</li>
+            <li><span class='list-value return-visits'></span> Return Visitors in date range</li>
+            <li><span class='list-value pages-viewed'></span> Total Unique Pages Viewed in time range</li>
+        </ul>
+        <table id='visitor-geography'>
+            <thead>
+                <tr>
+                    <th>Country</th>
+                    <th>Unique Visitors<br>(all time)</th>
+                    <th>Unique Pages Viewed<br>(in range)</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+</main>
+
+<script src='/js/vendor/chart.umd.js'></script>

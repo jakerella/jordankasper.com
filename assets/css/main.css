@@ -848,3 +848,9 @@ body>footer .rss:active {
 .posts-by-tag .tags li:last-child::after {
     content: "";
 }
+
+
+#visitor-geography img {
+    width: 1.3em;
+    padding: 0;
+}
