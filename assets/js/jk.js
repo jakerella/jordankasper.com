@@ -72,7 +72,7 @@
             t: Date.now()
         }
 
-        navigator.sendBeacon(`/.netlify/functions/processVisit?data=${btoa(JSON.stringify({ v: visitor, h: [hit] }))}`)
+        await fetch(`/.netlify/functions/processVisit?data=${btoa(JSON.stringify({ v: visitor, h: [hit] }))}`)
 
         // TODO: prevent quick repeat hits (like a quick refresh)
     }

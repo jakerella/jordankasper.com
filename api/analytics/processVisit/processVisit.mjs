@@ -1,12 +1,11 @@
 
-const crypto = require('node:crypto')
-const blobs = require('@netlify/blobs')
-const timezones = require('../timezones.json')
+import { randomInt } from 'node:crypto'
+import { getStore } from '@netlify/blobs'
 
-const c = require('../constants.json')
+import timezones from '../timezones.json'
+import c from '../constants.json'
+
 const TRACKED_SEARCH_PARAMS = ['q']
-
-module.exports = { handler }
 
 /**
  * This is the main handler for the analytics processor. The Request object needs to have
@@ -27,18 +26,16 @@ module.exports = { handler }
  * 
  * @param {*} req The HTTP Request object from Netlify
  * @param {*} context The Netlify context
- * @returns 
+ * @returns Response
  */
-async function handler(req, context) {
+export default async function handler(req, context) {
     try {
-        const analytics = extractRequestData(req.queryStringParameters, context)
+        const analytics = extractRequestData(req.url.split('?data=')[1] || null, context)
         if (!analytics) {
-            return { statusCode: 400, body: 'Invalid analytic data payload' }
+            return new Response('Invalid analytic data payload', { status: 500 })
         }
 
-        // console.debug('Storing analytic data:', analytics)
-
-        const store = blobs.getStore({
+        const store = getStore({
             name: c.ANALYTICS_STORE,
             siteID: process.env.NETLIFY_SITE_ID || undefined,
             edgeURL: process.env.NETLIFY_EDGE_URL || undefined,
@@ -51,21 +48,20 @@ async function handler(req, context) {
         if (!result) {
             return { statusCode: 500, body: 'Unable to save analytic data' }
         }
-        return { statusCode: 200, body: '' }
+        return new Response('success', { status: 200 })
+
     } catch(err) {
-        console.err(`Hit catch all block: ${err.message || err.toString()}`)
-        return { statusCode: 500, body: 'Unable to save analytic data' }
+        console.error(`Hit catch all block: ${err.message || err.toString()}\n${err.stack.split('\n')[1]}`)
+        return new Response('Unable to save analytic data', { status: 500 })
     }
 }
 
-function extractRequestData(queryParams, context) {
-    if (!queryParams.data) {
-        return null
-    }
+function extractRequestData(queryParam, context) {
+    if (!queryParam) { return null }
 
     let data = {}
     try {
-        data = JSON.parse(atob(queryParams.data))
+        data = JSON.parse(atob(queryParam))
     } catch (err) {
         console.warn(`Unable to parse analytic data in query string: ${err.message || err}`)
         return null
@@ -184,7 +180,7 @@ async function updatePageHits(analytics, store) {
 }
 
 function generatePathKey(paths) {
-    const pathId = `p-${crypto.randomInt(1, 99999)}`
+    const pathId = `p-${randomInt(1, 99999)}`
     if (paths[pathId]) {
         return generatePathKey(paths)
     }

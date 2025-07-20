@@ -1,26 +1,30 @@
 
-const blobs = require('@netlify/blobs')
-const countries = require('../countries.json')
+import { getStore } from '@netlify/blobs'
 
-const c = require('../constants.json')
+import c from '../constants.json'
+
 const ONE_DAY = (1000 * 60 * 60 * 24)
 const ONE_WEEK_AGO = (ONE_DAY * 6)
 
-module.exports = { handler }
 
-
-async function handler(req, context) {
+export default async function handler(req, context) {
     try {
-        let start = Number(req.queryStringParameters.start)
-        if ((!start || start < 0) && req.queryStringParameters.start) {
-            start = (new Date(req.queryStringParameters.start)).getTime()
+        const queryParams = {}
+        ;(req.url.split('?')[1] || '').split('&').forEach((param) => {
+            const parts = param.split('=')
+            queryParams[parts[0]] = parts[1]
+        })
+        
+        let start = Number(queryParams.start)
+        if ((!start || start < 0) && queryParams.start) {
+            start = (new Date(queryParams.start)).getTime()
         }
         if (!start) {
             start = Date.now() - ONE_WEEK_AGO
         }
-        let end = Number(req.queryStringParameters.end)
-        if ((!end || end < 0) && req.queryStringParameters.end) {
-            end = (new Date(req.queryStringParameters.end)).getTime()
+        let end = Number(queryParams.end)
+        if ((!end || end < 0) && queryParams.end) {
+            end = (new Date(queryParams.end)).getTime()
         }
         if (!end) {
             end = Date.now()
@@ -30,7 +34,7 @@ async function handler(req, context) {
             start = end
         }
 
-        const store = blobs.getStore({
+        const store = getStore({
             name: c.ANALYTICS_STORE,
             siteID: process.env.NETLIFY_SITE_ID || undefined,
             edgeURL: process.env.NETLIFY_EDGE_URL || undefined,
@@ -49,22 +53,19 @@ async function handler(req, context) {
         const hits = {}
         for (let t=start; t<=end; t+=ONE_DAY) {
             const keyDate = (new Date(t)).toISOString().split('T')[0]
-            console.log(`Getting hits from ${keyDate}`)
             hits[keyDate] = (await store.get(c.HITS_KEY_PREFIX + keyDate, { type: 'json' })) || {}
         }
 
-        // TODO: now we just need to make this data useful. ;)
-
-        return { statusCode: 200, body: JSON.stringify({
+        return new Response(JSON.stringify({
             start,
             end,
             visitors,
             paths,
             hits
-        }) }
+        }), { status: 200 })
 
     } catch(err) {
-        console.error(`Hit catch all block: ${err.message || err.toString()}`)
-        return { statusCode: 500, body: 'Unable to retrieve analytic data' }
+        console.error(`Hit catch all block: ${err.message || err.toString()}\n${err.stack.split('\n')[1]}`)
+        return new Response('Unable to retrieve analytic data', { status: 500 })
     }
 }
