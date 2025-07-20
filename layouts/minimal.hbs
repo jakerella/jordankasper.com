@@ -8,13 +8,13 @@
         {{> header }}
 
         <section class='main-body row'>
-            <article class='main-content sm-12 md-12 lg-9'>
+            <article class='main-content sm-12 md-12 {{#if nosidebar }}lg-12{{else}}lg-9{{/if}}'>
 
                 {{{contents}}}
 
             </article>
 
-            {{> sidebar }}
+            {{#if nosidebar }} {{else}}{{> sidebar }}{{/if}}
         </section>
 
         {{> footer }}

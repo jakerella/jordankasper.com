@@ -1,9 +1,8 @@
 *.log
 npm-debug.log*
-
 build/
-
 node_modules/
 
-# Local Netlify folder
+# Netlify things
 .netlify
+api/test-blobs/

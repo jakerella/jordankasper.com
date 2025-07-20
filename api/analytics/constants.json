@@ -1,0 +1,6 @@
+{
+    "ANALYTICS_STORE": "analytics",
+    "VISITORS_KEY": "site-visitors",
+    "PATHS_KEY": "site-paths",
+    "HITS_KEY_PREFIX": "hits--"
+}
