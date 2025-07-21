@@ -850,6 +850,46 @@ body>footer .rss:active {
 }
 
 
+@media (min-width: 64em) {
+    .analytics-container {
+        display: grid;
+        grid-template-columns: 40% 30% 30%;
+    }
+
+    .chart-container {
+        grid-row: 1;
+        grid-column: 1;
+    }
+    #stats-by-referrer {
+        grid-row: 1;
+        grid-column: 2;
+    }
+    #visitor-stats {
+        grid-row: 1;
+        grid-column: 3;
+    }
+    #stats-by-path {
+        grid-row: 2;
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+}
+#expand-chart {
+    cursor: pointer;
+}
+.site-analytics thead {
+    border-bottom: 1px solid #000;
+}
+.site-analytics th:not(:first-child), .site-analytics td:not(:first-child) {
+    text-align: center;
+    padding-left: 1rem;
+}
+.stripe td {
+    background-color: #eef;
+}
+#visitor-stats .list-value {
+    font-weight: bold;
+}
 #visitor-geography img {
     width: 1.3em;
     padding: 0;

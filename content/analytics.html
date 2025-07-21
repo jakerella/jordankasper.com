@@ -7,33 +7,28 @@ analytics: true
 
 <script>window.NO_TRACK = true;</script>
 
-<main class='site-analytics'>
+<header>
     <h2>Site Analytics</h2>
-    
-    <section>
-        <h3>Views and Visitors in Time Range</h3>
+</header>
+
+<nav>
+    <fieldset>
+        <legend>Date Range</legend>
+        <label for='start-date'>From <input type='date' id='start-date' step='1' max=''></label> 
+        <label for='end-date'>to <input type='date' id='end-date' step='1' max=''></label>
+        <input type='button' id='change-range' value='Go'>
+    </fieldset>
+</nav>
+
+<main class='site-analytics analytics-container'>
+    <section class='chart-container'>
+        <h3>Views and Visitors in Time Range <span id='expand-chart'>⤡</span></h3>
         <canvas id='stats-by-time'></canvas>
     </section>
 
-    <section>
-        <h3>Stats by Page</h3>
-        <table id='stats-by-path'>
-            <thead>
-                <tr>
-                    <th>Path</th>
-                    <th>Views</th>
-                    <th>Unique<br>Visitors</th>
-                    <th>Referrer URLs</th>
-                    <th>Search Terms</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </section>
-
-    <section>
+    <section id='stats-by-referrer'>
         <h3>Referreral URLs</h3>
-        <table id='stats-by-referrer'>
+        <table>
             <thead>
                 <tr>
                     <th>Referring URL</th>
@@ -45,21 +40,7 @@ analytics: true
         </table>
     </section>
 
-    <section>
-        <h3>Search Terms</h3>
-        <table id='stats-by-query'>
-            <thead>
-                <tr>
-                    <th>Search Term</th>
-                    <th>Count</th>
-                    <th>Unique<br>Visitors</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </section>
-
-    <section>
+    <section id='visitor-stats'>
         <h3>Visitor Stats</h3>
         <ul>
             <li><span class='list-value total-unique'></span> Total Unique Visitors (all time)</li>
@@ -78,6 +59,36 @@ analytics: true
             <tbody></tbody>
         </table>
     </section>
+
+    <section id='stats-by-path'>
+        <h3>Stats by Page</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Path</th>
+                    <th>Views</th>
+                    <th>Unique<br>Visitors</th>
+                    <th>Referrer URLs</th>
+                    <!-- <th>Search Terms</th> -->
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <!-- <section id='stats-by-query'>
+        <h3>Search Terms</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Search Term</th>
+                    <th>Count</th>
+                    <th>Unique<br>Visitors</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section> -->
 
 </main>
 
