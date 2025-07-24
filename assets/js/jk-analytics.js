@@ -90,6 +90,7 @@
             let chartVisitors = new Set()
 
             Object.keys(data.hits[d]).forEach((pathId) => {
+                if (!data.pathsById[pathId]) { return }
                 if (!dataByPath[pathId]) {
                     dataByPath[pathId] = {
                         path: data.pathsById[pathId],
@@ -111,10 +112,12 @@
                 visitorStats.paths.add(data.pathsById[pathId])
 
                 data.hits[d][pathId].v.forEach((v) => {
-                    if (data.visitors[v].f < d) {
-                        visitorStats.returns.add(v)
+                    if (data.visitors[v]) {
+                        if (data.visitors[v].f < d) {
+                            visitorStats.returns.add(v)
+                        }
+                        visitorStats.geoStats[data.visitors[v].g].paths.add(pathId)
                     }
-                    visitorStats.geoStats[data.visitors[v].g].paths.add(pathId)
                 })
 
                 data.hits[d][pathId].r.forEach((r) => {
