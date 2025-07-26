@@ -153,29 +153,33 @@
 
         let tableRows = []
         let stripe = false
-        for (let pathId in dataByPath) {
-            tableRows.push(`<tr class='${(stripe) ? 'stripe' : ''}'>
-                <td>${dataByPath[pathId].path}</td>
-                <td>${dataByPath[pathId].hits}</td>
-                <td>${dataByPath[pathId].visitors.size}</td>
-                <td>${dataByPath[pathId].referrers.values().toArray().join('<br>')}</td>
-                <!-- <td>${dataByPath[pathId].queries.values().toArray().join('<br>')}</td> -->
-            </tr>`)
-            stripe = !stripe
-        }
+        Object.keys(dataByPath)
+            .sort((a, b) => dataByPath[b].visitors.size - dataByPath[a].visitors.size)
+            .forEach((pathId) => {
+                tableRows.push(`<tr class='${(stripe) ? 'stripe' : ''}'>
+                    <td>${dataByPath[pathId].path}</td>
+                    <td>${dataByPath[pathId].hits}</td>
+                    <td>${dataByPath[pathId].visitors.size}</td>
+                    <td>${dataByPath[pathId].referrers.values().toArray().join('<br>')}</td>
+                    <!-- <td>${dataByPath[pathId].queries.values().toArray().join('<br>')}</td> -->
+                </tr>`)
+                stripe = !stripe
+            })
         $('#stats-by-path tbody').html(tableRows.join('\n'))
 
 
         tableRows = []
         stripe = false
-        for (let referrer in dataByReferrer) {
-            tableRows.push(`<tr class='${(stripe) ? 'stripe' : ''}'>
-                <td>${referrer}</td>
-                <td>${dataByReferrer[referrer].visitors.size}</td>
-                <td>${dataByReferrer[referrer].paths.size}</td>
-            </tr>`)
-            stripe = !stripe
-        }
+        Object.keys(dataByReferrer)
+            .sort((a, b) => dataByReferrer[b].visitors.size - dataByReferrer[a].visitors.size)
+            .forEach((referrer) => {
+                tableRows.push(`<tr class='${(stripe) ? 'stripe' : ''}'>
+                    <td>${referrer}</td>
+                    <td>${dataByReferrer[referrer].visitors.size}</td>
+                    <td>${dataByReferrer[referrer].paths.size}</td>
+                </tr>`)
+                stripe = !stripe
+            })
         $('#stats-by-referrer tbody').html(tableRows.join('\n'))
 
 
@@ -200,18 +204,20 @@
         const countryTweaks = {
             'UK': 'GB'
         }
-        for (let country in visitorStats.geoStats) {
-            const code = (countryTweaks[country]) ? countryTweaks[country] : country
-            tableRows.push(`<tr class='${(stripe) ? 'stripe' : ''}'>
-                <td>
-                    <img src='https://raw.githubusercontent.com/lipis/flag-icons/main/flags/4x3/${code.toLowerCase()}.svg' alt='Country: ${country}'>
-                    ${country}
-                </td>
-                <td>${visitorStats.geoStats[country].visitorCount}</td>
-                <td>${visitorStats.geoStats[country].paths.size}</td>
-            </tr>`)
-            stripe = !stripe
-        }
+        Object.keys(visitorStats.geoStats)
+            .sort((a, b) => visitorStats.geoStats[b].visitorCount - visitorStats.geoStats[a].visitorCount)
+            .forEach((country) => {
+                const code = (countryTweaks[country]) ? countryTweaks[country] : country
+                tableRows.push(`<tr class='${(stripe) ? 'stripe' : ''}'>
+                    <td>
+                        <img src='https://raw.githubusercontent.com/lipis/flag-icons/main/flags/4x3/${code.toLowerCase()}.svg' alt='Country: ${country}'>
+                        ${country}
+                    </td>
+                    <td>${visitorStats.geoStats[country].visitorCount}</td>
+                    <td>${visitorStats.geoStats[country].paths.size}</td>
+                </tr>`)
+                stripe = !stripe
+            })
         $('#visitor-geography tbody').html(tableRows.join('\n'))
     }
 
