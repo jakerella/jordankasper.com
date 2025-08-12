@@ -70,10 +70,6 @@
       "default": "post.hbs",
       "pattern": ["**/*.html", "**/*.md"]
     },
-    "metalsmith-assets": {
-      "source": "./assets",
-      "destination": "./"
-    },
     "./plugins/rss": {
       "description": "Blog posts from Jordan Kasper",
       "relative_image_path": "images/hobbes_small.png",
@@ -81,7 +77,8 @@
     },
     "./plugins/copy": {
       "locations": [
-        { "from": "assets/static/", "to": "build/" },
+        { "from": "assets/", "to": "build/" },
+        { "from": "static/", "to": "build/" },
         { "from": "node_modules/jquery/dist/jquery.min.js", "to": "build/js/vendor/jquery.min.js" },
         { "from": "node_modules/chart.js/dist/chart.umd.js", "to": "build/js/vendor/chart.umd.js" },
         { "from": "node_modules/@fingerprintjs/fingerprintjs/dist/fp.min.js", "to": "build/js/vendor/fp.min.js" }
