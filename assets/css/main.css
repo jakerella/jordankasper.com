@@ -462,6 +462,18 @@ body>footer .rss:active {
 .blog-post img {
     max-width: 100%;
 }
+@media (min-width: 64em) {
+    .blog-post .post-right-image {
+        float: right;
+        width: 40%;
+        padding-left: 1em;
+    }
+    .blog-post .post-left-image {
+        float: left;
+        width: 40%;
+        padding-left: 1em;
+    }
+}
 .blog-post .view-image {
     text-align: right;
 }
