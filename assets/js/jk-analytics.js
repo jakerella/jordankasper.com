@@ -7,28 +7,29 @@
     const ONE_WEEK_AGO = (new Date(Date.now() - (1000 * 60 * 60 * 24 * 6))).toISOString().split('T')[0]
     let currentChart = null
 
-    $('#start-date').attr('max', (new Date()).toISOString().split('T')[0])[0].valueAsDate = new Date(ONE_WEEK_AGO)
-    $('#end-date').attr('max', (new Date()).toISOString().split('T')[0])[0].valueAsDate = new Date()
+    document.addEventListener('DOMContentLoaded', async () => {
+        $('#start-date').attr('max', (new Date()).toISOString().split('T')[0])[0].valueAsDate = new Date(ONE_WEEK_AGO)
+        $('#end-date').attr('max', (new Date()).toISOString().split('T')[0])[0].valueAsDate = new Date()
 
-    $('#change-range').on('click', async () => {
-        const start = $('#start-date').val()
-        const end = $('#end-date').val()
-        if (currentChart) {
-            currentChart.destroy()
-            currentChart = null
-        }
-        loadPage(start, end)
+        $('#change-range').on('click', async () => {
+            const start = $('#start-date').val()
+            const end = $('#end-date').val()
+            if (currentChart) {
+                currentChart.destroy()
+                currentChart = null
+            }
+            loadPage(start, end)
+        })
+
+        $('#expand-chart').on('click', (e) => {
+            $('.site-analytics').removeClass('analytics-container')
+            e.target.parentNode.removeChild(e.target)
+        })
+
+        
+        // Initial page load with default date range
+        await loadPage()
     })
-
-    $('#expand-chart').on('click', (e) => {
-        $('.site-analytics').removeClass('analytics-container')
-        e.target.parentNode.removeChild(e.target)
-    })
-
-    
-    // Initial page load with default date range
-    await loadPage()
-
 
     async function loadPage(start=null, end=null) {
         start = start || ONE_WEEK_AGO
