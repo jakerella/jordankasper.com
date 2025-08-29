@@ -1,9 +1,7 @@
 ;(async function () {
 
-    // TODO: if the date range is too large, roll up data
-    // TODO: cache data for dates in the past (localStorage)
+    // TODO: if the date range is too large, roll up data (on server?)
 
-    const LOCAL_KEY = 'jk-stats-cache'
     const ONE_WEEK_AGO = (new Date(Date.now() - (1000 * 60 * 60 * 24 * 6))).toISOString().split('T')[0]
     let currentChart = null
 

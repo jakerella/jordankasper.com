@@ -862,6 +862,9 @@ body>footer .rss:active {
 }
 
 
+#stats-by-path {
+    overflow-x: scroll;
+}
 @media (min-width: 64em) {
     .analytics-container {
         display: grid;

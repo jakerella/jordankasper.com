@@ -74,6 +74,14 @@ How is this all done? Well, the site is built using metalsmith, which itself is 
 
 The final, static site will be in the `/build` directory and you can **run the site** using your favorite HTTP server tool, serving content from that directory. For example, in Node you could use: `http-server ./build` (presuming you had installed the http-server Node module globally).
 
+### Testing Locally
+
+You can run `npm run watch` to watch the files for changes and rebuild automatically. If you are just testing some HTML/CSS/JS changes, then you can run a basic http server from the `/build` directory in another terminal.
+
+**However**, if you want to test the site as it will run on Netlify, then you should use the `netlify dev` command in your terminal versus a simple http server. This will also enable the analytics functions (both the hit tracker and the visualizations). That said, you also need to run Netlify blobs locally as the data store for the analytics.
+
+To start the test blob server, navigate to the `/api` directory in your terminal and run `node testBlobServer.js` (note that you will need to run `npm install` in that directory first).
+
 ### Publishing the Site
 
 This site is deployed to Netlify. To do this, you will need to install the Netlify CLI tool:
