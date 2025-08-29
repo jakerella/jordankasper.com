@@ -4,7 +4,6 @@
     adjustContentHeight()
     setupSearch()
     setupImageLinks()
-    await initAnalytics()
 
     function setupHobbesHover() {
         const hobbes = $('.hobbes-hover')
@@ -55,26 +54,6 @@
                 $(n).before(`<p class='view-image'><a href='${n.getAttribute('src')}' target='_blank'>[view image]</a></p>`)
             }
         })
-    }
-
-    async function initAnalytics() {
-        if (window.NO_TRACK === true) { return }
-        var fp = await (await FingerprintJS.load()).get()
-
-        const visitor = {
-            id: fp.visitorId,
-            tz: Intl.DateTimeFormat().resolvedOptions().timeZone
-        }
-        const hit = {
-            p: window.location.pathname || '/',
-            q: window.location.search || '',
-            r: document.referrer?.replace(window.location.origin, ''),
-            t: Date.now()
-        }
-
-        await fetch(`/.netlify/functions/processVisit?data=${btoa(JSON.stringify({ v: visitor, h: [hit] }))}`)
-
-        // TODO: prevent quick repeat hits (like a quick refresh)
     }
 
 })();

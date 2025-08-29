@@ -115,9 +115,8 @@
                 </footer>
             </dialog>
         </main>
-    </body>
 
-    <script>
+        <script>
 ;(() => {
     const ROWS = 16
     const COLS = 30
@@ -413,5 +412,9 @@
         localStorage.setItem(STATS_KEY, JSON.stringify(stats.games))
     }
 })()
-    </script>
+        </script>
+
+        <script src='/js/vendor/fp.min.js'></script>
+        <script src='/js/jk-send-hit.js'></script>
+    </body>
 </html>

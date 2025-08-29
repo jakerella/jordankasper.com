@@ -1,0 +1,26 @@
+;(async function () {
+    if (window.NO_TRACK === true) { return }
+    let fp = null
+    if (FingerprintJS) {
+        fp = (await (await FingerprintJS.load()).get()).visitorId
+    } else {
+        const userData =new TextEncoder().encode(navigator.userAgent + navigator.language + navigator.deviceMemory + navigator.deviceConcurrency)
+        const digest = await crypto.subtle.digest('SHA-1', userData)
+        fp = [...new Uint8Array(digest)].map(x => x.toString(16).padStart(2, '0')).join('')
+    }
+
+    const visitor = {
+        id: fp,
+        tz: Intl.DateTimeFormat().resolvedOptions().timeZone
+    }
+    const hit = {
+        p: window.location.pathname || '/',
+        q: window.location.search || '',
+        r: document.referrer?.replace(window.location.origin, ''),
+        t: Date.now()
+    }
+
+    await fetch(`/.netlify/functions/processVisit?data=${btoa(JSON.stringify({ v: visitor, h: [hit] }))}`)
+
+    // TODO: prevent quick repeat hits (like a quick refresh)
+})();
