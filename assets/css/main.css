@@ -862,7 +862,7 @@ body>footer .rss:active {
 }
 
 
-#stats-by-path {
+.site-analytics section {
     overflow-x: scroll;
 }
 @media (min-width: 64em) {
@@ -891,6 +891,9 @@ body>footer .rss:active {
 }
 #expand-chart {
     cursor: pointer;
+}
+.site-analytics section {
+    overflow-x: scroll;
 }
 .site-analytics thead {
     border-bottom: 1px solid #000;
