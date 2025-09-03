@@ -1111,6 +1111,15 @@
                 "Open Source in the Federal Government",
                 "[Badge Challenge]"
             ]
+        },
+        {
+            "name": "DistrictCon",
+            "url": "https://districtcon.org",
+            "location": "Washington, DC",
+            "date": "Jan 24 2026",
+            "topics": [
+                "[Badge Challenge]"
+            ]
         }
     ]
 }
