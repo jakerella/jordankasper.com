@@ -462,6 +462,12 @@ body>footer .rss:active {
 .blog-post img {
     max-width: 100%;
 }
+@media (max-width: 64em) {
+    .blog-post img.maximize-image-on-mobile {
+        width: 100% !important;
+    }
+}
+
 @media (min-width: 64em) {
     .blog-post .post-right-image {
         float: right;
