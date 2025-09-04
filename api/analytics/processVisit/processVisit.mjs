@@ -35,12 +35,7 @@ export default async function handler(req, context) {
             return new Response('Invalid analytic data payload', { status: 500 })
         }
 
-        const store = getStore({
-            name: c.ANALYTICS_STORE,
-            siteID: process.env.NETLIFY_SITE_ID || undefined,
-            edgeURL: process.env.NETLIFY_EDGE_URL || undefined,
-            token: process.env.NETLIFY_BLOBS_TOKEN || undefined
-        })
+        const store = getStore({ name: c.ANALYTICS_STORE })
 
         await updateVisitorData(analytics, store)
 

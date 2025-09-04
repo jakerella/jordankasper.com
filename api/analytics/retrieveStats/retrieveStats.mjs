@@ -34,12 +34,7 @@ export default async function handler(req, context) {
             start = end
         }
 
-        const store = getStore({
-            name: c.ANALYTICS_STORE,
-            siteID: process.env.NETLIFY_SITE_ID || undefined,
-            edgeURL: process.env.NETLIFY_EDGE_URL || undefined,
-            token: process.env.NETLIFY_BLOBS_TOKEN || undefined
-        })
+        const store = getStore({ name: c.ANALYTICS_STORE })
 
         const visitors = (await store.get(c.VISITORS_KEY, { type: 'json' })) || {}
         const paths = (await store.get(c.PATHS_KEY, { type: 'json' })) || {}
