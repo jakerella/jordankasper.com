@@ -78,8 +78,8 @@ The serverless function will check the data and store it, then sends back a simp
 
 Here's the main points:
 
-1. You don't have to put everything in a `.netlify/` directory... I didn't want to, and you can configure that in your Project configuration under "Build settings".
-2. In my case I used plain JavaScript (versus TypeScript), but either way you need a function that is exported and accepts a request object and the execution context.
+1. You don't have to put everything in a `netlify/` directory... I didn't want to, and you can configure that in your Project configuration under "Build settings".
+2. In my case I used plain JavaScript (versus TypeScript), but either way you need a function that is exported and accepts a `Request` object and the execution context.
 3. Remember that this is an asynchronous function whether you use the `async` keyword or not, so might as well take advantage of it.
 4. Make sure you return a native JS `Response` object! In my case, it's super basic: `return new Response('success', { status: 200 })`
 
@@ -98,12 +98,7 @@ Being a simple key-value store, the basic steps are:
 ```javascript
 import { getStore } from '@netlify/blobs'
 
-const store = getStore({
-    name: 'my-store-name',
-    siteID: process.env.NETLIFY_SITE_ID || undefined,
-    edgeURL: process.env.NETLIFY_EDGE_URL || undefined,  // useful for local development
-    token: process.env.NETLIFY_BLOBS_TOKEN || undefined  // useful for local development
-})
+const store = getStore({ name: 'my-store-name' })
 ```
 
 We'll talk about those environment variables when we get to the local testing section.
@@ -160,23 +155,20 @@ Luckily, the Blob Store is behind that serverless function and has token-based a
 
 Second, there's no (easy/free) way to restrict access to your analytics UI. This isn't a huge deal for me - in part because I have no sensitive data on there and because it's a small site with limited traffic. But your experience may be different.
 
-#### Testing Locally
+### Testing Locally
 
-Lastly, I found it overly complicated to locally test serveless functions - and specifically the Blob store. Netlify provides a nice [`dev` command in their CLI for local testing](https://docs.netlify.com/cli/local-development/). This is a good way to ensure your site works locally as it will when deployed to Netlify (versus using a simple local static server).
+I found it difficult to find good information on testing locally with Netlify, but it **is** easy, you just have to know the right levers to pull. Netlify provides a nice [`dev` command in their CLI for local testing](https://docs.netlify.com/cli/local-development/). This is a good way to ensure your site works locally as it will when deployed to Netlify (versus using a simple local static server).
 
-It will also run your serverless functions _locally_, which is nice... and it _sort of_ runs your Blob stores... only not really. It mocks those out. In other words, no actually data is stored. Ugh.
+It will also run your serverless functions _locally_, which is awesome, and it even runs a Blob store server with local data storage.
 
-Luckily, there is a solution! Netlify actually has an [open source library for implementing the Blob Store](https://www.npmjs.com/package/@netlify/blobs) which has a [**Server implementation**](https://www.npmjs.com/package/@netlify/blobs). This will allow you to run your own Blob store locally to test. You can see [my (very basic) implementation for testing](https://github.com/jakerella/jordankasper.com/blob/master/api/testBlobServer.js) on GitHub. This server will store its data locally in your project directory. (Be sure to add that directory to your `.gitignore` file!)
-
-One last note here: while Netlify's `dev` CLI command has an `--offline` option (which I encourage you use exclusively), you will need to have your publish directory and functions directory specified in a [`netlify.toml` configuration file](https://docs.netlify.com/build/configure-builds/file-based-configuration/) in your project directory for that to work. Even if you configure things on the web dashboard, you will need to do this locally _if you want to run the `dev` command offline_.
+One last note here: while Netlify's `dev` CLI command has an `--offline` option (which I encourage you use exclusively for efficiency), you will need to have your publish directory in a [`netlify.toml` configuration file](https://docs.netlify.com/build/configure-builds/file-based-configuration/) in your project directory for that to work (unless the root directory of your project is the publish directory). And if you configured a different directory for your serverless functions, you'll need to put that in the `netlify.toml` as well. You need to do this even if you configure things on the web dashboard, but _only if you want to run the `dev` command **offline**_.
 
 So, to recap, to test locally you need to:
 
-1. Specify your publish and functions directories in a local `netlify.toml` file
+1. Specify your publish (and maybe functions) directory in a local `netlify.toml` file
 2. Build your static site files (I use `npm run build`, which you can see in my `package.json file`)
-3. Start your local Blob store server
-4. Start the Netlify dev instance using `netlify dev --offline`
-5. Profit?
+3. Start the Netlify dev instance using `netlify dev` (possibly with `--offline`)
+4. Profit?
 
 ### What's Next?
 
