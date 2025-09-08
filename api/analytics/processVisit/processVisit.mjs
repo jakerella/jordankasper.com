@@ -5,7 +5,7 @@ import { getStore } from '@netlify/blobs'
 import timezones from '../timezones.json'
 import c from '../constants.json'
 
-const TRACKED_SEARCH_PARAMS = ['q']
+const TRACKED_SEARCH_PARAMS = ['q', 'errorMessage']
 
 /**
  * This is the main handler for the analytics processor. The Request object needs to have

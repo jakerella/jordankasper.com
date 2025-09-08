@@ -14,8 +14,8 @@
         tz: Intl.DateTimeFormat().resolvedOptions().timeZone
     }
     const hit = {
-        p: window.location.pathname || '/',
-        q: window.location.search || '',
+        p: window.errorCode || window.location.pathname || '/',
+        q: ((window.errorCode) ? `?errorMessage=${window.errorMessage}` : window.location.search) || '',
         r: document.referrer?.replace(window.location.origin, ''),
         t: Date.now()
     }

@@ -20,7 +20,7 @@ KEY(S): hits--CCYY-MM-DD
     "pathId": {          // unique paths visited on the website on this day
         h: Number,       // number of hits (page views)
         v: [...String],  // fingerprints of unique visitors
-        q: [...String],  // search query terms used to reach this path
+        q: [...String],  // query terms used for this path
         r: [...String]   // unique referral URLs
     },
     ...

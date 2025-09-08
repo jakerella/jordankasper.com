@@ -159,8 +159,8 @@
                     <td>${dataByPath[pathId].path}</td>
                     <td>${dataByPath[pathId].hits}</td>
                     <td>${dataByPath[pathId].visitors.size}</td>
+                    <td>${dataByPath[pathId].queries.values().toArray().join('<br>')}</td>
                     <td>${dataByPath[pathId].referrers.values().toArray().join('<br>')}</td>
-                    <!-- <td>${dataByPath[pathId].queries.values().toArray().join('<br>')}</td> -->
                 </tr>`)
                 stripe = !stripe
             })
