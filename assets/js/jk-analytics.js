@@ -155,12 +155,15 @@
         Object.keys(dataByPath)
             .sort((a, b) => dataByPath[b].visitors.size - dataByPath[a].visitors.size)
             .forEach((pathId) => {
+                const filteredReferrers = dataByPath[pathId].referrers.values().toArray().filter((ref) => {
+                    return dataByPath[pathId].path !== ref
+                })
                 tableRows.push(`<tr class='${(stripe) ? 'stripe' : ''}'>
                     <td>${dataByPath[pathId].path}</td>
                     <td>${dataByPath[pathId].hits}</td>
                     <td>${dataByPath[pathId].visitors.size}</td>
+                    <td>${filteredReferrers.join('<br>')}</td>
                     <td>${dataByPath[pathId].queries.values().toArray().join('<br>')}</td>
-                    <td>${dataByPath[pathId].referrers.values().toArray().join('<br>')}</td>
                 </tr>`)
                 stripe = !stripe
             })
@@ -172,6 +175,9 @@
         Object.keys(dataByReferrer)
             .sort((a, b) => dataByReferrer[b].visitors.size - dataByReferrer[a].visitors.size)
             .forEach((referrer) => {
+                if (dataByReferrer[referrer].paths.has(referrer)) {
+                    return
+                }
                 tableRows.push(`<tr class='${(stripe) ? 'stripe' : ''}'>
                     <td>${referrer}</td>
                     <td>${dataByReferrer[referrer].visitors.size}</td>
@@ -180,18 +186,6 @@
                 stripe = !stripe
             })
         $('#stats-by-referrer tbody').html(tableRows.join('\n'))
-
-
-        // tableRows = []
-        // for (let query in dataByQuery) {
-        //     tableRows.push(`<tr>
-        //         <td>${query}</td>
-        //         <td>${dataByQuery[query].count}</td>
-        //         <td>${dataByQuery[query].visitors.size}</td>
-        //     </tr>`)
-        // }
-        // $('#stats-by-query tbody').html(tableRows.join('\n'))
-
         
         $('.total-unique').html(Object.keys(data.visitors).length)
         $('.range-unique').html(visitorStats.unique.size)

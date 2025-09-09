@@ -20,7 +20,14 @@
         t: Date.now()
     }
 
+    // Prevent quick (1 hour) refreshes or visits from triggering more page views
+    const [lastFp, lastPath, lastTs] = (localStorage.getItem('jk-last') || '|').split('|')
+    if (lastFp === fp && lastPath && hit.p && (Date.now() - Number(lastTs)) < (1000 * 60 * 60)) {
+        console.debug('I was just here', new Date(Number(lastTs)))
+        return
+    }
+
     await fetch(`/.netlify/functions/processVisit?data=${btoa(JSON.stringify({ v: visitor, h: [hit] }))}`)
 
-    // TODO: prevent quick repeat hits (like a quick refresh)
+    localStorage.setItem('jk-last', `${fp}|${hit.p}|${Date.now()}`)
 })();

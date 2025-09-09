@@ -869,38 +869,38 @@ body>footer .rss:active {
 }
 
 
-.site-analytics section {
-    overflow-x: scroll;
-}
 @media (min-width: 64em) {
     .analytics-container {
         display: grid;
-        grid-template-columns: 40% 30% 30%;
+        grid-template-columns: 25% 25% 25% 25%;
     }
 
     .chart-container {
         grid-row: 1;
-        grid-column: 1;
+        grid-column-start: 1;
+        grid-column-end: 3;
     }
     #stats-by-referrer {
         grid-row: 1;
-        grid-column: 2;
+        grid-column-start: 3;
+        grid-column-end: 5;
     }
     #visitor-stats {
-        grid-row: 1;
-        grid-column: 3;
+        grid-row: 2;
+        grid-column-start: 1;
+        grid-column-end: 2;
     }
     #stats-by-path {
         grid-row: 2;
-        grid-column-start: 1;
-        grid-column-end: 3;
+        grid-column-start: 2;
+        grid-column-end: 5;
     }
 }
 #expand-chart {
     cursor: pointer;
 }
 .site-analytics section {
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 .site-analytics thead {
     border-bottom: 1px solid #000;
