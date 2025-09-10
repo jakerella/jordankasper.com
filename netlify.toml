@@ -1,4 +1,26 @@
 [build]
   publish = "build/"
+
 [functions]
   directory = "api/analytics"
+
+[[redirects]]
+  from = "/blog/2013/04/automated-javascript-tests-using-grunt-phantomjs-and-qunit"
+  to = "/automated-javascript-tests-using-grunt-phantomjs-and-qunit/"
+  status = 301
+
+[[redirects]]
+  from = "/blog/2014/01/windows-8-native-javascript-file-system/"
+  to = "/windows-8-native-javascript-file-system"
+  status = 301
+
+[[redirects]]
+  from = "/blog"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/jquery/*"
+  to = "/jquery?path=:splat"
+  status = 301
+
