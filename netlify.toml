@@ -5,13 +5,13 @@
   directory = "api/analytics"
 
 [[redirects]]
-  from = "/blog/2013/04/automated-javascript-tests-using-grunt-phantomjs-and-qunit"
-  to = "/automated-javascript-tests-using-grunt-phantomjs-and-qunit/"
+  from = "/blog/:year/:month/:slug"
+  to = "/:slug"
   status = 301
 
 [[redirects]]
-  from = "/blog/2014/01/windows-8-native-javascript-file-system/"
-  to = "/windows-8-native-javascript-file-system"
+  from = "/posts/:slug"
+  to = "/:slug"
   status = 301
 
 [[redirects]]
