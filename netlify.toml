@@ -15,6 +15,11 @@
   status = 301
 
 [[redirects]]
+  from = "/preso/:slug"
+  to = "/:slug"
+  status = 301
+
+[[redirects]]
   from = "/blog"
   to = "/"
   status = 301

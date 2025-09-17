@@ -138,7 +138,7 @@ This structure is referred to as the **prototype chain** and falling back to suc
 
 This output shows how the `__proto__` property is used to reference the `prototype` object that each level was created from. That "chain" of `__proto__` properties is our inheritance path. For those of us that are more visually inclined, perhaps this diagram is better suited. Notice that our `Dog` instance (`v`) is at the bottom and the chain proceeds up with the top level being the "root" JavaScript `Object`.
 
-![The JavaScript prototype chain](/images/preso/JS_prototype_chain.png)
+![The JavaScript prototype chain](/oop-js/images/prototype_chain.png)
 
 We can show that JavaScript recognizes this prototype chain by using the `instanceof` operator on our newly created objects. In each case, JavaScript is simply looking up the prototype chain to see if it finds a matching object. The last line in the example below simply shows how you can reverse the logic to go from the prototype down to the instance.
 

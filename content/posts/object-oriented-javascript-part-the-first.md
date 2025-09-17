@@ -238,7 +238,7 @@ When we create the `alive` variable we do _not_ place it on the instance variabl
 
 > In the diagram below each of the colored boxes represent a function scope. The `jk` object variable in the "Global Scope" is accessible to all functions created within its scope (the largest box). The `foo` function (red box) creates a new scope, and a variable `x` within it. It also creates a new function which it then places on the `jk.privy` variable. Note that the `privy` function (the blue box) is completely contained within the `foo` function's scope (red box) thus when the function is executed at a later time it will _still have access to `x`_, even if the `foo` function is no longer accessible otherwise.
 
-> ![Closure Diagram](/images/preso/closures_final.png)
+> ![Closure Diagram](/oop-js/images/closures_final.png)
 
 > The green box on the right for the `bar` function creates its own scope _outside_ of the `foo` function's scope. This means that the `bar` function can never access the `x` variable declared inside of `foo` (in other words, `x` is "private" to `foo`). However, since the `privy` function is declared on the `jk` object, and the `bar` function is within the global scope that `jk` is defined within, `bar` can call the `privy` function. The `privy` function has access to variables in scope at the time it was created within `foo` (this is the definition of a closure), thus `bar` can indirectly access `x` by calling `privy`.
 
