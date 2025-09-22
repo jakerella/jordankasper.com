@@ -159,7 +159,7 @@
                     return dataByPath[pathId].path !== ref
                 })
                 tableRows.push(`<tr class='${(stripe) ? 'stripe' : ''}'>
-                    <td>${dataByPath[pathId].path}</td>
+                    <td><a href='${dataByPath[pathId].path}'>${dataByPath[pathId].path}</a></td>
                     <td>${dataByPath[pathId].hits}</td>
                     <td>${dataByPath[pathId].visitors.size}</td>
                     <td>${filteredReferrers.join('<br>')}</td>
