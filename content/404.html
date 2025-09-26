@@ -4,6 +4,16 @@ title: Not Found
 permalink: false
 ---
 
+<script>
+    if (/\.md$/.test(document.location.pathname)) {
+        // Looks like someone has a link to the raw markdown. Let's redirect them.
+        window.location.replace(document.location.href.replace(/\.md$/, ''))
+    } else {
+        window.errorCode = 404
+        window.errorMessage = window.location.pathname
+    }
+</script>
+
 <p><img class='error-dog' src='/images/404.jpg' alt='404 Not Found'></p>
 
 <p class='text-center'>
@@ -13,8 +23,3 @@ permalink: false
 </p>
 
 <p class='fine'>Thanks to <a href='http://httpstatusdogs.com/404-not-found'>HTTP Status Dogs</a> for the image!</p>
-
-<script>
-    window.errorCode = 404
-    window.errorMessage = window.location.pathname
-</script>
