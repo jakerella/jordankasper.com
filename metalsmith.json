@@ -14,9 +14,6 @@
         "pattern": "content/posts/*.md",
         "sortBy": "date",
         "reverse": true
-      },
-      "presos": {
-        "pattern": "content/presos/**/*.html"
       }
     },
     "metalsmith-pagination": {
@@ -69,6 +66,21 @@
       "directory": "layouts",
       "default": "post.hbs",
       "pattern": ["**/*.html", "**/*.md"]
+    },
+    "./plugins/relocate": {
+      "rewritePaths": { "^presos\/": "" }
+    },
+    "./plugins/sitemap": {
+      "exclude": "(LICENSE|\\.(png|jpg|gif|svg|js|css|drawio|zip|json)$)",
+      "excludeOthers": true,
+      "scanForPaths": [ "static" ],
+      "priorities": {
+        "/content/index.html": 1.0,
+        "/content/posts/": 0.8,
+        "/content/presos/": 0.6,
+        "/content/tag/": 0.1,
+        "/content/page/": 0.1
+      }
     },
     "./plugins/rss": {
       "description": "Blog posts from Jordan Kasper",

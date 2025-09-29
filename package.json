@@ -8,7 +8,7 @@
   "description": "Static homepage for me",
   "scripts": {
     "clean": "rm -rf build/",
-    "build": "npm run clean && DEBUGLEVEL=INFO npx metalsmith && cp -r build/presos/* build/ && rm -rf build/presos/ && rm -rf build/static/ && npx pagefind",
+    "build": "npm run clean && DEBUGLEVEL=INFO npx metalsmith && rm -rf build/static/ && npx pagefind",
     "debug": "npm run clean && DEBUG=metalsmith:*,@metalsmith/*,metalsmith-* DEBUGLEVEL=DEBUG npx metalsmith && cp -r build/presos/* build/ && rm -rf build/presos/ && rm -rf build/static/ && npx pagefind --verbose",
     "watch": "npm-watch build"
   },
@@ -48,7 +48,6 @@
     "handlebars": "^4.7.8",
     "jstransformer-handlebars": "^1.2.0",
     "jstransformer-markdown": "^1.2.1",
-    "lodash": "^4.17.21",
     "metalsmith": "^2.6.2",
     "metalsmith-date-formatter": "^1.0.2",
     "metalsmith-discover-partials": "^0.1.2",
