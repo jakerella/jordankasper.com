@@ -875,7 +875,7 @@ body>footer .rss:active {
         grid-template-columns: 25% 25% 25% 25%;
     }
 
-    .chart-container {
+    #stats-by-time {
         grid-row: 1;
         grid-column-start: 1;
         grid-column-end: 3;
@@ -888,11 +888,22 @@ body>footer .rss:active {
     #visitor-stats {
         grid-row: 2;
         grid-column-start: 1;
-        grid-column-end: 2;
+        grid-column-end: 3;
+    }
+    .visitor-charts {
+        display: flex;
+    }
+    #device-stats {
+        grid-row: 2;
+        grid-column-start: 3;
+        grid-column-end: 5;
+    }
+    .device-charts {
+        display: flex;
     }
     #stats-by-path {
-        grid-row: 2;
-        grid-column-start: 2;
+        grid-row: 3;
+        grid-column-start: 1;
         grid-column-end: 5;
     }
 }
@@ -915,7 +926,13 @@ body>footer .rss:active {
 #visitor-stats .list-value {
     font-weight: bold;
 }
-#visitor-geography img {
-    width: 1.3em;
+#visitor-stats .geo-flag-icon {
+    width: 2rem;
     padding: 0;
+}
+.geo-tooltip {
+    position: absolute;
+    transform: translate(-50%, 0);
+    transition: all .1s ease;
+    font-size: 1.5rem;
 }

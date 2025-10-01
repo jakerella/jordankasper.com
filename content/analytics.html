@@ -21,9 +21,9 @@ analytics: true
 </nav>
 
 <main class='site-analytics analytics-container'>
-    <section class='chart-container'>
+    <section id='stats-by-time'>
         <h3>Views and Visitors in Time Range <span id='expand-chart'>⤡</span></h3>
-        <canvas id='stats-by-time'></canvas>
+        <canvas></canvas>
     </section>
 
     <section id='stats-by-referrer'>
@@ -48,7 +48,17 @@ analytics: true
             <li><span class='list-value return-visits'></span> Return Visitors in date range</li>
             <li><span class='list-value pages-viewed'></span> Total Unique Pages Viewed in time range</li>
         </ul>
-        <table id='visitor-geography'>
+        <section class='visitor-charts'>
+            <aside>
+                <h4>All Time Unique Visitors</h4>
+                <canvas id='geography-all'></canvas>
+            </aside>
+            <aside>
+                <h4>In Range Page Views</h4>
+                <canvas id='geography-ranged-views'></canvas>
+            </aside>
+        </section>
+        <!-- <table id='visitor-geography'>
             <thead>
                 <tr>
                     <th>Country</th>
@@ -57,7 +67,31 @@ analytics: true
                 </tr>
             </thead>
             <tbody></tbody>
-        </table>
+        </table> -->
+    </section>
+
+    <section id='device-stats'>
+        <h3>Device Stats</h3>
+        <section class='device-charts'>
+            <aside>
+                <h4>Browsers</h4>
+                <canvas id='user-browsers'></canvas>
+            </aside>
+            <aside>
+                <h4>Operating Systems</h4>
+                <canvas id='operating-systems'></canvas>
+            </aside>
+        </section>
+        <section class='device-charts'>
+            <aside>
+                <h4>Device Types</h4>
+                <canvas id='device-types'></canvas>
+            </aside>
+            <aside>
+                <h4>Bots</h4>
+                <canvas id='bot-visitors'></canvas>
+            </aside>
+        </section>
     </section>
 
     <section id='stats-by-path'>
@@ -68,6 +102,7 @@ analytics: true
                     <th>Path</th>
                     <th>Views</th>
                     <th>Unique<br>Visitors</th>
+                    <th>Bot Hits</th>
                     <th>Referrer URLs</th>
                     <th>Query Params</th>
                 </tr>

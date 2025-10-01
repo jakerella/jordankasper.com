@@ -1,4 +1,7 @@
 ;(async function () {
+    const RECENT_CACHE_KEY = 'jk-recent'
+    const CACHE_LIMIT = (1000 * 60 * 60)
+
     if (window.NO_TRACK === true) { return }
     let fp = null
     if (FingerprintJS) {
@@ -11,6 +14,7 @@
 
     const visitor = {
         id: fp,
+        ua: navigator.userAgent,
         tz: Intl.DateTimeFormat().resolvedOptions().timeZone
     }
     const hit = {
@@ -20,14 +24,37 @@
         t: Date.now()
     }
 
-    // Prevent quick (1 hour) refreshes or visits from triggering more page views
-    const [lastFp, lastPath, lastTs] = (localStorage.getItem('jk-last') || '|').split('|')
-    if (lastFp === fp && lastPath && hit.p && (Date.now() - Number(lastTs)) < (1000 * 60 * 60)) {
-        console.debug('I was just here', new Date(Number(lastTs)))
+    // Prevent quick (1 hour) refreshes or re-visits from triggering more page views
+    const [recentFP, recentHitsHash] = (localStorage.getItem(RECENT_CACHE_KEY) || '|').split('|')
+    if (recentFP && recentFP !== fp) { return }
+
+    const recentHits = (atob(recentHitsHash) || '')
+        .split(';')
+        .map(r => r.split('|'))
+        .filter(r => {
+            return (Date.now() - Number(r[1])) < CACHE_LIMIT
+        })
+    
+    const recentMatch = recentHits.filter(r => r[0] === hit.p)
+    if (recentMatch.length) {
+        storeRecent(recentHits, hit.p)
         return
     }
 
-    await fetch(`/.netlify/functions/processVisit?data=${btoa(JSON.stringify({ v: visitor, h: [hit] }))}`)
+    await fetch(`/.netlify/functions/processVisit?data=${btoa(JSON.stringify({ v: visitor, h: hit }))}`)
+    storeRecent(recentHits, hit.p)
 
-    localStorage.setItem('jk-last', `${fp}|${hit.p}|${Date.now()}`)
+    function storeRecent(current, path) {
+        let found = false
+        recentHits.forEach(r => {
+            if (r[0] === path) {
+                r[1] = Date.now()
+                found = true
+            }
+        })
+        if (!found) {
+            current.push([path, Date.now()])
+        }
+        localStorage.setItem(RECENT_CACHE_KEY, `${fp}|${btoa(current.map(r => `${r[0]}|${r[1]}`).join(';'))}`)
+    }
 })();

@@ -4,6 +4,7 @@ KEY: site-visitors
 {
     "fingerprint": {
         g: String,       // geolocation (country code)
+        u: String,       // userAgent details in the format: browser|os|format (i.e. "chrome|windows|desktop")
         f: Number,       // timestamp of first visit
         l: Number        // timestamp of latest visit
     },
@@ -18,8 +19,9 @@ KEY: site-paths
 KEY(S): hits--CCYY-MM-DD
 {
     "pathId": {          // unique paths visited on the website on this day
-        h: Number,       // number of hits (page views)
-        v: [...String],  // fingerprints of unique visitors
+        h: Number,       // number of hits (page views, non-bot)
+        b: Number,       // number of hits by a bot user agent
+        v: [...String],  // fingerprints of unique, non-bot visitors
         q: [...String],  // query terms used for this path
         r: [...String]   // unique referral URLs
     },
