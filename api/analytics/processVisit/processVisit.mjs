@@ -8,6 +8,8 @@ import timezones from '../timezones.json'
 import c from '../constants.json'
 
 const TRACKED_SEARCH_PARAMS = ['q', 'errorMessage']
+const VALIDATE_PATHS_WITH_SITEMAP = true
+const SITEMAP_PATH = '/sitemap.xml'
 
 /**
  * This is the main handler for the analytics processor. The Request object needs to have
@@ -69,17 +71,20 @@ async function extractRequestData(queryParam, context) {
         return null
     }
 
-    // if (context.geo && context.geo.country) {
-    //     data.v.g = context.geo.country.code
-    // } else {
+    if (context.geo && context.geo.country) {
+        data.v.g = context.geo.country.code
+    } else {
         data.v.g = getCountryFromTZ(data.v.tz || '')
-    // }
+    }
     
     if (data.h.p === '') { data.h.p = '/' }
     if (!data.h.p) { return null }
 
-    if (!/^[3-5]\d\d$/.test(data.h.p)) {
-        const resp = await fetch(`${context.site.url}/sitemap.xml`)
+    // remove hash, query string and strip trailing slash
+    data.h.p = data.h.p.split('#')[0].split('?')[0].replace(/(.)\/$/, '$1')
+
+    if (VALIDATE_PATHS_WITH_SITEMAP && !/^[3-5]\d\d$/.test(data.h.p)) {
+        const resp = await fetch(`${context.site.url}${SITEMAP_PATH}`)
         if (resp.status === 200) {
             const locations = (await resp.text()).match(/\<loc\>[^\<]+\<\/loc\>/ig)
             const paths = locations.map(l => l.replace(/\<\/?loc\>/g, '').replace(/^https?:\/\/[^\/]+/, ''))
@@ -188,11 +193,11 @@ function generatePathKey(paths) {
 
 function getCountryFromTZ(tz) {
     if (!tz) { return '?' }
-    if (timezones[tz].length < 3) {
+    if (timezones[tz] && timezones[tz].length < 3) {
         return timezones[tz][0]
     } else if ( /\//.test(tz)) {
         return tz.split('/')[0]
     } else {
-        return '?'
+        return ''
     }
 }
