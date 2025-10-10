@@ -19,7 +19,7 @@
         "content/**/*.*",
         "layouts/**/*.*",
         "plugins/*.js",
-        "metalsmith.js"
+        "static/**/*.*"
       ],
       "delay": 1000
     }

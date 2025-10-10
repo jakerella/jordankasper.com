@@ -2,44 +2,103 @@
 ;(() => {
 
     // TODO:
-    // remove all edges
-    // win screen (timer?)
-    // new game
     // solver (for quitters)
-    // node & label design
+    // win screen (timer?)
+    // start new game
+    // game options (difficulty, etc)
+    // game timer
+    // save player stats
+    // better node & label design
+    // better UI overall
+    // dark mode
+
+    const GRAPH_ELEM = document.getElementById('graph')
+    const EDGES_ELEM = document.getElementById('edges')
+    const MSG_ELEM = document.getElementById('message')
+    const MSG_TIMEOUT = 5000
+    
+    let GAME = null
 
     function main() {
-        const GAME = {
-            graphElem: document.getElementById('graph'),
-            edgesElem: document.getElementById('edges'),
-            messageElem: document.getElementById('message'),
-            nodeCount: [5, 8],
-            edgeCount: [5, 12],
-            weightRange: [1, 10],
-            minNodeSize: 7,
-            nodePadding: 30
-        }
 
-        GAME.nodes = determineNodes(GAME)
-        GAME.edges = determineEdges(GAME)
-        // console.log(GAME.edges.map(e => `${e.source.id} to ${e.dest.id} (${e.weight})`))
-        drawGraphNodes(GAME)
-        drawAvailableEdges(GAME)
+        newGame()
 
-        GAME.edgesElem.addEventListener('click', (e) => {
-            GAME.messageElem.innerText = ''
+        EDGES_ELEM.addEventListener('click', (e) => {
+            if (!GAME) { return }
             if (e.target.classList.contains('edge')) {
                 selectEdge(GAME, e.target)
             }
         })
 
-        GAME.graphElem.addEventListener('click', (e) => {
-            GAME.messageElem.innerText = ''
+        GRAPH_ELEM.addEventListener('click', (e) => {
+            if (!GAME) { return }
             if (e.target.nodeName.toLowerCase() === 'circle') {
                 selectNode(GAME, e.target)
+            } else if (e.target.classList.contains('node-label')) {
+                const target = document.getElementById(e.target.id.split('-label')[0])
+                selectNode(GAME, target)
             } else if (e.target.nodeName.toLowerCase() === 'line') {
                 removeEdge(GAME, e.target)
+            } else if (e.target.classList.contains('edge-label')) {
+                const target = document.getElementById(e.target.id.split('-label')[0])
+                removeEdge(GAME, target)
             }
+        })
+
+        document.getElementById('reset').addEventListener('click', () => {
+            if (!GAME) { return }
+            Array.from(GRAPH_ELEM.querySelectorAll('line')).forEach(el => {
+                removeEdge(GAME, el)
+            })
+        })
+
+        document.getElementById('layout').addEventListener('click', () => {
+            if (!GAME) { return }
+            changeLayout(GAME)
+        })
+    }
+
+    function newGame() {
+        GAME = {
+            nodeCount: 6,
+            edgeCount: [5, 12],
+            weightRange: [2, 7],
+            minNodeSize: 6,
+            nodePadding: 40
+        }
+
+        GRAPH_ELEM.innerHTML = ''
+        EDGES_ELEM.innerHTML = ''
+        showMessage('')
+
+        GAME.nodes = determineNodes(GAME)
+        GAME.edges = determineEdges(GAME)
+        drawGraphNodes(GAME)
+        drawAvailableEdges(GAME)
+    }
+
+    function showMessage(msg, timeout=MSG_TIMEOUT) {
+        MSG_ELEM.innerText = ''+msg || ''
+        if (Number(timeout)) {
+            setTimeout(() => {
+                MSG_ELEM.innerText = ''
+            }, timeout)
+        }
+    }
+
+    function changeLayout(g) {
+        Array.from(GRAPH_ELEM.querySelectorAll('circle, text'))
+            // .concat(Array.from(GRAPH_ELEM.querySelectorAll('text')))
+            .forEach(el => GRAPH_ELEM.removeChild(el))
+        const edges = Array.from(GRAPH_ELEM.querySelectorAll('line'))
+            .map(el => {
+                GRAPH_ELEM.removeChild(el)
+                return el.id.split('-').concat([Number(el.getAttribute('data-weight'))])
+            })
+        g.nodes.forEach(n => n.edges = [])
+        drawGraphNodes(g)
+        edges.forEach(e => {
+            addEdge(g, e[0], e[1], e[2])
         })
     }
 
@@ -51,7 +110,7 @@
                 node.classList.remove('selected')
             }
         } else if (!elem.classList.contains('used')) {
-            const edge = g.edgesElem.querySelector('.selected')
+            const edge = EDGES_ELEM.querySelector('.selected')
             if (edge) {
                 edge.classList.remove('selected')
             }
@@ -60,9 +119,9 @@
     }
 
     function selectNode(g, elem) {
-        const edge = g.edgesElem.querySelector('.selected')
+        const edge = EDGES_ELEM.querySelector('.selected')
         if (!edge) {
-            g.messageElem.innerText = 'Please select an edge to place first!'
+            showMessage('Please select an edge to place first!')
             return
         }
 
@@ -76,7 +135,7 @@
                     prevEdge = document.getElementById(otherElem.id + '-' + elem.id)
                 }
                 if (prevEdge) {
-                    g.messageElem.innerText = 'You already have an edge between those two nodes!'
+                    showMessage('You already have an edge between those two nodes!')
                     return
                 }
 
@@ -90,8 +149,8 @@
     }
 
     function removeEdge(g, elem) {
-        g.graphElem.removeChild(elem)
-        g.graphElem.removeChild(document.getElementById(elem.id + '-label'))
+        GRAPH_ELEM.removeChild(elem)
+        GRAPH_ELEM.removeChild(document.getElementById(elem.id + '-label'))
         const weight = Number(elem.getAttribute('data-weight'))
         const [sourceId, destId] = elem.id.split('-')
         g.nodes
@@ -99,7 +158,7 @@
             .forEach(n => {
                 n.edges.splice(n.edges.indexOf(weight), 1)
             })
-        const libraryEdge = g.edgesElem.querySelector(`[data-weight="${weight}"].edge.used`)
+        const libraryEdge = EDGES_ELEM.querySelector(`[data-weight="${weight}"].edge.used`)
         if (libraryEdge) {
             libraryEdge.classList.remove('used')
         }
@@ -109,13 +168,13 @@
     function addEdge(g, sourceId, destId, weight) {
         const edge = g.edges.filter(e => e.weight === weight && !e.used)[0]
         if (!edge) {
-            g.messageElem.innerText = 'Sorry, but you don\'t have a free edge with that weight!'
+            showMessage('Sorry, but you don\'t have a free edge with that weight!')
             return
         }
         const sourceNode = g.nodes.filter(n => n.id === sourceId)[0]
         const destNode = g.nodes.filter(n => n.id === destId)[0]
         if (!sourceNode || !destNode) {
-            g.messageElem.innerText = 'Sorry, but those are invalid nodes!'
+            showMessage('Sorry, but those are invalid nodes!')
             return
         }
         sourceNode.edges.push(weight)
@@ -150,41 +209,39 @@
             }
         })
         if (complete) {
-            g.messageElem.innerText = 'You win!'
+            showMessage('You win!', 0)
         }
     }
 
     function drawEdge(g, sourceNode, destNode, weight) {
-        g.graphElem.removeChild(document.getElementById(sourceNode.id))
-        g.graphElem.removeChild(document.getElementById(sourceNode.id + '-label'))
-        g.graphElem.removeChild(document.getElementById(destNode.id))
-        g.graphElem.removeChild(document.getElementById(destNode.id + '-label'))
-        g.graphElem.innerHTML += `<line id='${sourceNode.id}-${destNode.id}' data-weight='${weight}' x1='${sourceNode.x}' y1='${sourceNode.y}' x2='${destNode.x}' y2='${destNode.y}' stroke-width='${weight}' />`
+        GRAPH_ELEM.removeChild(document.getElementById(sourceNode.id))
+        GRAPH_ELEM.removeChild(document.getElementById(sourceNode.id + '-label'))
+        GRAPH_ELEM.removeChild(document.getElementById(destNode.id))
+        GRAPH_ELEM.removeChild(document.getElementById(destNode.id + '-label'))
+        GRAPH_ELEM.innerHTML += `<line id='${sourceNode.id}-${destNode.id}' data-weight='${weight}' x1='${sourceNode.x}' y1='${sourceNode.y}' x2='${destNode.x}' y2='${destNode.y}' stroke-width='${weight*2}' />`
         const labelX = Math.max(destNode.x, sourceNode.x) - (Math.abs(destNode.x - sourceNode.x) / 2)
         const labelY = Math.max(destNode.y, sourceNode.y) - (Math.abs(destNode.y - sourceNode.y) / 2)
-        g.graphElem.innerHTML += `<text id='${sourceNode.id}-${destNode.id}-label' class='edge-label' x='${labelX}' y='${labelY}'>${weight}</text>`
+        GRAPH_ELEM.innerHTML += `<text id='${sourceNode.id}-${destNode.id}-label' class='edge-label' x='${labelX}' y='${labelY}'>${weight}</text>`
         drawGraphNode(g, sourceNode)
         drawGraphNode(g, destNode)
     }
 
     function determineNodes(g) {
-        const count = Math.ceil(Math.random() * (g.nodeCount[1] - g.nodeCount[0] + 1)) + g.nodeCount[0]
         const nodes = []
-        for (let i=0; i<count; ++i) {
+        for (let i=0; i<g.nodeCount; ++i) {
             nodes.push({ id: 'N'+(i+1), weight: 0, count: 0, edges: [] })
         }
         return nodes
     }
 
     function determineEdges(g) {
-        let count = Math.ceil(Math.random() * (g.edgeCount[1] - g.edgeCount[0] + 1)) + g.edgeCount[0]
-        count = Math.min(count, ((g.nodes.length * (g.nodes.length - 1)) / 2))
+        const count = Array.isArray(g.edgeCount) ? getRandomBetween(g.edgeCount[0], g.edgeCount[1]) : Number(g.edgeCount)
         const edges = []
         const cache = []
 
         // start by ensuring every node is the source for at least 1 edge
         g.nodes.forEach((n, i) => {
-            const weight = Math.ceil(Math.random() * (g.weightRange[1] - g.weightRange[0] + 1)) + g.weightRange[0]
+            const weight = getRandomBetween(g.weightRange[0], g.weightRange[1])
             let [source, dest] = pickTwoNodes(g.nodes, n)
             while (cache.includes(source.id+'-'+dest.id)) {
                 ;[source, dest] = pickTwoNodes(g.nodes, n)
@@ -199,7 +256,7 @@
         })
 
         for (let i=g.nodes.length; i<count; ++i) {
-            const weight = Math.ceil(Math.random() * (g.weightRange[1] - g.weightRange[0] + 1)) + g.weightRange[0]
+            const weight = getRandomBetween(g.weightRange[0], g.weightRange[1])
             let [source, dest] = pickTwoNodes(g.nodes)
             
             while (cache.includes(source.id+'-'+dest.id)) {
@@ -242,16 +299,21 @@
         })
     }
 
-    function drawGraphNode(g, n) {
-        const radius = Math.max(n.weight, g.minNodeSize)
-        g.graphElem.innerHTML += `<circle id='${n.id}' data-edges='[]' weight='${n.weight}' count='${n.count}' cx='${n.x}' cy='${n.y}' r='${radius}' stroke-width='0' />`
-        const labelX = (n.x < (g.graphElem.clientWidth - 70)) ? n.x + radius + 2 : n.x - radius - 50
-        g.graphElem.innerHTML += `<text id='${n.id}-label' x='${labelX}' y='${n.y + 5}'>${n.weight} x ${n.count}</text>`
+    function drawGraphNode(g, node) {
+        const radius = getNodeRadius(g, node)
+        GRAPH_ELEM.innerHTML += `<circle id='${node.id}' data-edges='[]' weight='${node.weight}' count='${node.count}' cx='${node.x}' cy='${node.y}' r='${radius}' stroke-width='0' />`
+        const labelX = (node.x < (GRAPH_ELEM.clientWidth - 70)) ? node.x + radius + 2 : node.x - radius - 45
+        GRAPH_ELEM.innerHTML += `<text id='${node.id}-label' class='node-label' x='${labelX}' y='${node.y + 5}'>${node.weight} x ${node.count}</text>`
+    }
+
+    function getNodeRadius(g, node) {
+        return Math.max(g.minNodeSize, 4 * Math.log(node.weight * node.weight))
     }
 
     function getNodePosition(g, node, positions) {
-        let x = getRandomBetween(node.weight, g.graphElem.clientWidth - (node.weight * 2))
-        let y = getRandomBetween(node.weight, g.graphElem.clientHeight - (node.weight * 2))
+        const radius = getNodeRadius(g, node)
+        let x = getRandomBetween(radius, GRAPH_ELEM.clientWidth - radius)
+        let y = getRandomBetween(radius, GRAPH_ELEM.clientHeight - radius)
         for (let i=0; i<positions.length; ++i) {
             if (Math.abs(positions[i][0] - x) < (node.weight + positions[i][2] + g.nodePadding) &&
                 Math.abs(positions[i][1] - y) < (node.weight + positions[i][2] + g.nodePadding)) {
@@ -261,16 +323,16 @@
         return [x, y]
     }
 
-    function getRandomBetween(min, max) {
-        return Math.floor(Math.random() * max) + min
-    }
-
     function drawAvailableEdges(g) {
         const edgeElems = []
         g.edges.forEach(e => {
             edgeElems.push(`<span id='E${e.id}' data-weight='${e.weight}' class='edge' style='height: ${e.weight * 2}px;'>${e.weight}</span>`)
         })
-        g.edgesElem.innerHTML = edgeElems.join('\n')
+        EDGES_ELEM.innerHTML = edgeElems.join('\n')
+    }
+
+    function getRandomBetween(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min
     }
 
     main()
