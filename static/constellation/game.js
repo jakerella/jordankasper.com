@@ -20,7 +20,7 @@
     const NODE_MULTIPLIER = 4
     const NODE_PADDING = 40
     
-    let LEVELS = [
+    const LEVELS = [
         { name: 'Main Sequence', nodeCount: 5, edgeCount: [5, 10], weightRange: [2, 6] },
         { name: 'Bright Giant', nodeCount: 6, edgeCount: [6, 12], weightRange: [2, 7] },
         { name: 'Super Giant', nodeCount: 7, edgeCount: [7, 13], weightRange: [2, 8] },
@@ -28,6 +28,7 @@
     ]
 
     let GAME = null
+    let FULLSCREEN = false
 
 
     function main() {
@@ -45,11 +46,10 @@
         /************* GAME EVENT HANDLERS *************/
 
         document.getElementById('fullscreen').addEventListener('click', () => {
-            document.body.requestFullscreen()
-        })
-        document.body.addEventListener('keyup', (e) => {
-            if (e.keyCode === 27 || e.which === 27) {
-                document.exitFullscreen()
+            if (FULLSCREEN) {
+                document.exitFullscreen().then(() => FULLSCREEN = false)
+            } else {
+                document.body.requestFullscreen().then(() => FULLSCREEN = true)
             }
         })
 
@@ -186,6 +186,7 @@
             if (edge) { edge.loc = null }
             addEdge(g, e[0], e[1], e[2], edge)
         })
+        saveGame(g)
     }
 
     function selectEdge(g, elem) {
@@ -428,9 +429,13 @@
     function drawAvailableEdges(g) {
         const edgeElems = []
         g.edges.forEach(e => {
-            edgeElems.push(`<span id='E${e.id}' data-weight='${e.weight}' class='edge' style='height: ${e.weight * 2}px;'>${e.weight}</span>`)
+            edgeElems.push(`<span id='E${e.id}' data-weight='${e.weight}' class='edge'>${e.weight}</span>`)
         })
         EDGES_ELEM.innerHTML = edgeElems.join('\n')
+
+        Array.from(EDGES_ELEM.querySelectorAll('.edge')).forEach(edgeElem => {
+            edgeElem.style.setProperty('--weight', `${Number(edgeElem.getAttribute('data-weight')) * 2}px`)
+        })
     }
 
 

@@ -1,28 +1,30 @@
-html{box-sizing:border-box;font-size:16px;}*,*:before,*:after{box-sizing:inherit;}body,h1,h2,h3,h4,h5,h6,p,ol,ul{margin:0;padding:0;font-weight:normal;}ol,ul{list-style:none;}img{max-width:100%;height:auto;}
+html{background:#fff;box-sizing:border-box;font-size:16px;}body{background:#fff}*,*:before,*:after{box-sizing:inherit;}body,h1,h2,h3,h4,h5,h6,p,ol,ul{margin:0;padding:0;font-weight:normal;}ol,ul{list-style:none;}img{max-width:100%;height:auto;}
 
 header {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 1rem;
 }
 
-nav ul {
+header nav ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
     height: 100%;
 }
-nav li {
+header nav li {
     margin: 0 0.7rem;
     cursor: pointer;
 }
-
-header nav {
-    font-size: 1.1rem;
+header nav li {
+    width: 1.5rem;
+    text-align: center;
+    font-size: 1.8rem;
 }
 #help {
+    width: 2.1rem;
     border: 1px solid #000;
     border-radius: 50%;
-    width: 1.3rem;
     text-align: center;
 }
 
@@ -30,7 +32,7 @@ main {
     position: relative;
 }
 main section {
-    margin: 0.5rem 0;
+    margin: 0;
     border: 1px solid #000;
 }
 
@@ -43,8 +45,25 @@ main section {
     text-align: center;
 }
 
-h2 {
+main nav {
+    font-size: 1.2rem;
+}
+main nav ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+main nav li {
+    background-color: #bdcbec;
+    padding: 0.2rem 1rem;
+    cursor: pointer;
+    width: 100%;
+    border-left: 1px solid #000;
     text-align: center;
+    box-shadow: 1px 1px 8px #aaa;
+}
+main nav li:last-child {
+    border-right: 1px solid #000;
 }
 
 #graph {
@@ -82,29 +101,40 @@ h2 {
     cursor: pointer;
 }
 
+
+#edge-container {
+    padding-top: 1rem;
+}
+#edge-container h2 {
+    text-align: center;
+    width: 70%;
+    margin: 0 auto;
+    border-bottom: 1px solid #666;
+}
 #edges {
     padding: 1rem;
     text-align: center;
 }
 #edges .edge {
     display: inline-block;
-    width: 50px;
-    margin: 0.5em;
+    width: 4rem;
+    margin: 0.3em;
     text-align: left;
     font-weight: bold;
     font-size: 1.5rem;
     cursor: pointer;
     position: relative;
+    padding: 0.2rem;
 }
 #edges .edge::after {
     display: block;
     content: "";
     background-color: #99c;
-    width: 35px;
+    width: 2rem;
     position: absolute;
-    top: 50%;
-    left: 15px;
-    height: 100%;
+    top: 0.5rem;
+    left: 1.2rem;
+    height: var(--weight);
 }
 @media (min-width: 700px) {
     #edges .edge {
