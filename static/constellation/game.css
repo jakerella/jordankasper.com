@@ -12,16 +12,18 @@ nav ul {
     height: 100%;
 }
 nav li {
-    margin: 0 1rem;
+    margin: 0 0.7rem;
     cursor: pointer;
 }
 
 header nav {
     font-size: 1.1rem;
 }
-header nav li:hover {
-    color: #44f;
-    text-decoration: underline;
+#help {
+    border: 1px solid #000;
+    border-radius: 50%;
+    width: 1.3rem;
+    text-align: center;
 }
 
 main {

@@ -2,26 +2,63 @@
 ;(() => {
 
     // TODO:
-    // solver (for quitters)
+    // solver
     // win screen (timer?)
-    // start new game
-    // game options (difficulty, etc)
-    // game timer
+    // game options (difficulty...?)
     // save player stats
+    // dark mode
+    // game timer (and save time?)
     // better node & label design
     // better UI overall
-    // dark mode
 
     const GRAPH_ELEM = document.getElementById('graph')
     const EDGES_ELEM = document.getElementById('edges')
     const MSG_ELEM = document.getElementById('message')
+    const LOCALSTORAGE_KEY = 'constellation'
     const MSG_TIMEOUT = 5000
+    const MIN_NODE_SIZE = 7
+    const NODE_MULTIPLIER = 4
+    const NODE_PADDING = 40
     
+    let LEVELS = [
+        { name: 'Main Sequence', nodeCount: 5, edgeCount: [5, 10], weightRange: [2, 6] },
+        { name: 'Bright Giant', nodeCount: 6, edgeCount: [6, 12], weightRange: [2, 7] },
+        { name: 'Super Giant', nodeCount: 7, edgeCount: [7, 13], weightRange: [2, 8] },
+        { name: 'Hyper Giant', nodeCount: 8, edgeCount: [8, 14], weightRange: [2, 9] }
+    ]
+
     let GAME = null
+
 
     function main() {
 
-        newGame()
+        /*****************************************************/
+        const currGame = localStorage.getItem(LOCALSTORAGE_KEY)
+        if (currGame) {
+            loadGame(currGame)
+        } else {
+            newGame(0)
+        }
+        /*****************************************************/
+
+
+        /************* GAME EVENT HANDLERS *************/
+
+        document.getElementById('fullscreen').addEventListener('click', () => {
+            document.body.requestFullscreen()
+        })
+        document.body.addEventListener('keyup', (e) => {
+            if (e.keyCode === 27 || e.which === 27) {
+                document.exitFullscreen()
+            }
+        })
+
+        document.getElementById('new').addEventListener('click', () => {
+            if (GAME && !confirm('You have a game in progress.\nAre you sure you want to start over?')) {
+                return
+            }
+            newGame(0)
+        })
 
         EDGES_ELEM.addEventListener('click', (e) => {
             if (!GAME) { return }
@@ -58,27 +95,53 @@
         })
     }
 
-    function newGame() {
-        GAME = {
-            nodeCount: 6,
-            edgeCount: [5, 12],
-            weightRange: [2, 7],
-            minNodeSize: 6,
-            nodePadding: 40
-        }
-
+    function newGame(level=0) {
         GRAPH_ELEM.innerHTML = ''
         EDGES_ELEM.innerHTML = ''
         showMessage('')
 
+        GAME = { ...LEVELS[level], level, nodes: [], edges: [] }
         GAME.nodes = determineNodes(GAME)
         GAME.edges = determineEdges(GAME)
         drawGraphNodes(GAME)
         drawAvailableEdges(GAME)
+
+        saveGame(GAME)
     }
 
+    function loadGame(serialized) {
+        const [level, nodes, edges] = serialized.split(';')
+        GAME = { ...LEVELS[level], level, nodes: [], edges: [] }
+
+        nodes.split('|').forEach((n, i) => {
+            const [weight, count, x, y] = n.split(/[x@,]/).map(it => Number(it))
+            GAME.nodes.push({ id: `N${i+1}`, weight, count, x, y, edges: [] })
+        })
+        drawGraphNodes(GAME, true)
+
+        edges.split('|').forEach((e, i) => {
+            const [source, dest, weight, n1, n2] = e.split(/[x>-]/).map(it => Number(it))
+            const edge = { id: i+1, weight, source: `N${source}`, dest: `N${dest}`, loc: null }
+            if (n1 && n2) {
+                edge.loc = [`N${n1}`, `N${n2}`]
+            }
+            GAME.edges.push(edge)
+        })
+        drawAvailableEdges(GAME)
+        GAME.edges.forEach(e => {
+            if (e.loc) {
+                addEdge(GAME, e.loc[0], e.loc[1], e.weight, e)
+                const edgeElem = document.getElementById(`E${e.id}`)
+                edgeElem.classList.add('used')
+            }
+        })
+    }
+
+
+    /************* COMMON HELPERS *************/
+
     function showMessage(msg, timeout=MSG_TIMEOUT) {
-        MSG_ELEM.innerText = ''+msg || ''
+        MSG_ELEM.innerText = ('' + msg) || ''
         if (Number(timeout)) {
             setTimeout(() => {
                 MSG_ELEM.innerText = ''
@@ -86,9 +149,30 @@
         }
     }
 
+    function saveGame(g) {
+        const serial = [
+            g.level,
+            g.nodes.map(n => `${n.weight}x${n.count}@${Math.floor(n.x)},${Math.floor(n.y)}`).join('|'),
+            g.edges.map(e => {
+                let info = `${e.source.substring(1)}-${e.dest.substring(1)}x${e.weight}`
+                if (e.loc) {
+                    info += `>${e.loc[0].substring(1)}-${e.loc[1].substring(1)}`
+                }
+                return info
+            }).join('|'),
+        ]
+        localStorage.setItem(LOCALSTORAGE_KEY, serial.join(';'))
+    }
+
+    function getRandomBetween(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min
+    }
+
+
+    /************* ALL THE FUNCTIONALITY *************/
+
     function changeLayout(g) {
         Array.from(GRAPH_ELEM.querySelectorAll('circle, text'))
-            // .concat(Array.from(GRAPH_ELEM.querySelectorAll('text')))
             .forEach(el => GRAPH_ELEM.removeChild(el))
         const edges = Array.from(GRAPH_ELEM.querySelectorAll('line'))
             .map(el => {
@@ -98,7 +182,9 @@
         g.nodes.forEach(n => n.edges = [])
         drawGraphNodes(g)
         edges.forEach(e => {
-            addEdge(g, e[0], e[1], e[2])
+            const edge = g.edges.filter(ge => ge.loc && ge.loc[0] === e[0] && ge.loc[1] === e[1] && ge.weight === e[2])[0]
+            if (edge) { edge.loc = null }
+            addEdge(g, e[0], e[1], e[2], edge)
         })
     }
 
@@ -151,8 +237,13 @@
     function removeEdge(g, elem) {
         GRAPH_ELEM.removeChild(elem)
         GRAPH_ELEM.removeChild(document.getElementById(elem.id + '-label'))
+        
         const weight = Number(elem.getAttribute('data-weight'))
         const [sourceId, destId] = elem.id.split('-')
+
+        const edge = g.edges.filter(e => e.loc && e.loc[0] === sourceId && e.loc[1] === destId && e.weight === weight)[0]
+        if (edge) { edge.loc = null }
+
         g.nodes
             .filter(n => n.id === sourceId || n.id === destId)
             .forEach(n => {
@@ -163,10 +254,14 @@
             libraryEdge.classList.remove('used')
         }
         checkGraph(g)
+        saveGame(g)
     }
 
-    function addEdge(g, sourceId, destId, weight) {
-        const edge = g.edges.filter(e => e.weight === weight && !e.used)[0]
+    function addEdge(g, sourceId, destId, weight, edgeData=null) {
+        let edge = edgeData
+        if (!edge) {
+            edge = g.edges.filter(e => e.weight === weight && !e.loc)[0]
+        }
         if (!edge) {
             showMessage('Sorry, but you don\'t have a free edge with that weight!')
             return
@@ -180,7 +275,11 @@
         sourceNode.edges.push(weight)
         destNode.edges.push(weight)
         drawEdge(g, sourceNode, destNode, weight)
+        edge.loc = [sourceId, destId]
         checkGraph(g)
+        if (!edgeData) {
+            saveGame(g)
+        }
     }
 
     function checkGraph(g) {
@@ -246,15 +345,15 @@
             while (cache.includes(source.id+'-'+dest.id)) {
                 ;[source, dest] = pickTwoNodes(g.nodes, n)
             }
-            // console.log(source, dest)
             cache.push(source.id+'-'+dest.id, dest.id+'-'+source.id)
             source.weight += weight
             source.count++
             dest.weight += weight
             dest.count++
-            edges.push({ id: i, weight, source, dest, used: false })
+            edges.push({ id: i, weight, source: source.id, dest: dest.id, loc: null })
         })
 
+        // now add edges up to our max
         for (let i=g.nodes.length; i<count; ++i) {
             const weight = getRandomBetween(g.weightRange[0], g.weightRange[1])
             let [source, dest] = pickTwoNodes(g.nodes)
@@ -267,7 +366,7 @@
             source.count++
             dest.weight += weight
             dest.count++
-            edges.push({ id: edges.length, weight, source, dest })
+            edges.push({ id: edges.length, weight, source: source.id, dest: dest.id, loc: null })
         }
         return edges
     }
@@ -288,13 +387,16 @@
         return (given) ? [given, two] : [nodes[one], nodes[two]]
     }
 
-    function drawGraphNodes(g) {
+    function drawGraphNodes(g, useExistingPositions=false) {
         const positions = []
         g.nodes.forEach((n) => {
-            const pos = getNodePosition(g, n, positions)
+            let pos = [n.x, n.y]
+            if (!useExistingPositions || !n.x || !n.y) {
+                pos = getNodePosition(g, n, positions)
+                n.x = pos[0]
+                n.y = pos[1]
+            }
             positions.push([...pos, n.weight])
-            n.x = pos[0]
-            n.y = pos[1]
             drawGraphNode(g, n)
         })
     }
@@ -307,7 +409,7 @@
     }
 
     function getNodeRadius(g, node) {
-        return Math.max(g.minNodeSize, 4 * Math.log(node.weight * node.weight))
+        return Math.max(MIN_NODE_SIZE, NODE_MULTIPLIER * Math.log(node.weight * node.weight))
     }
 
     function getNodePosition(g, node, positions) {
@@ -315,8 +417,8 @@
         let x = getRandomBetween(radius, GRAPH_ELEM.clientWidth - radius)
         let y = getRandomBetween(radius, GRAPH_ELEM.clientHeight - radius)
         for (let i=0; i<positions.length; ++i) {
-            if (Math.abs(positions[i][0] - x) < (node.weight + positions[i][2] + g.nodePadding) &&
-                Math.abs(positions[i][1] - y) < (node.weight + positions[i][2] + g.nodePadding)) {
+            if (Math.abs(positions[i][0] - x) < (node.weight + positions[i][2] + NODE_PADDING) &&
+                Math.abs(positions[i][1] - y) < (node.weight + positions[i][2] + NODE_PADDING)) {
                 return getNodePosition(g, node, positions)
             }
         }
@@ -331,10 +433,9 @@
         EDGES_ELEM.innerHTML = edgeElems.join('\n')
     }
 
-    function getRandomBetween(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min
-    }
 
-    main()
+    /************* START THE SHOW *************/
+                       main()
+    /******************************************/
 
 })();
