@@ -25,17 +25,50 @@
             </section>
             <nav>
                 <ul>
-                    <li id='new'>new</li>
-                    <li id='reset'>reset</li>
-                    <li id='layout'>layout</li>
-                    <li id='solve'>solve</li>
+                    <li id='new'>✦ new</li>
+                    <li id='reset'>🗑 reset</li>
+                    <li id='layout'>♻ layout</li>
+                    <li id='hint'>💡hint</li>
                 </ul>
             </nav>
             <section id='edge-container'>
                 <h2>Available Connections</h2>
                 <aside id='edges'></aside>
             </section>
+
+            <div id='shield'></div>
         </main>
+
+        <dialog id='win-screen'>
+            <h2>Stellar!</h2>
+            <p>You completed this constellation.</p>
+            <p>How about trying a more difficult level?</p>
+            <fieldset>
+                <select class='level'>
+                    <option value='0'>Main Sequence</option>
+                    <option value='1'>Bright Giant</option>
+                    <option value='2'>Super Giant</option>
+                    <option value='3'>Hyper Giant</option>
+                </select>
+                <button class='new-game'>New Game</button>
+            </fieldset>
+            <svg id='snapshot'></svg>
+        </dialog>
+
+        <dialog id='new-game-screen'>
+            <h2>Are you sure?</h2>
+            <p>You will be giving up this game, are you sure you want to start a new one?</p>
+            <fieldset>
+                <select class='level'>
+                    <option value='0'>Main Sequence</option>
+                    <option value='1'>Bright Giant</option>
+                    <option value='2'>Super Giant</option>
+                    <option value='3'>Hyper Giant</option>
+                </select>
+                <button class='new-game'>New Game</button>
+            </fieldset>
+            <button class='cancel'>Cancel</button>
+        </dialog>
 
         <script type='module' src='game.js'></script>
 

@@ -2,20 +2,26 @@
 ;(() => {
 
     // TODO:
-    // solver
-    // win screen (timer?)
-    // game options (difficulty...?)
+    // show hint (connection)
     // save player stats
     // dark mode
     // game timer (and save time?)
     // better node & label design
     // better UI overall
+    // share result online
+    // never allow multiple graphs in same puzzle (like 2 single-count nodes connected)
 
+    const MAIN_ELEM = document.querySelector('main')
+    const SHIELD_ELEM = document.getElementById('shield')
+    const SNAPSHOT_ELEM = document.getElementById('snapshot')
     const GRAPH_ELEM = document.getElementById('graph')
     const EDGES_ELEM = document.getElementById('edges')
     const MSG_ELEM = document.getElementById('message')
+    const NEW_GAME_ELEM = document.getElementById('new-game-screen')
+    const WIN_DIALOG_ELEM = document.getElementById('win-screen')
     const LOCALSTORAGE_KEY = 'constellation'
     const MSG_TIMEOUT = 5000
+    const MSG_FADEOUT = 2
     const MIN_NODE_SIZE = 7
     const NODE_MULTIPLIER = 4
     const NODE_PADDING = 40
@@ -28,6 +34,7 @@
     ]
 
     let GAME = null
+    let MSG_TIMER = null
     let FULLSCREEN = false
 
 
@@ -38,6 +45,7 @@
         if (currGame) {
             loadGame(currGame)
         } else {
+            // TODO: determine level
             newGame(0)
         }
         /*****************************************************/
@@ -54,10 +62,27 @@
         })
 
         document.getElementById('new').addEventListener('click', () => {
-            if (GAME && !confirm('You have a game in progress.\nAre you sure you want to start over?')) {
-                return
+            if (GAME) {
+                return showDialog(NEW_GAME_ELEM)
             }
+            // TODO: determine level?
             newGame(0)
+        })
+
+        NEW_GAME_ELEM.querySelector('.cancel').addEventListener('click', () => {
+            hideDialog(NEW_GAME_ELEM)
+        })
+        NEW_GAME_ELEM.querySelector('.new-game').addEventListener('click', () => {
+            newGame(NEW_GAME_ELEM.querySelector('.level').value)
+            hideDialog(NEW_GAME_ELEM)
+        })
+
+        WIN_DIALOG_ELEM.querySelector('.new-game').addEventListener('click', () => {
+            if (GAME) {
+                return hideDialog(WIN_DIALOG_ELEM)
+            }
+            newGame(WIN_DIALOG_ELEM.querySelector('.level').value)
+            hideDialog(WIN_DIALOG_ELEM)
         })
 
         EDGES_ELEM.addEventListener('click', (e) => {
@@ -96,9 +121,11 @@
     }
 
     function newGame(level=0) {
+        level = Number(level) || 0
         GRAPH_ELEM.innerHTML = ''
         EDGES_ELEM.innerHTML = ''
         showMessage('')
+        GRAPH_ELEM.setAttribute('data-level', level)
 
         GAME = { ...LEVELS[level], level, nodes: [], edges: [] }
         GAME.nodes = determineNodes(GAME)
@@ -112,6 +139,8 @@
     function loadGame(serialized) {
         const [level, nodes, edges] = serialized.split(';')
         GAME = { ...LEVELS[level], level, nodes: [], edges: [] }
+
+        GRAPH_ELEM.setAttribute('data-level', level)
 
         nodes.split('|').forEach((n, i) => {
             const [weight, count, x, y] = n.split(/[x@,]/).map(it => Number(it))
@@ -141,12 +170,44 @@
     /************* COMMON HELPERS *************/
 
     function showMessage(msg, timeout=MSG_TIMEOUT) {
+        if (MSG_ELEM.innerText === msg) {
+            return
+        } else if (MSG_ELEM.innerText) {
+            clearTimeout(MSG_TIMER)
+            MSG_TIMER = null
+        }
+
         MSG_ELEM.innerText = ('' + msg) || ''
+        if (msg) {
+            MSG_ELEM.style.top = '0'
+            MSG_ELEM.style.opacity = 1
+        }
         if (Number(timeout)) {
-            setTimeout(() => {
-                MSG_ELEM.innerText = ''
+            MSG_TIMER = setTimeout(() => {
+                fadeOut(MSG_ELEM, MSG_FADEOUT).then(() => {
+                    MSG_ELEM.style.top = '-1000px'
+                    MSG_ELEM.innerText = ''
+                })
             }, timeout)
         }
+    }
+
+    function fadeOut(el, time) {
+        const steps = 100
+        return new Promise((resolve, _) => {
+            let step = 0
+            let opacity = el.style.opacity || 1
+            const interval = opacity / steps
+            const timer = setInterval(() => {
+                step++
+                opacity = Math.max(0, opacity - interval)
+                el.style.opacity = opacity
+                if (step >= steps || opacity === 0) {
+                    clearInterval(timer)
+                    resolve()
+                }
+            }, Math.ceil((time * 1000) / steps))
+        })
     }
 
     function saveGame(g) {
@@ -162,6 +223,26 @@
             }).join('|'),
         ]
         localStorage.setItem(LOCALSTORAGE_KEY, serial.join(';'))
+    }
+
+    function showDialog(idOrElem) {
+        let elem = idOrElem
+        if (typeof(idOrElem) === 'string') {
+            elem = document.getElementById(idOrElem)
+        }
+        MAIN_ELEM.classList.add('dialog-open')
+        SHIELD_ELEM.style.display = 'block'
+        elem.setAttribute('open', 'open')
+    }
+
+    function hideDialog(idOrElem) {
+        let elem = idOrElem
+        if (typeof(idOrElem) === 'string') {
+            elem = document.getElementById(idOrElem)
+        }
+        elem.removeAttribute('open')
+        MAIN_ELEM.classList.remove('dialog-open')
+        SHIELD_ELEM.style.display = 'none'
     }
 
     function getRandomBetween(min, max) {
@@ -208,7 +289,7 @@
     function selectNode(g, elem) {
         const edge = EDGES_ELEM.querySelector('.selected')
         if (!edge) {
-            showMessage('Please select an edge to place first!')
+            showMessage('Select an available connection first!')
             return
         }
 
@@ -222,7 +303,7 @@
                     prevEdge = document.getElementById(otherElem.id + '-' + elem.id)
                 }
                 if (prevEdge) {
-                    showMessage('You already have an edge between those two nodes!')
+                    showMessage('You already have a connection between those stars!')
                     return
                 }
 
@@ -264,13 +345,13 @@
             edge = g.edges.filter(e => e.weight === weight && !e.loc)[0]
         }
         if (!edge) {
-            showMessage('Sorry, but you don\'t have a free edge with that weight!')
+            showMessage('You don\'t have a connection with that mass!')
             return
         }
         const sourceNode = g.nodes.filter(n => n.id === sourceId)[0]
         const destNode = g.nodes.filter(n => n.id === destId)[0]
         if (!sourceNode || !destNode) {
-            showMessage('Sorry, but those are invalid nodes!')
+            showMessage('Sorry, but you can\'t connect those stars!')
             return
         }
         sourceNode.edges.push(weight)
@@ -308,8 +389,14 @@
                 elem.classList.add('in-progress')
             }
         })
+
         if (complete) {
-            showMessage('You win!', 0)
+            GAME = null
+            WIN_DIALOG_ELEM.querySelector('.level').value = GRAPH_ELEM.getAttribute('data-level')
+            SNAPSHOT_ELEM.setAttribute('viewBox', `0 0 ${GRAPH_ELEM.clientWidth} ${GRAPH_ELEM.clientHeight}`)
+            SNAPSHOT_ELEM.innerHTML = GRAPH_ELEM.innerHTML
+            
+            showDialog(WIN_DIALOG_ELEM)
         }
     }
 
