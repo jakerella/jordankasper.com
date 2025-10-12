@@ -2,7 +2,7 @@
 ;(() => {
 
     // TODO:
-    // show hint (connection)
+    // points for winning (and negative for hints)
     // save player stats
     // dark mode
     // game timer (and save time?)
@@ -13,18 +13,20 @@
 
     const MAIN_ELEM = document.querySelector('main')
     const SHIELD_ELEM = document.getElementById('shield')
-    const SNAPSHOT_ELEM = document.getElementById('snapshot')
     const GRAPH_ELEM = document.getElementById('graph')
     const EDGES_ELEM = document.getElementById('edges')
     const MSG_ELEM = document.getElementById('message')
-    const NEW_GAME_ELEM = document.getElementById('new-game-screen')
-    const WIN_DIALOG_ELEM = document.getElementById('win-screen')
+    const NEW_GAME_ELEM = document.getElementById('new-game-modal')
+    const WIN_DIALOG_ELEM = document.getElementById('win-modal')
+    const HINT_DIALOG_ELEM = document.getElementById('hint-modal')
     const LOCALSTORAGE_KEY = 'constellation'
-    const MSG_TIMEOUT = 5000
+    const MSG_TIMEOUT = 4000
     const MSG_FADEOUT = 2
     const MIN_NODE_SIZE = 7
     const NODE_MULTIPLIER = 4
     const NODE_PADDING = 40
+    const MAX_HINTS = 3
+    const HINT_POINT_REDUCTION = 5
     
     const LEVELS = [
         { name: 'Main Sequence', nodeCount: 5, edgeCount: [5, 10], weightRange: [2, 6] },
@@ -43,12 +45,20 @@
         /*****************************************************/
         const currGame = localStorage.getItem(LOCALSTORAGE_KEY)
         if (currGame) {
-            loadGame(currGame)
+            loadGame(atob(currGame))
         } else {
-            // TODO: determine level
+            // TODO: determine level?
             newGame(0)
         }
         /*****************************************************/
+
+        /************* GAME UI SETUP *************/
+        const levelOptions = LEVELS.map((lv, i) => `<option value='${i}'>${lv.name}</option>`).join('\n')
+        Array.from(document.querySelectorAll('select.level')).forEach((opt) => {
+            opt.innerHTML = levelOptions
+        })
+        document.querySelector('.max-hints').innerText = MAX_HINTS
+        document.querySelector('.hint-point-deduction').innerText = HINT_POINT_REDUCTION
 
 
         /************* GAME EVENT HANDLERS *************/
@@ -65,8 +75,7 @@
             if (GAME) {
                 return showDialog(NEW_GAME_ELEM)
             }
-            // TODO: determine level?
-            newGame(0)
+            newGame(0)  // if there is no existing game, we'll use the lowest level
         })
 
         NEW_GAME_ELEM.querySelector('.cancel').addEventListener('click', () => {
@@ -118,6 +127,28 @@
             if (!GAME) { return }
             changeLayout(GAME)
         })
+
+        document.getElementById('hint').addEventListener('click', () => {
+            if (!GAME) { return }
+            if (GAME.hints >= MAX_HINTS) {
+                return showMessage('Sorry, but you\'re out of hints.', 'warning')
+            }
+            showDialog(HINT_DIALOG_ELEM)
+        })
+        HINT_DIALOG_ELEM.querySelector('.cancel').addEventListener('click', () => {
+            hideDialog(HINT_DIALOG_ELEM)
+        })
+        HINT_DIALOG_ELEM.querySelector('.show-hint').addEventListener('click', () => {
+            if (!GAME) {
+                return hideDialog(HINT_DIALOG_ELEM)
+            }
+            if (GAME.hints >= MAX_HINTS) {
+                showMessage('Sorry, but you\'re out of hints.', 'warning')
+                return hideDialog(HINT_DIALOG_ELEM)
+            }
+            revealRandomConnection(GAME)
+            hideDialog(HINT_DIALOG_ELEM)
+        })
     }
 
     function newGame(level=0) {
@@ -127,7 +158,7 @@
         showMessage('')
         GRAPH_ELEM.setAttribute('data-level', level)
 
-        GAME = { ...LEVELS[level], level, nodes: [], edges: [] }
+        GAME = { ...LEVELS[level], level, hints: 0, nodes: [], edges: [] }
         GAME.nodes = determineNodes(GAME)
         GAME.edges = determineEdges(GAME)
         drawGraphNodes(GAME)
@@ -137,8 +168,8 @@
     }
 
     function loadGame(serialized) {
-        const [level, nodes, edges] = serialized.split(';')
-        GAME = { ...LEVELS[level], level, nodes: [], edges: [] }
+        const [level, nodes, edges, hints] = serialized.split(';')
+        GAME = { ...LEVELS[Number(level)], level: Number(level), hints: Number(hints), nodes: [], edges: [] }
 
         GRAPH_ELEM.setAttribute('data-level', level)
 
@@ -149,19 +180,24 @@
         drawGraphNodes(GAME, true)
 
         edges.split('|').forEach((e, i) => {
-            const [source, dest, weight, n1, n2] = e.split(/[x>-]/).map(it => Number(it))
+            const [source, dest, weight, n1, n2] = e.split(/[-x~>]/).map(it => Number(it))
             const edge = { id: i+1, weight, source: `N${source}`, dest: `N${dest}`, loc: null }
             if (n1 && n2) {
                 edge.loc = [`N${n1}`, `N${n2}`]
+                if (/~/.test(e)) {
+                    edge.revealed = true
+                }
             }
             GAME.edges.push(edge)
         })
         drawAvailableEdges(GAME)
         GAME.edges.forEach(e => {
             if (e.loc) {
-                addEdge(GAME, e.loc[0], e.loc[1], e.weight, e)
-                const edgeElem = document.getElementById(`E${e.id}`)
-                edgeElem.classList.add('used')
+                addEdgeAndMarkUnavailable(GAME, e.loc[0], e.loc[1], e, true)
+                if (e.revealed) {
+                    const edgeElem = GRAPH_ELEM.getElementById(`${e.loc[0]}-${e.loc[1]}`)
+                    edgeElem.classList.add('revealed')
+                }
             }
         })
     }
@@ -169,7 +205,7 @@
 
     /************* COMMON HELPERS *************/
 
-    function showMessage(msg, timeout=MSG_TIMEOUT) {
+    function showMessage(msg, cls='info', timeout=MSG_TIMEOUT) {
         if (MSG_ELEM.innerText === msg) {
             return
         } else if (MSG_ELEM.innerText) {
@@ -181,6 +217,8 @@
         if (msg) {
             MSG_ELEM.style.top = '0'
             MSG_ELEM.style.opacity = 1
+            MSG_ELEM.classList.remove('info', 'warning', 'error')
+            MSG_ELEM.classList.add(cls)
         }
         if (Number(timeout)) {
             MSG_TIMER = setTimeout(() => {
@@ -217,12 +255,51 @@
             g.edges.map(e => {
                 let info = `${e.source.substring(1)}-${e.dest.substring(1)}x${e.weight}`
                 if (e.loc) {
-                    info += `>${e.loc[0].substring(1)}-${e.loc[1].substring(1)}`
+                    const connector = (e.revealed) ? '~' : '-'
+                    info += `>${e.loc[0].substring(1)}${connector}${e.loc[1].substring(1)}`
                 }
                 return info
             }).join('|'),
+            g.hints
         ]
-        localStorage.setItem(LOCALSTORAGE_KEY, serial.join(';'))
+        localStorage.setItem(LOCALSTORAGE_KEY, btoa(serial.join(';')))
+    }
+
+    function checkGraph(g) {
+        let complete = true
+        g.nodes.forEach(n => {
+            let countComplete = false
+            let weightComplete = false
+            if (n.edges.length === n.count) {
+                countComplete = true
+            }
+            const weight = n.edges.reduce((prev, curr) => { return prev += curr }, 0)
+            if (weight === n.weight) {
+                weightComplete = true
+            }
+            const elem = document.getElementById(n.id)
+            elem.classList.remove('in-progress', 'complete', 'over')
+            if (!countComplete || !weightComplete) {
+                complete = false
+            }
+            if (countComplete && weightComplete) {
+                elem.classList.add('complete')
+            } else if (weight > n.weight || n.edges.length > n.count) {
+                elem.classList.add('over')
+            } else if (n.edges.length) {
+                elem.classList.add('in-progress')
+            }
+        })
+
+        if (complete) {
+            GAME = null
+            WIN_DIALOG_ELEM.querySelector('.level').value = GRAPH_ELEM.getAttribute('data-level')
+            const snapshot = WIN_DIALOG_ELEM.querySelector('.snapshot')
+            snapshot.setAttribute('viewBox', `0 0 ${GRAPH_ELEM.clientWidth} ${GRAPH_ELEM.clientHeight}`)
+            snapshot.innerHTML = GRAPH_ELEM.innerHTML
+            
+            showDialog(WIN_DIALOG_ELEM)
+        }
     }
 
     function showDialog(idOrElem) {
@@ -255,19 +332,69 @@
     function changeLayout(g) {
         Array.from(GRAPH_ELEM.querySelectorAll('circle, text'))
             .forEach(el => GRAPH_ELEM.removeChild(el))
-        const edges = Array.from(GRAPH_ELEM.querySelectorAll('line'))
+        const edgeInfo = Array.from(GRAPH_ELEM.querySelectorAll('line'))
             .map(el => {
                 GRAPH_ELEM.removeChild(el)
                 return el.id.split('-').concat([Number(el.getAttribute('data-weight'))])
             })
         g.nodes.forEach(n => n.edges = [])
         drawGraphNodes(g)
-        edges.forEach(e => {
+        edgeInfo.forEach(e => {
             const edge = g.edges.filter(ge => ge.loc && ge.loc[0] === e[0] && ge.loc[1] === e[1] && ge.weight === e[2])[0]
-            if (edge) { edge.loc = null }
+            edge.loc = null
             addEdge(g, e[0], e[1], e[2], edge)
+            if (edge.revealed) {
+                const edgeElem = GRAPH_ELEM.getElementById(`${edge.source}-${edge.dest}`)
+                edgeElem.classList.add('revealed')
+            }
         })
         saveGame(g)
+    }
+
+    function revealRandomConnection(g) {
+        const unrevealedEdges = g.edges.filter(e => !e.revealed)
+        const edge = unrevealedEdges[Math.floor(Math.random() * unrevealedEdges.length)]
+
+        if (!edge) {
+            return showMessage('No connection available to reveal.', 'warning')
+        }
+
+        let msg = 'A new connection has been revealed!'
+        if (edge.loc) {
+            if ((edge.loc[0] === edge.source || edge.loc[1] === edge.source) &&
+                (edge.loc[0] === edge.dest || edge.loc[1] === edge.dest)) {
+                msg = 'A connection has been confirmed!'
+            } else {
+                msg = 'A connection was moved!'
+            }
+        }
+
+        let existingEdge = GRAPH_ELEM.getElementById(`${edge.source}-${edge.dest}`)
+        if (!existingEdge) {
+            existingEdge = GRAPH_ELEM.getElementById(`${edge.dest}-${edge.source}`)
+        }
+        if (existingEdge) {
+            removeEdge(g, existingEdge)
+            if (Number(existingEdge.getAttribute('data-weight')) !== edge.weight) {
+                msg = 'An existing connection was removed'
+                if (edge.loc) {
+                    msg += ', and the correct connection was moved!'
+                } else {
+                    msg += ', and a new connection revealed!'
+                }
+            }
+        }
+
+        g.hints = (g.hints || 0) + 1
+        edge.revealed = true
+        if (edge.loc) {
+            removeEdge(g, GRAPH_ELEM.getElementById(`${edge.loc[0]}-${edge.loc[1]}`))
+        }
+        addEdgeAndMarkUnavailable(g, edge.source, edge.dest, edge)
+        const edgeElem = GRAPH_ELEM.getElementById(`${edge.source}-${edge.dest}`)
+        edgeElem.classList.add('revealed')
+
+        showMessage(msg)
     }
 
     function selectEdge(g, elem) {
@@ -289,7 +416,7 @@
     function selectNode(g, elem) {
         const edge = EDGES_ELEM.querySelector('.selected')
         if (!edge) {
-            showMessage('Select an available connection first!')
+            showMessage('Select an available connection first!', 'warning')
             return
         }
 
@@ -303,7 +430,7 @@
                     prevEdge = document.getElementById(otherElem.id + '-' + elem.id)
                 }
                 if (prevEdge) {
-                    showMessage('You already have a connection between those stars!')
+                    showMessage('You already have a connection between those stars!', 'warning')
                     return
                 }
 
@@ -345,14 +472,12 @@
             edge = g.edges.filter(e => e.weight === weight && !e.loc)[0]
         }
         if (!edge) {
-            showMessage('You don\'t have a connection with that mass!')
-            return
+            return showMessage('You don\'t have a connection with that mass!', 'warning')
         }
         const sourceNode = g.nodes.filter(n => n.id === sourceId)[0]
         const destNode = g.nodes.filter(n => n.id === destId)[0]
         if (!sourceNode || !destNode) {
-            showMessage('Sorry, but you can\'t connect those stars!')
-            return
+            return showMessage('Sorry, but you can\'t connect those stars!', 'warning')
         }
         sourceNode.edges.push(weight)
         destNode.edges.push(weight)
@@ -362,41 +487,15 @@
         if (!edgeData) {
             saveGame(g)
         }
+        return true
     }
 
-    function checkGraph(g) {
-        let complete = true
-        g.nodes.forEach(n => {
-            let countComplete = false
-            let weightComplete = false
-            if (n.edges.length === n.count) {
-                countComplete = true
+    function addEdgeAndMarkUnavailable(g, sourceId, destId, edge, skipSave) {
+        if (addEdge(g, sourceId, destId, edge.weight, (skipSave) ? edge : null)) {
+            const availEdgeElem = document.getElementById(`E${edge.id}`)
+            if (availEdgeElem) {
+                availEdgeElem.classList.add('used')
             }
-            const weight = n.edges.reduce((prev, curr) => { return prev += curr }, 0)
-            if (weight === n.weight) {
-                weightComplete = true
-            }
-            const elem = document.getElementById(n.id)
-            elem.classList.remove('in-progress', 'complete', 'over')
-            if (!countComplete || !weightComplete) {
-                complete = false
-            }
-            if (countComplete && weightComplete) {
-                elem.classList.add('complete')
-            } else if (weight > n.weight || n.edges.length > n.count) {
-                elem.classList.add('over')
-            } else if (n.edges.length) {
-                elem.classList.add('in-progress')
-            }
-        })
-
-        if (complete) {
-            GAME = null
-            WIN_DIALOG_ELEM.querySelector('.level').value = GRAPH_ELEM.getAttribute('data-level')
-            SNAPSHOT_ELEM.setAttribute('viewBox', `0 0 ${GRAPH_ELEM.clientWidth} ${GRAPH_ELEM.clientHeight}`)
-            SNAPSHOT_ELEM.innerHTML = GRAPH_ELEM.innerHTML
-            
-            showDialog(WIN_DIALOG_ELEM)
         }
     }
 

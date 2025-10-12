@@ -48,6 +48,14 @@ header nav li {
     text-shadow: 1px 1px 2px #666;
     width: 100%;
 }
+#message.warning {
+    color: #000;
+    background: rgba(198, 198, 112, 0.5);
+}
+#message.error {
+    color: #000;
+    background: rgba(210, 100, 100, 0.5);
+}
 
 #shield {
     display: none;
@@ -66,7 +74,7 @@ dialog {
     font-size: 1.2rem;
 }
 dialog p, dialog fieldset {
-    margin: 0.5rem 0;
+    margin: 0.7rem 0;
 }
 dialog fieldset {
     padding: 1rem;
@@ -88,16 +96,16 @@ dialog fieldset {
     display: flex;
     justify-content: space-around;
 }
-#snapshot {
+.snapshot {
     width: 100%;
     height: 400px;
     border: 1px solid #444;
 }
-#snapshot circle {
-    fill: #4c8f65;
+.snapshot *  {
+    cursor: inherit;
 }
-#snapshot line {
-    stroke: #2d2dd4;
+#hint-modal .snapshot {
+    margin-top: 0.5rem;
 }
 
 
@@ -113,7 +121,7 @@ main section {
 }
 
 main nav {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 main nav ul {
     display: flex;
@@ -122,9 +130,9 @@ main nav ul {
 }
 main nav li {
     background-color: #bdcbec;
-    padding: 0.2rem 1rem;
+    padding: 0.2rem 0;
     cursor: pointer;
-    width: 100%;
+    width: 25%;
     border-left: 1px solid #000;
     text-align: center;
     box-shadow: 1px 1px 8px #aaa;
@@ -137,32 +145,35 @@ main nav li:last-child {
     width: 100%;
     height: 550px;
 }
-#graph circle {
+circle {
     cursor: pointer;
     fill: #555;
 }
-#graph circle.in-progress {
+circle.in-progress {
     fill: #7598a4
 }
-#graph circle.complete {
+circle.complete {
     fill: #4c8f65
 }
-#graph circle.over {
+circle.over {
     fill: #bd4242
 }
-#graph circle.selected {
+circle.selected {
     fill: #c18234;
 }
-#graph text {
+text {
   font-size: 1rem;
   font-weight: bold;
   text-shadow: -2px -2px 2px #fff, -2px 0px 2px #FFF, 0px 0px 1px #fff, 0px 2px 1px #fff, 2px 2px 1px #fff;
 }
-#graph line {
+line {
     stroke: #2d2dd4;
     cursor: pointer;
 }
-#graph .edge-label {
+line.revealed {
+    stroke: #287853;
+}
+.edge-label {
     fill: #a55;
     font-size: 1.2rem;
     cursor: pointer;
