@@ -45,9 +45,15 @@
         /*****************************************************/
         const currGame = localStorage.getItem(LOCALSTORAGE_KEY)
         if (currGame) {
-            loadGame(atob(currGame))
+            let serialized = null
+            try {
+                serialized = atob(currGame)
+            } catch(_) {
+                showMessage('Sorry, but we lost your saved game, please start over!', 'warning')
+                return newGame(0)
+            }
+            loadGame(serialized)
         } else {
-            // TODO: determine level?
             newGame(0)
         }
         /*****************************************************/
@@ -169,7 +175,13 @@
 
     function loadGame(serialized) {
         const [level, nodes, edges, hints] = serialized.split(';')
-        GAME = { ...LEVELS[Number(level)], level: Number(level), hints: Number(hints), nodes: [], edges: [] }
+
+        if (!level || !nodes || !edges) {
+            showMessage('Sorry, but we lost your saved game, please start over!', 'warning')
+            return newGame(0)
+        }
+
+        GAME = { ...LEVELS[Number(level)], level: Number(level), hints: Number(hints) || 0, nodes: [], edges: [] }
 
         GRAPH_ELEM.setAttribute('data-level', level)
 
