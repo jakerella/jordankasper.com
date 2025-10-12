@@ -304,14 +304,23 @@
         })
 
         if (complete) {
-            GAME = null
-            WIN_DIALOG_ELEM.querySelector('.level').value = GRAPH_ELEM.getAttribute('data-level')
-            const snapshot = WIN_DIALOG_ELEM.querySelector('.snapshot')
-            snapshot.setAttribute('viewBox', `0 0 ${GRAPH_ELEM.clientWidth} ${GRAPH_ELEM.clientHeight}`)
-            snapshot.innerHTML = GRAPH_ELEM.innerHTML
-            
-            showDialog(WIN_DIALOG_ELEM)
+            endGame()
         }
+    }
+
+    function endGame() {
+        let score = (GAME.nodes.length * GAME.edges.length) - (GAME.hints * HINT_POINT_REDUCTION)
+
+        // @TODO: continue
+        console.log(score)
+
+        WIN_DIALOG_ELEM.querySelector('.level').value = GRAPH_ELEM.getAttribute('data-level')
+        const snapshot = WIN_DIALOG_ELEM.querySelector('.snapshot')
+        snapshot.setAttribute('viewBox', `0 0 ${GRAPH_ELEM.clientWidth} ${GRAPH_ELEM.clientHeight}`)
+        snapshot.innerHTML = GRAPH_ELEM.innerHTML
+        
+        GAME = null
+        showDialog(WIN_DIALOG_ELEM)
     }
 
     function showDialog(idOrElem) {
@@ -470,9 +479,9 @@
             .forEach(n => {
                 n.edges.splice(n.edges.indexOf(weight), 1)
             })
-        const libraryEdge = EDGES_ELEM.querySelector(`[data-weight="${weight}"].edge.used`)
-        if (libraryEdge) {
-            libraryEdge.classList.remove('used')
+        const availableEdge = EDGES_ELEM.querySelector(`[data-weight="${weight}"].edge.used`)
+        if (availableEdge) {
+            availableEdge.classList.remove('used')
         }
         checkGraph(g)
         saveGame(g)
@@ -502,11 +511,14 @@
         return true
     }
 
-    function addEdgeAndMarkUnavailable(g, sourceId, destId, edge, skipSave) {
-        if (addEdge(g, sourceId, destId, edge.weight, (skipSave) ? edge : null)) {
+    function addEdgeAndMarkUnavailable(g, sourceId, destId, edge, skipSave=false) {
+        if (addEdge(g, sourceId, destId, edge.weight, edge)) {
             const availEdgeElem = document.getElementById(`E${edge.id}`)
             if (availEdgeElem) {
                 availEdgeElem.classList.add('used')
+            }
+            if (!skipSave) {
+                saveGame(g)
             }
         }
     }
