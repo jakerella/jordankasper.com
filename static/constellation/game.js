@@ -2,7 +2,6 @@
 ;(() => {
 
     // TODO:
-    // bonus points for an alternate constellation from the known solution
     // save player stats
     // help and about info (modal and footer)
     // dark mode
@@ -27,12 +26,13 @@
     const NODE_MULTIPLIER = 4
     const NODE_PADDING = 40
     const MAX_HINTS = 3
+    const ALTERNATE_POINT_MODIFIER = 3
     const HINT_POINT_REDUCTION = 5
     const CENTRAL_NODE_POINT_MODIFIER = 2
     const OUTLIER_NODE_POINT_MODIFIER = 3
     
     const LEVELS = [
-        { name: 'Main Sequence', nodeCount: 5, edgeCount: [6, 6], weightRange: [2, 6] },
+        { name: 'Main Sequence', nodeCount: 5, edgeCount: [6, 10], weightRange: [2, 6] },
         { name: 'Bright Giant', nodeCount: 6, edgeCount: [7, 13], weightRange: [2, 7] },
         { name: 'Super Giant', nodeCount: 7, edgeCount: [8, 14], weightRange: [2, 8] },
         { name: 'Hyper Giant', nodeCount: 8, edgeCount: [9, 15], weightRange: [2, 9] }
@@ -173,8 +173,11 @@
         GRAPH_ELEM.setAttribute('data-level', level)
 
         const gameData = { ...LEVELS[level], level, hints: 0, nodes: [], edges: [] }
-        gameData.nodes = determineNodes(gameData)
+        for (let i=0; i<gameData.nodeCount; ++i) {
+            gameData.nodes.push({ id: 'N'+(i+1), weight: 0, count: 0, edges: [] })
+        }
         gameData.edges = determineEdges(gameData)
+
         drawGraphNodes(gameData)
         drawAvailableEdges(gameData)
 
@@ -340,9 +343,20 @@
             }
         })
 
-        const finalScore = scoreData.base - scoreData.hints - scoreData.central - scoreData.outlier
+        // Determine if solution matched predicted connections
+        const predicted = g.edges.map(e => {
+            return (e.source < e.dest) ? `${e.source}${e.dest}` : `${e.dest}${e.source}`
+        }).sort().join('')
+        const actual = g.edges.map(e => {
+            return (e.loc[0] < e.loc[1]) ? `${e.loc[0]}${e.loc[1]}` : `${e.loc[1]}${e.loc[0]}`
+        }).sort().join('')
+        scoreData.alternate = (predicted === actual) ? 0 : ((g.level + 1) * ALTERNATE_POINT_MODIFIER)
+
+
+        const finalScore = scoreData.base + scoreData.alternate - scoreData.hints - scoreData.central - scoreData.outlier
         WIN_DIALOG_ELEM.querySelector('.final-score').innerText = finalScore
         WIN_DIALOG_ELEM.querySelector('.score-base').innerText = scoreData.base
+        WIN_DIALOG_ELEM.querySelector('.score-alternate').innerText = scoreData.alternate
         WIN_DIALOG_ELEM.querySelector('.score-hints').innerText = '-'+scoreData.hints
         WIN_DIALOG_ELEM.querySelector('.score-central').innerText = '-'+scoreData.central
         WIN_DIALOG_ELEM.querySelector('.score-outlier').innerText = '-'+scoreData.outlier
@@ -569,14 +583,6 @@
         GRAPH_ELEM.innerHTML += `<text id='${sourceNode.id}-${destNode.id}-label' class='edge-label' x='${labelX}' y='${labelY}'>${weight}</text>`
         drawGraphNode(g, sourceNode)
         drawGraphNode(g, destNode)
-    }
-
-    function determineNodes(g) {
-        const nodes = []
-        for (let i=0; i<g.nodeCount; ++i) {
-            nodes.push({ id: 'N'+(i+1), weight: 0, count: 0, edges: [] })
-        }
-        return nodes
     }
 
     function determineEdges(g) {
