@@ -2,13 +2,15 @@
 ;(() => {
 
     // TODO:
-    // points for winning (and negative for hints)
+    // BUG: sometimes it says you already have a connection between two nodes on new game without refresh (maybe with hints?)
+    // bonus points for an alternate constellation from the known solution
     // save player stats
+    // help and about info (modal and footer)
     // dark mode
-    // game timer (and save time?)
+    // game timer (?) - and if so, does it affect points?
+    // share result online
     // better node & label design
     // better UI overall
-    // share result online
     // never allow multiple graphs in same puzzle (like 2 single-count nodes connected)
 
     const MAIN_ELEM = document.querySelector('main')
@@ -26,39 +28,26 @@
     const NODE_MULTIPLIER = 4
     const NODE_PADDING = 40
     const MAX_HINTS = 3
-    const HINT_POINT_REDUCTION = 5
+    const HINT_POINT_REDUCTION = 4
+    const CENTRAL_NODE_POINT_MODIFIER = 2
+    const OUTLIER_NODE_POINT_MODIFIER = 3
     
     const LEVELS = [
-        { name: 'Main Sequence', nodeCount: 5, edgeCount: [5, 10], weightRange: [2, 6] },
-        { name: 'Bright Giant', nodeCount: 6, edgeCount: [6, 12], weightRange: [2, 7] },
-        { name: 'Super Giant', nodeCount: 7, edgeCount: [7, 13], weightRange: [2, 8] },
-        { name: 'Hyper Giant', nodeCount: 8, edgeCount: [8, 14], weightRange: [2, 9] }
+        { name: 'Main Sequence', nodeCount: 5, edgeCount: [6, 6], weightRange: [2, 6] },
+        { name: 'Bright Giant', nodeCount: 6, edgeCount: [7, 13], weightRange: [2, 7] },
+        { name: 'Super Giant', nodeCount: 7, edgeCount: [8, 14], weightRange: [2, 8] },
+        { name: 'Hyper Giant', nodeCount: 8, edgeCount: [9, 15], weightRange: [2, 9] }
     ]
 
+
     let GAME = null
-    let MSG_TIMER = null
-    let FULLSCREEN = false
+    let messageTimer = null
+    let fullscreen = false
 
 
+    /****************************************************/
     function main() {
-
-        /*****************************************************/
-        const currGame = localStorage.getItem(LOCALSTORAGE_KEY)
-        if (currGame) {
-            let serialized = null
-            try {
-                serialized = atob(currGame)
-            } catch(_) {
-                showMessage('Sorry, but we lost your saved game, please start over!', 'warning')
-                return newGame(0)
-            }
-            loadGame(serialized)
-        } else {
-            newGame(0)
-        }
-        /*****************************************************/
-
-        /************* GAME UI SETUP *************/
+        /****** GAME UI SETUP ******/
         const levelOptions = LEVELS.map((lv, i) => `<option value='${i}'>${lv.name}</option>`).join('\n')
         Array.from(document.querySelectorAll('select.level')).forEach((opt) => {
             opt.innerHTML = levelOptions
@@ -66,14 +55,36 @@
         document.querySelector('.max-hints').innerText = MAX_HINTS
         document.querySelector('.hint-point-deduction').innerText = HINT_POINT_REDUCTION
 
+        setupEventHandlers()
 
-        /************* GAME EVENT HANDLERS *************/
+        /****** LOAD OR START NEW GAME ******/
+        const currGame = localStorage.getItem(LOCALSTORAGE_KEY)
+        if (currGame) {
+            let serialized = null
+            try {
+                serialized = atob(currGame)
+            } catch(_) {
+                showMessage('Sorry, but we lost your saved game, please start over!', 'warning')
+                GAME = newGame(0)
+                return 
+            }
+            GAME = loadGame(serialized)
+        } else {
+            GAME = newGame(0)
+        }
+        if (/^localhost/.test(window.location.host)) {
+            console.debug(GAME)
+        }
+    }
+    /****************************************************/
 
+
+    function setupEventHandlers() {
         document.getElementById('fullscreen').addEventListener('click', () => {
-            if (FULLSCREEN) {
-                document.exitFullscreen().then(() => FULLSCREEN = false)
+            if (fullscreen) {
+                document.exitFullscreen().then(() => fullscreen = false)
             } else {
-                document.body.requestFullscreen().then(() => FULLSCREEN = true)
+                document.body.requestFullscreen().then(() => fullscreen = true)
             }
         })
 
@@ -81,22 +92,20 @@
             if (GAME) {
                 return showDialog(NEW_GAME_ELEM)
             }
-            newGame(0)  // if there is no existing game, we'll use the lowest level
+            GAME = newGame(0)  // if there is no existing game, we'll use the lowest level
         })
 
         NEW_GAME_ELEM.querySelector('.cancel').addEventListener('click', () => {
             hideDialog(NEW_GAME_ELEM)
         })
         NEW_GAME_ELEM.querySelector('.new-game').addEventListener('click', () => {
-            newGame(NEW_GAME_ELEM.querySelector('.level').value)
+            GAME = newGame(NEW_GAME_ELEM.querySelector('.level').value)
             hideDialog(NEW_GAME_ELEM)
         })
 
         WIN_DIALOG_ELEM.querySelector('.new-game').addEventListener('click', () => {
-            if (GAME) {
-                return hideDialog(WIN_DIALOG_ELEM)
-            }
-            newGame(WIN_DIALOG_ELEM.querySelector('.level').value)
+            GAME = null
+            GAME = newGame(WIN_DIALOG_ELEM.querySelector('.level').value)
             hideDialog(WIN_DIALOG_ELEM)
         })
 
@@ -164,13 +173,17 @@
         showMessage('')
         GRAPH_ELEM.setAttribute('data-level', level)
 
-        GAME = { ...LEVELS[level], level, hints: 0, nodes: [], edges: [] }
-        GAME.nodes = determineNodes(GAME)
-        GAME.edges = determineEdges(GAME)
-        drawGraphNodes(GAME)
-        drawAvailableEdges(GAME)
+        const gameData = { ...LEVELS[level], level, hints: 0, nodes: [], edges: [] }
+        gameData.nodes = determineNodes(gameData)
+        gameData.edges = determineEdges(gameData)
+        drawGraphNodes(gameData)
+        drawAvailableEdges(gameData)
 
-        saveGame(GAME)
+        saveGame(gameData)
+        if (/^localhost/.test(window.location.host)) {
+            console.debug(gameData)
+        }
+        return gameData
     }
 
     function loadGame(serialized) {
@@ -181,15 +194,15 @@
             return newGame(0)
         }
 
-        GAME = { ...LEVELS[Number(level)], level: Number(level), hints: Number(hints) || 0, nodes: [], edges: [] }
+        const gameData = { ...LEVELS[Number(level)], level: Number(level), hints: Number(hints) || 0, nodes: [], edges: [] }
 
         GRAPH_ELEM.setAttribute('data-level', level)
 
         nodes.split('|').forEach((n, i) => {
             const [weight, count, x, y] = n.split(/[x@,]/).map(it => Number(it))
-            GAME.nodes.push({ id: `N${i+1}`, weight, count, x, y, edges: [] })
+            gameData.nodes.push({ id: `N${i+1}`, weight, count, x, y, edges: [] })
         })
-        drawGraphNodes(GAME, true)
+        drawGraphNodes(gameData, true)
 
         edges.split('|').forEach((e, i) => {
             const [source, dest, weight, n1, n2] = e.split(/[-x~>]/).map(it => Number(it))
@@ -200,18 +213,20 @@
                     edge.revealed = true
                 }
             }
-            GAME.edges.push(edge)
+            gameData.edges.push(edge)
         })
-        drawAvailableEdges(GAME)
-        GAME.edges.forEach(e => {
+        drawAvailableEdges(gameData)
+        gameData.edges.forEach(e => {
             if (e.loc) {
-                addEdgeAndMarkUnavailable(GAME, e.loc[0], e.loc[1], e, true)
+                addEdgeAndMarkUnavailable(gameData, e.loc[0], e.loc[1], e, true)
                 if (e.revealed) {
                     const edgeElem = GRAPH_ELEM.getElementById(`${e.loc[0]}-${e.loc[1]}`)
                     edgeElem.classList.add('revealed')
                 }
             }
         })
+
+        return gameData
     }
 
 
@@ -221,8 +236,8 @@
         if (MSG_ELEM.innerText === msg) {
             return
         } else if (MSG_ELEM.innerText) {
-            clearTimeout(MSG_TIMER)
-            MSG_TIMER = null
+            clearTimeout(messageTimer)
+            messageTimer = null
         }
 
         MSG_ELEM.innerText = ('' + msg) || ''
@@ -233,7 +248,7 @@
             MSG_ELEM.classList.add(cls)
         }
         if (Number(timeout)) {
-            MSG_TIMER = setTimeout(() => {
+            messageTimer = setTimeout(() => {
                 fadeOut(MSG_ELEM, MSG_FADEOUT).then(() => {
                     MSG_ELEM.style.top = '-1000px'
                     MSG_ELEM.innerText = ''
@@ -304,15 +319,34 @@
         })
 
         if (complete) {
-            endGame()
+            endGame(g)
         }
     }
 
-    function endGame() {
-        let score = (GAME.nodes.length * GAME.edges.length) - (GAME.hints * HINT_POINT_REDUCTION)
+    function endGame(g) {
+        const scoreData = {
+            base: (g.nodes.length * g.edges.length),
+            hints: g.hints * HINT_POINT_REDUCTION,
+            central: 0,
+            outlier: 0,
+            alternate: 0
+        }
 
-        // @TODO: continue
-        console.log(score)
+        g.nodes.forEach((n) => {
+            if (n.count === (g.nodes.length - 1)) {
+                scoreData.central += ((g.level + 1) * CENTRAL_NODE_POINT_MODIFIER)
+            }
+            if (n.count === 1) {
+                scoreData.outlier += ((g.level + 1) * OUTLIER_NODE_POINT_MODIFIER)
+            }
+        })
+
+        const finalScore = scoreData.base - scoreData.hints - scoreData.central - scoreData.outlier
+        WIN_DIALOG_ELEM.querySelector('.final-score').innerText = finalScore
+        WIN_DIALOG_ELEM.querySelector('.score-base').innerText = scoreData.base
+        WIN_DIALOG_ELEM.querySelector('.score-hints').innerText = '-'+scoreData.hints
+        WIN_DIALOG_ELEM.querySelector('.score-central').innerText = '-'+scoreData.central
+        WIN_DIALOG_ELEM.querySelector('.score-outlier').innerText = '-'+scoreData.outlier
 
         WIN_DIALOG_ELEM.querySelector('.level').value = GRAPH_ELEM.getAttribute('data-level')
         const snapshot = WIN_DIALOG_ELEM.querySelector('.snapshot')
@@ -320,6 +354,7 @@
         snapshot.innerHTML = GRAPH_ELEM.innerHTML
         
         GAME = null
+        g = null
         showDialog(WIN_DIALOG_ELEM)
     }
 

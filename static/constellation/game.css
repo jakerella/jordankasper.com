@@ -107,6 +107,28 @@ dialog fieldset {
 #hint-modal .snapshot {
     margin-top: 0.5rem;
 }
+#win-modal table {
+    width: 100%;
+}
+#win-modal h3 {
+    font-weight: bold;
+}
+#win-modal thead th, #win-modal thead td {
+    border-bottom: 1px solid #333;
+}
+#win-modal th {
+    width: 50%;
+    text-align: right;
+    font-weight: bold;
+}
+#win-modal td {
+    padding-left: 1rem;
+    text-align: left;
+}
+.final-score {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
 
 
 main {
