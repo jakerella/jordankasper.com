@@ -2,7 +2,6 @@
 ;(() => {
 
     // TODO:
-    // BUG: sometimes it says you already have a connection between two nodes on new game without refresh (maybe with hints?)
     // bonus points for an alternate constellation from the known solution
     // save player stats
     // help and about info (modal and footer)
@@ -28,7 +27,7 @@
     const NODE_MULTIPLIER = 4
     const NODE_PADDING = 40
     const MAX_HINTS = 3
-    const HINT_POINT_REDUCTION = 4
+    const HINT_POINT_REDUCTION = 5
     const CENTRAL_NODE_POINT_MODIFIER = 2
     const OUTLIER_NODE_POINT_MODIFIER = 3
     
@@ -352,6 +351,7 @@
         const snapshot = WIN_DIALOG_ELEM.querySelector('.snapshot')
         snapshot.setAttribute('viewBox', `0 0 ${GRAPH_ELEM.clientWidth} ${GRAPH_ELEM.clientHeight}`)
         snapshot.innerHTML = GRAPH_ELEM.innerHTML
+        Array.from(snapshot.querySelectorAll('circle, line')).forEach(el => el.id = 'snapshot-'+el.id)
         
         GAME = null
         g = null
