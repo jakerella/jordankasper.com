@@ -3,7 +3,7 @@
 
     // TODO:
     // save player stats
-    // help and about info (modal and footer)
+    // "start screen" for new players (no save data)
     // dark mode
     // game timer (?) - and if so, does it affect points?
     // share result online
@@ -16,6 +16,7 @@
     const GRAPH_ELEM = document.getElementById('graph')
     const EDGES_ELEM = document.getElementById('edges')
     const MSG_ELEM = document.getElementById('message')
+    const HELP_ELEM = document.getElementById('help-modal')
     const NEW_GAME_ELEM = document.getElementById('new-game-modal')
     const WIN_DIALOG_ELEM = document.getElementById('win-modal')
     const HINT_DIALOG_ELEM = document.getElementById('hint-modal')
@@ -47,11 +48,22 @@
     /****************************************************/
     function main() {
         /****** GAME UI SETUP ******/
-        const levelOptions = LEVELS.map((lv, i) => `<option value='${i}'>${lv.name}</option>`).join('\n')
-        Array.from(document.querySelectorAll('select.level')).forEach((opt) => {
-            opt.innerHTML = levelOptions
+        const levelOptions = []
+        const levelHelp = []
+        LEVELS.forEach((lv, i) => {
+            levelOptions.push(`<option value='${i}'>${lv.name}</option>`)
+            levelHelp.push(`<li>
+                <strong>${lv.name}</strong>:<br>
+                ${lv.nodeCount} stars with ${lv.edgeCount[0]} to ${lv.edgeCount[1]} connections<br>
+                Max Score: ${lv.nodeCount * lv.edgeCount[1] + ((i+1) * ALTERNATE_POINT_MODIFIER)}</li>
+            `)
         })
-        document.querySelector('.max-hints').innerText = MAX_HINTS
+        Array.from(document.querySelectorAll('select.level')).forEach((opt) => {
+            opt.innerHTML = levelOptions.join('\n')
+        })
+        HELP_ELEM.querySelector('.levels').innerHTML = levelHelp.join('\n')
+
+        Array.from(document.querySelectorAll('.max-hints')).forEach(el => el.innerText = MAX_HINTS)
         document.querySelector('.hint-point-deduction').innerText = HINT_POINT_REDUCTION
 
         setupEventHandlers()
@@ -79,6 +91,15 @@
 
 
     function setupEventHandlers() {
+        document.getElementById('help').addEventListener('click', () => {
+            showDialog(HELP_ELEM)
+        })
+        Array.from(HELP_ELEM.querySelectorAll('.close')).forEach(elem => {
+            elem.addEventListener('click', () => {
+                hideDialog(HELP_ELEM)
+            })
+        })
+
         document.getElementById('fullscreen').addEventListener('click', () => {
             if (fullscreen) {
                 document.exitFullscreen().then(() => fullscreen = false)
@@ -133,7 +154,9 @@
         document.getElementById('reset').addEventListener('click', () => {
             if (!GAME) { return }
             Array.from(GRAPH_ELEM.querySelectorAll('line')).forEach(el => {
-                removeEdge(GAME, el)
+                if (!el.classList.contains('revealed')) {
+                    removeEdge(GAME, el)
+                }
             })
         })
 
@@ -514,6 +537,10 @@
     }
 
     function removeEdge(g, elem) {
+        if (elem.classList.contains('revealed')) {
+            return showMessage('You can\'t remove this connection, it was a hint!', 'warning')
+        }
+
         GRAPH_ELEM.removeChild(elem)
         GRAPH_ELEM.removeChild(document.getElementById(elem.id + '-label'))
         
