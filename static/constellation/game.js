@@ -3,7 +3,6 @@
 
     // TODO:
     // save player stats
-    // "start screen" for new players (no save data)
     // dark mode
     // game timer (?) - and if so, does it affect points?
     // share result online
@@ -81,8 +80,10 @@
             }
             GAME = loadGame(serialized)
         } else {
+            showDialog(document.getElementById('welcome-modal'))
             GAME = newGame(0)
         }
+
         if (/^localhost/.test(window.location.host)) {
             console.debug(GAME)
         }
@@ -396,13 +397,21 @@
     }
 
     function showDialog(idOrElem) {
+        Array.from(document.querySelectorAll('dialog')).forEach(el => hideDialog(el))
+        
         let elem = idOrElem
         if (typeof(idOrElem) === 'string') {
             elem = document.getElementById(idOrElem)
         }
         MAIN_ELEM.classList.add('dialog-open')
         SHIELD_ELEM.style.display = 'block'
+
+        elem.style.opacity = 0  // avoid a visual jump
         elem.setAttribute('open', 'open')
+        if ((window.innerHeight - elem.clientHeight) > 0) {
+            elem.style.top = Math.floor((window.innerHeight - elem.clientHeight) / 2) + 'px'
+        }
+        elem.style.opacity = 1
     }
 
     function hideDialog(idOrElem) {

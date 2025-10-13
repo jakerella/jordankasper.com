@@ -45,7 +45,37 @@
         </footer>
 
 
-        <!-- DIALOG SCREENS -->
+        <!-- MODAL DIALOG SCREENS -->
+
+        <dialog id='welcome-modal'>
+            <button class='close close-icon'>X</button>
+            <h2>Constellation</h2>
+
+            <p>
+                Constellation is a <strong>graph pattern matching game</strong>. Complete the 
+                constellation by connecting stars (circles) using connections (lines). Each line has a 
+                specific mass, and each star needs to have a specific <strong>number of connections</strong> 
+                and a <strong>specific total mass</strong>.
+            </p>
+            <h3>To play:</h3>
+            <ol>
+                <li><strong>tap a connection</strong> in the "Available Connections" area at the 
+                bottom,
+                <li><strong>tap a star</strong> (circle) to start a connection,
+                <li><strong>tap a second star</strong> to complete the connection!
+            </ol>
+            <p>
+                Connect all of the stars with the correct number of connections and total mass to win.
+            </p>
+            <p>
+                Remove a connection by tapping its line.
+            </p>
+            <p>If you need more help, click on the "?" icon in the top right!</p>
+
+            <footer>
+                <button class='close'>Close</button>
+            </footer>
+        </dialog>
 
         <dialog id='help-modal'>
             <button class='close close-icon'>X</button>
@@ -58,9 +88,8 @@
                 with a <strong>specific total mass</strong>.
             </p>
 
-            <h3>Quick Start</h3>
+            <h3>How to Play</h3>
 
-            <p>After starting a new game:</p>
             <ol>
                 <li><strong>tap a connection</strong> in the "Available Connections" area at the 
                 bottom,
@@ -69,9 +98,11 @@
             </ol>
             <p>You will see a new connection (a blue line) between the two stars!</p>
             <p>
-                Repeat this process to connect all of the stars with the correct numberof connections and total mass.
-                You can <strong>remove a connection by tapping on a blue line</strong>, which will make it 
+                <strong>Remove a connection by tapping on a blue line</strong>, which will make it 
                 available to select again.
+            </p>
+            <p>
+                Repeat this process to connect all of the stars with the correct number of connections and total mass.
             </p>
             <p>
                 A star will turn green when all of the connections into it are correct. (But note that there 
