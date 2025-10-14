@@ -2,10 +2,10 @@
 ;(() => {
 
     // TODO:
-    // save player stats
     // dark mode
-    // game timer (?) - and if so, does it affect points?
     // share result online
+    // save player stats
+    // game timer (?) - and if so, does it affect points?
     // better node & label design
     // better UI overall
     // never allow multiple graphs in same puzzle (like 2 single-count nodes connected)
@@ -15,11 +15,9 @@
     const GRAPH_ELEM = document.getElementById('graph')
     const EDGES_ELEM = document.getElementById('edges')
     const MSG_ELEM = document.getElementById('message')
-    const HELP_ELEM = document.getElementById('help-modal')
-    const NEW_GAME_ELEM = document.getElementById('new-game-modal')
     const WIN_DIALOG_ELEM = document.getElementById('win-modal')
-    const HINT_DIALOG_ELEM = document.getElementById('hint-modal')
     const LOCALSTORAGE_KEY = 'constellation'
+    const LOCALSTORAGE_OPTIONS = 'constellation_options'
     const MSG_TIMEOUT = 4000
     const MSG_FADEOUT = 2
     const MIN_NODE_SIZE = 7
@@ -39,6 +37,7 @@
     ]
 
 
+    let OPTIONS = {}
     let GAME = null
     let messageTimer = null
     let fullscreen = false
@@ -46,25 +45,8 @@
 
     /****************************************************/
     function main() {
-        /****** GAME UI SETUP ******/
-        const levelOptions = []
-        const levelHelp = []
-        LEVELS.forEach((lv, i) => {
-            levelOptions.push(`<option value='${i}'>${lv.name}</option>`)
-            levelHelp.push(`<li>
-                <strong>${lv.name}</strong>:<br>
-                ${lv.nodeCount} stars with ${lv.edgeCount[0]} to ${lv.edgeCount[1]} connections<br>
-                Max Score: ${lv.nodeCount * lv.edgeCount[1] + ((i+1) * ALTERNATE_POINT_MODIFIER)}</li>
-            `)
-        })
-        Array.from(document.querySelectorAll('select.level')).forEach((opt) => {
-            opt.innerHTML = levelOptions.join('\n')
-        })
-        HELP_ELEM.querySelector('.levels').innerHTML = levelHelp.join('\n')
-
-        Array.from(document.querySelectorAll('.max-hints')).forEach(el => el.innerText = MAX_HINTS)
-        document.querySelector('.hint-point-deduction').innerText = HINT_POINT_REDUCTION
-
+        
+        setupGameUI()
         setupEventHandlers()
 
         /****** LOAD OR START NEW GAME ******/
@@ -91,13 +73,53 @@
     /****************************************************/
 
 
-    function setupEventHandlers() {
-        document.getElementById('help').addEventListener('click', () => {
-            showDialog(HELP_ELEM)
+    function setupGameUI() {
+        const levelOptions = []
+        const levelHelp = []
+        LEVELS.forEach((lv, i) => {
+            levelOptions.push(`<option value='${i}'>${lv.name}</option>`)
+            levelHelp.push(`<li>
+                <strong>${lv.name}</strong>:<br>
+                ${lv.nodeCount} stars with ${lv.edgeCount[0]} to ${lv.edgeCount[1]} connections<br>
+                Max Score: ${lv.nodeCount * lv.edgeCount[1] + ((i+1) * ALTERNATE_POINT_MODIFIER)}</li>
+            `)
         })
-        Array.from(HELP_ELEM.querySelectorAll('.close')).forEach(elem => {
-            elem.addEventListener('click', () => {
-                hideDialog(HELP_ELEM)
+        Array.from(document.querySelectorAll('select.level')).forEach((opt) => {
+            opt.innerHTML = levelOptions.join('\n')
+        })
+        document.querySelector('#help-modal .levels').innerHTML = levelHelp.join('\n')
+
+        Array.from(document.querySelectorAll('.max-hints')).forEach(el => el.innerText = MAX_HINTS)
+        document.querySelector('.hint-point-deduction').innerText = HINT_POINT_REDUCTION
+
+        try {
+            OPTIONS = JSON.parse(localStorage.getItem(LOCALSTORAGE_OPTIONS) || '{}')
+        } catch(_) { /* nothing to do here */ }
+        if (OPTIONS.darkMode === 0) {
+            document.body.parentNode.classList.remove('dark-mode')
+            document.getElementById('dark-mode').checked = ''
+        } else {
+            document.getElementById('dark-mode').checked = 'checked'
+        }
+    }
+
+    function setupEventHandlers() {
+        // open and close any (simple) modal
+        Array.from(document.querySelectorAll('.open-model')).forEach((trigger) => {
+            trigger.addEventListener('click', (e) => {
+                if (e.target.classList.contains('disabled')) {
+                    return
+                }
+                showDialog(document.getElementById(e.target.id + '-modal'))
+            })
+        })
+        Array.from(document.querySelectorAll('dialog .close')).forEach((trigger) => {
+            trigger.addEventListener('click', (e) => {
+                let dialog = e.target.parentNode
+                while (dialog.tagName.toLowerCase() !== 'dialog') {
+                    dialog = dialog.parentNode
+                }
+                hideDialog(dialog)
             })
         })
 
@@ -109,19 +131,49 @@
             }
         })
 
-        document.getElementById('new').addEventListener('click', () => {
-            if (GAME) {
-                return showDialog(NEW_GAME_ELEM)
+        document.getElementById('dark-mode').addEventListener('change', (e) => {
+            if (e.target.checked) {
+                OPTIONS.darkMode = 1
+                document.body.parentNode.classList.add('dark-mode')
+            } else {
+                OPTIONS.darkMode = 0
+                document.body.parentNode.classList.remove('dark-mode')
             }
-            GAME = newGame(0)  // if there is no existing game, we'll use the lowest level
+            localStorage.setItem(LOCALSTORAGE_OPTIONS, JSON.stringify(OPTIONS))
         })
 
-        NEW_GAME_ELEM.querySelector('.cancel').addEventListener('click', () => {
-            hideDialog(NEW_GAME_ELEM)
+        document.querySelector('#new-game-modal .new-game').addEventListener('click', () => {
+            GAME = newGame(document.querySelector('#new-game-modal .level').value)
+            hideDialog('new-game-modal')
         })
-        NEW_GAME_ELEM.querySelector('.new-game').addEventListener('click', () => {
-            GAME = newGame(NEW_GAME_ELEM.querySelector('.level').value)
-            hideDialog(NEW_GAME_ELEM)
+
+        document.getElementById('reset').addEventListener('click', () => {
+            if (!GAME) { return }
+            Array.from(GRAPH_ELEM.querySelectorAll('line')).forEach(el => {
+                if (!el.classList.contains('revealed')) {
+                    removeEdge(GAME, el)
+                }
+            })
+        })
+
+        document.getElementById('layout').addEventListener('click', () => {
+            if (!GAME) { return }
+            changeLayout(GAME)
+        })
+
+        document.querySelector('#hint-modal .show-hint').addEventListener('click', () => {
+            if (!GAME) {
+                return hideDialog('hint-modal')
+            }
+            if (GAME.hints >= MAX_HINTS) {
+                showMessage('Sorry, but you\'re out of hints.', 'warning')
+                return hideDialog('hint-modal')
+            }
+            revealRandomConnection(GAME)
+            if (GAME.hints >= MAX_HINTS) {
+                document.getElementById('hint').classList.add('disabled')
+            }
+            hideDialog('hint-modal')
         })
 
         WIN_DIALOG_ELEM.querySelector('.new-game').addEventListener('click', () => {
@@ -151,42 +203,6 @@
                 removeEdge(GAME, target)
             }
         })
-
-        document.getElementById('reset').addEventListener('click', () => {
-            if (!GAME) { return }
-            Array.from(GRAPH_ELEM.querySelectorAll('line')).forEach(el => {
-                if (!el.classList.contains('revealed')) {
-                    removeEdge(GAME, el)
-                }
-            })
-        })
-
-        document.getElementById('layout').addEventListener('click', () => {
-            if (!GAME) { return }
-            changeLayout(GAME)
-        })
-
-        document.getElementById('hint').addEventListener('click', () => {
-            if (!GAME) { return }
-            if (GAME.hints >= MAX_HINTS) {
-                return showMessage('Sorry, but you\'re out of hints.', 'warning')
-            }
-            showDialog(HINT_DIALOG_ELEM)
-        })
-        HINT_DIALOG_ELEM.querySelector('.cancel').addEventListener('click', () => {
-            hideDialog(HINT_DIALOG_ELEM)
-        })
-        HINT_DIALOG_ELEM.querySelector('.show-hint').addEventListener('click', () => {
-            if (!GAME) {
-                return hideDialog(HINT_DIALOG_ELEM)
-            }
-            if (GAME.hints >= MAX_HINTS) {
-                showMessage('Sorry, but you\'re out of hints.', 'warning')
-                return hideDialog(HINT_DIALOG_ELEM)
-            }
-            revealRandomConnection(GAME)
-            hideDialog(HINT_DIALOG_ELEM)
-        })
     }
 
     function newGame(level=0) {
@@ -204,6 +220,8 @@
 
         drawGraphNodes(gameData)
         drawAvailableEdges(gameData)
+
+        document.getElementById('hint').classList.remove('disabled')
 
         saveGame(gameData)
         if (/^localhost/.test(window.location.host)) {
@@ -223,6 +241,9 @@
         const gameData = { ...LEVELS[Number(level)], level: Number(level), hints: Number(hints) || 0, nodes: [], edges: [] }
 
         GRAPH_ELEM.setAttribute('data-level', level)
+        if (gameData.hints >= MAX_HINTS) {
+            document.getElementById('hint').classList.add('disabled')
+        }
 
         nodes.split('|').forEach((n, i) => {
             const [weight, count, x, y] = n.split(/[x@,]/).map(it => Number(it))

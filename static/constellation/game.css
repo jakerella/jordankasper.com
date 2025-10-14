@@ -1,5 +1,10 @@
 html{background:#fff;box-sizing:border-box;font-size:16px;}body{background:#fff}*,*:before,*:after{box-sizing:inherit;}body,h1,h2,h3,h4,h5,h6,p,ol,ul{margin:0;padding:0;font-weight:normal;}img{max-width:100%;height:auto;}
 
+.dark-mode, .dark-mode body {
+    background-color: #222;
+    color: #eee;
+}
+
 body > header {
     display: flex;
     justify-content: space-between;
@@ -12,8 +17,14 @@ body > footer {
     color: #444;
     padding: 1rem 0.5rem;
 }
-footer a {
+body > footer a {
     color: #000;
+}
+.dark-mode body > footer {
+    color: #999;
+}
+.dark-mode body > footer a {
+    color: #bbb;
 }
 
 h2 {
@@ -23,9 +34,16 @@ h2 {
     border-bottom: 1px solid #666;
     margin-bottom: 1rem;
 }
+.dark-mode h2 {
+    border-bottom: 1px solid #bbb;
+}
 h3 {
     margin-top: 0.5rem;
     font-weight: bold;
+}
+
+.disabled {
+    filter: grayscale(1);
 }
 
 header nav ul {
@@ -49,6 +67,9 @@ header nav li {
     border: 1px solid #000;
     border-radius: 50%;
     text-align: center;
+}
+.dark-mode #help {
+    border: 1px solid #eee;
 }
 
 #message {
@@ -192,6 +213,10 @@ main section {
     margin: 0;
     border: 1px solid #000;
 }
+.dark-mode main section {
+    background-color: #292929;
+    border: 1px solid #eee;
+}
 
 main nav {
     font-size: 1.1rem;
@@ -210,9 +235,14 @@ main nav li {
     border-left: 1px solid #000;
     text-align: center;
     box-shadow: 1px 1px 8px #aaa;
+    color: #222;
 }
 main nav li:last-child {
     border-right: 1px solid #000;
+}
+
+.dark-mode svg {
+    background-color: #222;
 }
 
 #graph {
@@ -222,6 +252,9 @@ main nav li:last-child {
 circle {
     cursor: pointer;
     fill: #555;
+}
+.dark-mode circle {
+    fill: #fff;
 }
 circle.in-progress {
     fill: #7598a4
@@ -238,10 +271,16 @@ circle.selected {
 text {
   font-size: 1rem;
   font-weight: bold;
-  text-shadow: -2px -2px 2px #fff, -2px 0px 2px #FFF, 0px 0px 1px #fff, 0px 2px 1px #fff, 2px 2px 1px #fff;
+  text-shadow: -2px -2px 2px #fff, -2px 0px 2px #fff, 0px 0px 1px #fff, 0px 2px 1px #fff, 2px 2px 1px #fff;
+}
+.dark-mode text {
+    text-shadow: -2px -2px 2px #292929, -2px 0px 2px #292929, 0px 0px 1px #292929, 0px 2px 1px #292929, 2px 2px 1px #292929;
 }
 .node-label {
     fill: #000;
+}
+.dark-mode .node-label {
+    fill: #eee;
 }
 line {
     stroke: #2d2dd4;
@@ -299,6 +338,9 @@ line.revealed {
 }
 #edges .used {
     color: #888;
+}
+.dark-mode #edges .used {
+    color: #aaa;
 }
 #edges .used::after {
     background-color: #bbb;

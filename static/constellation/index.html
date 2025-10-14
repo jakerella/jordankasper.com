@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang='en' class='dark-mode'>
     <head>
         <meta charset='UTF-8'>
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
@@ -12,8 +12,8 @@
             <nav>
                 <ul>
                     <li id='fullscreen'>⛶</li>
-                    <li id='options'>⚙</li>
-                    <li id='help'>?</li>
+                    <li id='options' class='open-model'>⚙</li>
+                    <li id='help' class='open-model'>?</li>
                 </ul>
             </nav>
         </header>
@@ -25,10 +25,10 @@
             </section>
             <nav>
                 <ul>
-                    <li id='new'>✦ new</li>
+                    <li id='new-game' class='open-model'>✦ new</li>
                     <li id='reset'>🗑 reset</li>
                     <li id='layout'>♻ layout</li>
-                    <li id='hint'>💡hint</li>
+                    <li id='hint' class='open-model'>💡hint</li>
                 </ul>
             </nav>
             <section id='edge-container'>
@@ -123,8 +123,8 @@
             </p>
 
             <svg style='width: 95px; height: 40px;'>
-                <circle cx='20' cy='20' r='20'></circle>
-                <text class='node-label' x='45' y='25'>10 x 3</text>
+                <circle cx='20' cy='20' r='14'></circle>
+                <text class='node-label' x='39' y='25'>10 x 3</text>
             </svg>
 
             <p>
@@ -276,6 +276,16 @@
             </footer>
         </dialog>
 
+        <dialog id='options-modal'>
+            <button class='close close-icon'>X</button>
+            <h2>Game Options</h2>
+
+            <label for='dark-mode'>
+                <input type='checkbox' name='dark-mode' id='dark-mode'>
+                Dark Mode
+            </label>
+        </dialog>
+
         <dialog id='win-modal'>
             <h2>Stellar!</h2>
             <p>You completed this constellation.</p>
@@ -306,7 +316,7 @@
                 <select name='new-level' class='level'></select>
                 <button class='new-game'>New Game</button>
             </fieldset>
-            <button class='cancel'>Cancel</button>
+            <button class='close'>Cancel</button>
         </dialog>
 
         <dialog id='hint-modal'>
@@ -324,7 +334,7 @@
                 or it may only confirm one of your existing connections is correct.
             </em></p>
             <fieldset>
-                <button class='cancel'>Cancel</button>
+                <button class='close'>Cancel</button>
                 <button class='show-hint'>Reveal</button>
             </fieldset>
         </dialog>
