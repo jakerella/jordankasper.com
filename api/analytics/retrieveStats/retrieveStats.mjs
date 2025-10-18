@@ -64,3 +64,12 @@ export default async function handler(req, context) {
         return new Response('Unable to retrieve analytic data', { status: 500 })
     }
 }
+
+export const config = {
+    path: '/retrieveStats',
+    rateLimit: {
+        windowLimit: 20,
+        windowSize: 60,
+        aggregateBy: ['ip', 'domain']
+    }
+}

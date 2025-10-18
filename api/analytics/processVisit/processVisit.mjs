@@ -56,6 +56,15 @@ export default async function handler(req, context) {
     }
 }
 
+export const config = {
+    path: '/processVisit',
+    rateLimit: {
+        windowLimit: 20,
+        windowSize: 60,
+        aggregateBy: ['ip', 'domain']
+    }
+}
+
 async function extractRequestData(queryParam, context) {
     if (!queryParam) { return null }
 
