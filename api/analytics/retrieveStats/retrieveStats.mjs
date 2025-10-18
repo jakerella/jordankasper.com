@@ -66,7 +66,7 @@ export default async function handler(req, context) {
 }
 
 export const config = {
-    path: '/retrieveStats',
+    // path: '/api/retrieveStats',  // TODO: why doesn't this work?
     rateLimit: {
         windowLimit: 20,
         windowSize: 60,

@@ -57,7 +57,7 @@ export default async function handler(req, context) {
 }
 
 export const config = {
-    path: '/processVisit',
+    // path: '/api/processVisit',  // TODO: why doesn't this work?
     rateLimit: {
         windowLimit: 20,
         windowSize: 60,
