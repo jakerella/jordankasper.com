@@ -149,11 +149,13 @@ Although this UI doesn't have all the bells and whistles and drill-down abilitie
 
 ### Issues and Pitfalls
 
-Here's the big one: **Netlify Functions [do not have a way to restrict execution to the origin domain](https://answers.netlify.com/t/support-guide-how-to-apply-access-control-for-netlify-functions/46519)**. In other words, if someone knows that you have a serverless Function out there, they could easily DDoS it, or just just junk data. On the first issue, I would hope that Netlify fixes this... but it's also been around for a while now. On the second, that's why you have good data validation in your function code, and maybe a way to clean that data if you need to. I don't have that yet, but it wouldn't be too difficult to do so.
+Here's the big one: **Netlify Functions [do not have a way to restrict execution to the origin domain](https://answers.netlify.com/t/support-guide-how-to-apply-access-control-for-netlify-functions/46519)**. In other words, if someone knows that you have a serverless Function out there, they could easily DDoS it, or just send junk data. On the first issue, I would hope that Netlify fixes this... but also, the origin header can easily be spoofed in a cURL request. On the second, that's why you have good data validation in your function code, and maybe a way to clean that data if you need to. I don't have that last part, but it wouldn't be too difficult to do so.
+
+I will note that Netlify does have a way to [configure rate limiting for your functions](https://docs.netlify.com/manage/security/secure-access-to-sites/rate-limiting/), which could effectively be used to block an individual IP addresses, so that could help with the first issue above as well.
 
 Luckily, the Blob Store is behind that serverless function and has token-based access control on the server-side. That should mean that a malicious actor can't wipe your data or change past data... but as mentioned, they could _add_ data.
 
-Second, there's no (easy/free) way to restrict access to your analytics UI. This isn't a huge deal for me - in part because I have no sensitive data on there and because it's a small site with limited traffic. But your experience may be different.
+Second, there's no (easy/free) way to restrict access to your analytics UI. This isn't a huge deal for me - in part because I have no sensitive data on there and because it's a small site with limited traffic. But your experience may be different. You can implement access control using Netlify _paid_ features, but that's beyond this article!
 
 ### Testing Locally
 
@@ -163,7 +165,7 @@ It will also run your serverless functions _locally_, which is awesome, and it e
 
 One last note here: while Netlify's `dev` CLI command has an `--offline` option (which I encourage you use exclusively for efficiency), you will need to have your publish directory in a [`netlify.toml` configuration file](https://docs.netlify.com/build/configure-builds/file-based-configuration/) in your project directory for that to work (unless the root directory of your project is the publish directory). And if you configured a different directory for your serverless functions, you'll need to put that in the `netlify.toml` as well. You need to do this even if you configure things on the web dashboard, but _only if you want to run the `dev` command **offline**_.
 
-So, to recap, to test locally you need to:
+So, to recap, to test locally (and offline) you need to:
 
 1. Specify your publish (and maybe functions) directory in a local `netlify.toml` file
 2. Build your static site files (I use `npm run build`, which you can see in my `package.json file`)
