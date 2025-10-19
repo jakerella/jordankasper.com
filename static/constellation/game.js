@@ -2,15 +2,12 @@
 ;(() => {
 
     // TODO:
-    // dark mode
+    // save player stats (total running score, number completed in each level, ...?)
     // share result online
-    // save player stats
-    // game timer (?) - and if so, does it affect points?
-    // better node & label design
-    // better UI overall
+    // game timer (?) - and if so, does it affect points? pause when unfocused?
+    // better UI / design overall
     // never allow multiple graphs in same puzzle (like 2 single-count nodes connected)
 
-    const MAIN_ELEM = document.querySelector('main')
     const SHIELD_ELEM = document.getElementById('shield')
     const GRAPH_ELEM = document.getElementById('graph')
     const EDGES_ELEM = document.getElementById('edges')
@@ -374,16 +371,20 @@
         const scoreData = {
             base: (g.nodes.length * g.edges.length),
             hints: g.hints * HINT_POINT_REDUCTION,
+            centralCount: 0,
             central: 0,
+            outlierCount: 0,
             outlier: 0,
             alternate: 0
         }
 
         g.nodes.forEach((n) => {
             if (n.count === (g.nodes.length - 1)) {
+                scoreData.centralCount++
                 scoreData.central += ((g.level + 1) * CENTRAL_NODE_POINT_MODIFIER)
             }
             if (n.count === 1) {
+                scoreData.outlierCount++
                 scoreData.outlier += ((g.level + 1) * OUTLIER_NODE_POINT_MODIFIER)
             }
         })
@@ -401,20 +402,24 @@
         const finalScore = scoreData.base + scoreData.alternate - scoreData.hints - scoreData.central - scoreData.outlier
         WIN_DIALOG_ELEM.querySelector('.final-score').innerText = finalScore
         WIN_DIALOG_ELEM.querySelector('.score-base').innerText = scoreData.base
-        WIN_DIALOG_ELEM.querySelector('.score-alternate').innerText = scoreData.alternate
-        WIN_DIALOG_ELEM.querySelector('.score-hints').innerText = '-'+scoreData.hints
-        WIN_DIALOG_ELEM.querySelector('.score-central').innerText = '-'+scoreData.central
-        WIN_DIALOG_ELEM.querySelector('.score-outlier').innerText = '-'+scoreData.outlier
+        WIN_DIALOG_ELEM.querySelector('.score-alternate').innerText = '+'+scoreData.alternate
+        WIN_DIALOG_ELEM.querySelector('.score-hints').innerText = `-${scoreData.hints} (${g.hints} x ${HINT_POINT_REDUCTION})`
+        WIN_DIALOG_ELEM.querySelector('.score-central').innerText = `-${scoreData.central} (${scoreData.centralCount} x ${(g.level + 1) * CENTRAL_NODE_POINT_MODIFIER})`
+        WIN_DIALOG_ELEM.querySelector('.score-outlier').innerText = `-${scoreData.outlier} (${scoreData.outlierCount} x ${(g.level + 1) * OUTLIER_NODE_POINT_MODIFIER})`
 
         WIN_DIALOG_ELEM.querySelector('.level').value = GRAPH_ELEM.getAttribute('data-level')
         const snapshot = WIN_DIALOG_ELEM.querySelector('.snapshot')
-        snapshot.setAttribute('viewBox', `0 0 ${GRAPH_ELEM.clientWidth} ${GRAPH_ELEM.clientHeight}`)
-        snapshot.innerHTML = GRAPH_ELEM.innerHTML
-        Array.from(snapshot.querySelectorAll('circle, line')).forEach(el => el.id = 'snapshot-'+el.id)
         
         GAME = null
         g = null
         showDialog(WIN_DIALOG_ELEM)
+
+        // we have to do this after showing the dialog because otherwise the snapshot has no width
+        const scale = GRAPH_ELEM.clientWidth / GRAPH_ELEM.clientHeight
+        snapshot.style.height = Math.floor(snapshot.clientWidth / scale) + 'px'
+        snapshot.setAttribute('viewBox', `0 0 ${GRAPH_ELEM.clientWidth} ${GRAPH_ELEM.clientHeight}`)
+        snapshot.innerHTML = GRAPH_ELEM.innerHTML
+        Array.from(snapshot.querySelectorAll('circle, line')).forEach(el => el.id = 'snapshot-'+el.id)
     }
 
     function showDialog(idOrElem) {
@@ -424,15 +429,16 @@
         if (typeof(idOrElem) === 'string') {
             elem = document.getElementById(idOrElem)
         }
-        MAIN_ELEM.classList.add('dialog-open')
+        document.body.classList.add('dialog-open')
         SHIELD_ELEM.style.display = 'block'
 
-        elem.style.opacity = 0  // avoid a visual jump
         elem.setAttribute('open', 'open')
-        if ((window.innerHeight - elem.clientHeight) > 0) {
-            elem.style.top = Math.floor((window.innerHeight - elem.clientHeight) / 2) + 'px'
-        }
-        elem.style.opacity = 1
+        // the dialog needs to be visible to get its proper height and center it
+        setTimeout(() => {
+            if ((window.innerHeight - elem.clientHeight) > 0) {
+                elem.style.top = Math.floor((window.innerHeight - elem.clientHeight) / 2) + 'px'
+            }
+        }, 1)
     }
 
     function hideDialog(idOrElem) {
@@ -441,7 +447,7 @@
             elem = document.getElementById(idOrElem)
         }
         elem.removeAttribute('open')
-        MAIN_ELEM.classList.remove('dialog-open')
+        document.body.classList.remove('dialog-open')
         SHIELD_ELEM.style.display = 'none'
     }
 
@@ -539,8 +545,7 @@
     function selectNode(g, elem) {
         const edge = EDGES_ELEM.querySelector('.selected')
         if (!edge) {
-            showMessage('Select an available connection first!', 'warning')
-            return
+            return showNodeStats(g, elem.id)
         }
 
         if (elem.classList.contains('selected')) {
@@ -553,8 +558,7 @@
                     prevEdge = document.getElementById(otherElem.id + '-' + elem.id)
                 }
                 if (prevEdge) {
-                    showMessage('You already have a connection between those stars!', 'warning')
-                    return
+                    return showMessage('You already have a connection between those stars!', 'warning')
                 }
 
                 edge.classList.remove('selected')
@@ -563,6 +567,17 @@
             } else {
                 elem.classList.add('selected')
             }
+        }
+    }
+
+    function showNodeStats(g, nodeId) {
+        const node = g.nodes.filter((n) => n.id === nodeId)[0]
+        if (node.edges.length) {
+            const mass = node.edges.reduce((p, c) => p+c, 0)
+            const massInfo = (mass < node.weight) ? ` and needs ${node.weight - mass} more mass` : ((mass > node.weight) ? ` and is over` : '')
+            showMessage(`This star has ${node.edges.length} of ${node.count} connections totaling ${mass} mass${massInfo}.`)
+        } else {
+            showMessage(`This star needs ${node.count} connections totalling ${node.weight} mass.`)
         }
     }
 
@@ -712,7 +727,13 @@
 
     function drawGraphNode(g, node) {
         const radius = getNodeRadius(g, node)
-        GRAPH_ELEM.innerHTML += `<circle id='${node.id}' data-edges='[]' weight='${node.weight}' count='${node.count}' cx='${node.x}' cy='${node.y}' r='${radius}' stroke-width='0' />`
+        let cls = ''
+        if (node.count === (g.nodeCount - 1)) {
+            cls = 'central'
+        } else if (node.count === 1) {
+            cls = 'outlier'
+        }
+        GRAPH_ELEM.innerHTML += `<circle id='${node.id}' class='${cls}' data-edges='[]' weight='${node.weight}' count='${node.count}' cx='${node.x}' cy='${node.y}' r='${radius}' />`
         const labelX = (node.x < (GRAPH_ELEM.clientWidth - 70)) ? node.x + radius + 2 : node.x - radius - 45
         GRAPH_ELEM.innerHTML += `<text id='${node.id}-label' class='node-label' x='${labelX}' y='${node.y + 5}'>${node.weight} x ${node.count}</text>`
     }
