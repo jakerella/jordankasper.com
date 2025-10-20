@@ -12,7 +12,7 @@
             <nav>
                 <ul>
                     <li id='fullscreen'>⛶</li>
-                    <li id='options' class='open-model'>⚙</li>
+                    <li id='dark-mode-switch'></li>
                     <li id='help' class='open-model'>?</li>
                 </ul>
             </nav>
@@ -180,7 +180,7 @@
                     <th>Star Info (Mass x Connections)</th>
                 </tr>
                 <tr>
-                    <td><svg style='width:20px;height:20px;'><circle cx='10' cy='10' r='10' /></svg></td>
+                    <td><svg style='width:20px;height:20px;'><circle cx='10' cy='10' r='8' /></svg></td>
                     <th>Disconnected Star</th>
                 </tr>
                 <tr>
@@ -192,15 +192,15 @@
                     <th>Outlier Star</th>
                 </tr>
                 <tr>
-                    <td><svg style='width:20px;height:20px;'><circle class='in-progress' cx='10' cy='10' r='10' /></svg></td>
+                    <td><svg style='width:20px;height:20px;'><circle class='in-progress' cx='10' cy='10' r='8' /></svg></td>
                     <th>Incomplete Star</th>
                 </tr>
                 <tr>
-                    <td><svg style='width:20px;height:20px;'><circle class='over' cx='10' cy='10' r='10' /></svg></td>
+                    <td><svg style='width:20px;height:20px;'><circle class='over' cx='10' cy='10' r='8' /></svg></td>
                     <th>Over-connected Star</th>
                 </tr>
                 <tr>
-                    <td><svg style='width:20px;height:20px;'><circle class='complete' cx='10' cy='10' r='10' /></svg></td>
+                    <td><svg style='width:20px;height:20px;'><circle class='complete' cx='10' cy='10' r='8' /></svg></td>
                     <th>Complete Star</th>
                 </tr>
                 <tr>
@@ -283,16 +283,6 @@
             <footer>
                 <button class='close'>Close</button>
             </footer>
-        </dialog>
-
-        <dialog id='options-modal'>
-            <button class='close close-icon'>X</button>
-            <h2>Game Options</h2>
-
-            <label for='dark-mode'>
-                <input type='checkbox' name='dark-mode' id='dark-mode'>
-                Dark Mode
-            </label>
         </dialog>
 
         <dialog id='win-modal'>

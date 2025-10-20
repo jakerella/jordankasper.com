@@ -62,6 +62,12 @@ header nav li {
     text-align: center;
     font-size: 1.8rem;
 }
+#dark-mode-switch::after {
+    content: "☀";
+}
+.dark-mode #dark-mode-switch::after {
+    content: "☾";
+}
 #help {
     width: 2.1rem;
     border: 1px solid #000;
@@ -261,6 +267,9 @@ circle.central {
     stroke: #555;
     stroke-dasharray: 3px;
 }
+.dark-mode circle.central {
+    stroke: #222;
+}
 circle.outlier {
     stroke-width: 6px;
     stroke: #555;
@@ -302,6 +311,12 @@ line {
 }
 line.revealed {
     stroke: #287853;
+}
+line.connection-mask {
+    stroke: #fff0;
+}
+.dark-mode line.connection-mask {
+    stroke: #2220;
 }
 .edge-label {
     fill: #a55;

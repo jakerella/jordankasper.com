@@ -2,9 +2,11 @@
 ;(() => {
 
     // TODO:
-    // save player stats (total running score, number completed in each level, ...?)
-    // share result online
+    // save player stats (total running score?, number completed in each level? ...?)
     // game timer (?) - and if so, does it affect points? pause when unfocused?
+    // share result online (with snapshot)
+    // allow sharing (and loading) of specific game setup
+    // allow user to draw connection (in addition to tapping two nodes)
     // better UI / design overall
     // never allow multiple graphs in same puzzle (like 2 single-count nodes connected)
 
@@ -20,6 +22,7 @@
     const MIN_NODE_SIZE = 7
     const NODE_MULTIPLIER = 4
     const NODE_PADDING = 40
+    const CONNECTION_MASK_WIDTH = 15
     const MAX_HINTS = 3
     const ALTERNATE_POINT_MODIFIER = 3
     const HINT_POINT_REDUCTION = 5
@@ -94,9 +97,8 @@
         } catch(_) { /* nothing to do here */ }
         if (OPTIONS.darkMode === 0) {
             document.body.parentNode.classList.remove('dark-mode')
-            document.getElementById('dark-mode').checked = ''
         } else {
-            document.getElementById('dark-mode').checked = 'checked'
+            document.body.parentNode.classList.add('dark-mode')
         }
     }
 
@@ -128,8 +130,8 @@
             }
         })
 
-        document.getElementById('dark-mode').addEventListener('change', (e) => {
-            if (e.target.checked) {
+        document.getElementById('dark-mode-switch').addEventListener('click', (e) => {
+            if (OPTIONS.darkMode === 0) {
                 OPTIONS.darkMode = 1
                 document.body.parentNode.classList.add('dark-mode')
             } else {
@@ -194,7 +196,11 @@
                 const target = document.getElementById(e.target.id.split('-label')[0])
                 selectNode(GAME, target)
             } else if (e.target.nodeName.toLowerCase() === 'line') {
-                removeEdge(GAME, e.target)
+                let el = e.target
+                if (/-mask$/.test(el.id)) {
+                    el = GRAPH_ELEM.querySelector('#'+el.getAttribute('data-connection'))
+                }
+                removeEdge(GAME, el)
             } else if (e.target.classList.contains('edge-label')) {
                 const target = document.getElementById(e.target.id.split('-label')[0])
                 removeEdge(GAME, target)
@@ -588,6 +594,7 @@
 
         GRAPH_ELEM.removeChild(elem)
         GRAPH_ELEM.removeChild(document.getElementById(elem.id + '-label'))
+        GRAPH_ELEM.removeChild(document.getElementById(`${elem.id}-mask`))
         
         const weight = Number(elem.getAttribute('data-weight'))
         const [sourceId, destId] = elem.id.split('-')
@@ -645,14 +652,18 @@
     }
 
     function drawEdge(g, sourceNode, destNode, weight) {
+        // we remove the two nodes being connected and redraw them later so they're on top of the lines
         GRAPH_ELEM.removeChild(document.getElementById(sourceNode.id))
         GRAPH_ELEM.removeChild(document.getElementById(sourceNode.id + '-label'))
         GRAPH_ELEM.removeChild(document.getElementById(destNode.id))
         GRAPH_ELEM.removeChild(document.getElementById(destNode.id + '-label'))
+
+        GRAPH_ELEM.innerHTML += `<line id='${sourceNode.id}-${destNode.id}-mask' class='connection-mask' data-connection='${sourceNode.id}-${destNode.id}' x1='${sourceNode.x}' y1='${sourceNode.y}' x2='${destNode.x}' y2='${destNode.y}' stroke-width='${CONNECTION_MASK_WIDTH}' />`
         GRAPH_ELEM.innerHTML += `<line id='${sourceNode.id}-${destNode.id}' data-weight='${weight}' x1='${sourceNode.x}' y1='${sourceNode.y}' x2='${destNode.x}' y2='${destNode.y}' stroke-width='${weight*2}' />`
         const labelX = Math.max(destNode.x, sourceNode.x) - (Math.abs(destNode.x - sourceNode.x) / 2)
         const labelY = Math.max(destNode.y, sourceNode.y) - (Math.abs(destNode.y - sourceNode.y) / 2)
         GRAPH_ELEM.innerHTML += `<text id='${sourceNode.id}-${destNode.id}-label' class='edge-label' x='${labelX}' y='${labelY}'>${weight}</text>`
+        
         drawGraphNode(g, sourceNode)
         drawGraphNode(g, destNode)
     }
