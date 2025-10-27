@@ -3,7 +3,6 @@
 
     // TODO:
     // save player stats (total running score?, number completed in each level? ...?)
-    // game timer (?) - and if so, does it affect points? pause when unfocused?
     // share result online (with snapshot)
     // allow sharing (and loading) of specific game setup
     // allow user to draw connection (in addition to tapping two nodes)
@@ -11,6 +10,7 @@
     // never allow multiple graphs in same puzzle (like 2 single-count nodes connected)
 
     const SHIELD_ELEM = document.getElementById('shield')
+    const TIME_ELEM = document.getElementById('game-time')
     const GRAPH_ELEM = document.getElementById('graph')
     const EDGES_ELEM = document.getElementById('edges')
     const MSG_ELEM = document.getElementById('message')
@@ -40,6 +40,7 @@
     let OPTIONS = {}
     let GAME = null
     let messageTimer = null
+    let gameTimerInterval = null
     let fullscreen = false
 
 
@@ -49,7 +50,7 @@
         setupGameUI()
         setupEventHandlers()
 
-        /****** LOAD OR START NEW GAME ******/
+        /************ LOAD OR START NEW GAME ************/
         const currGame = localStorage.getItem(LOCALSTORAGE_KEY)
         if (currGame) {
             let serialized = null
@@ -61,9 +62,16 @@
                 return 
             }
             GAME = loadGame(serialized)
+            if (GAME.complete) {
+                GAME = null
+            }
         } else {
             showDialog(document.getElementById('welcome-modal'))
             GAME = newGame(0)
+        }
+
+        if (GAME) {
+            resumeTime(GAME)
         }
 
         if (/^localhost/.test(window.location.host)) {
@@ -144,6 +152,7 @@
         document.querySelector('#new-game-modal .new-game').addEventListener('click', () => {
             GAME = newGame(document.querySelector('#new-game-modal .level').value)
             hideDialog('new-game-modal')
+            resumeTime(GAME)
         })
 
         document.getElementById('reset').addEventListener('click', () => {
@@ -179,6 +188,18 @@
             GAME = null
             GAME = newGame(WIN_DIALOG_ELEM.querySelector('.level').value)
             hideDialog(WIN_DIALOG_ELEM)
+            resumeTime(GAME)
+        })
+
+        window.addEventListener('blur', () => {
+            stopTimer()
+            document.body.classList.add('paused')
+        })
+        window.addEventListener('focus', () => {
+            document.body.classList.remove('paused')
+            if (GAME && !gameTimerInterval) {
+                resumeTime(GAME)
+            }
         })
 
         EDGES_ELEM.addEventListener('click', (e) => {
@@ -209,13 +230,18 @@
     }
 
     function newGame(level=0) {
+        if (gameTimerInterval) {
+            stopTimer()
+            TIME_ELEM.innerText = getTimeDisplay(0).clock
+        }
+
         level = Number(level) || 0
         GRAPH_ELEM.innerHTML = ''
         EDGES_ELEM.innerHTML = ''
         showMessage('')
         GRAPH_ELEM.setAttribute('data-level', level)
 
-        const gameData = { ...LEVELS[level], level, hints: 0, nodes: [], edges: [] }
+        const gameData = { ...LEVELS[level], level, time: 0, hints: 0, nodes: [], edges: [] }
         for (let i=0; i<gameData.nodeCount; ++i) {
             gameData.nodes.push({ id: 'N'+(i+1), weight: 0, count: 0, edges: [] })
         }
@@ -230,18 +256,18 @@
         if (/^localhost/.test(window.location.host)) {
             console.debug(gameData)
         }
+
         return gameData
     }
 
     function loadGame(serialized) {
-        const [level, nodes, edges, hints] = serialized.split(';')
+        const [level, nodes, edges, hints, time] = serialized.split(';')
 
         if (!level || !nodes || !edges) {
-            showMessage('Sorry, but we lost your saved game, please start over!', 'warning')
-            return newGame(0)
+            return showMessage('Sorry, but we lost your saved game, please start over!', 'warning')
         }
 
-        const gameData = { ...LEVELS[Number(level)], level: Number(level), hints: Number(hints) || 0, nodes: [], edges: [] }
+        const gameData = { ...LEVELS[Number(level)], level: Number(level), time: Number(time), hints: Number(hints) || 0, nodes: [], edges: [] }
 
         GRAPH_ELEM.setAttribute('data-level', level)
         if (gameData.hints >= MAX_HINTS) {
@@ -337,7 +363,8 @@
                 }
                 return info
             }).join('|'),
-            g.hints
+            g.hints,
+            g.time
         ]
         localStorage.setItem(LOCALSTORAGE_KEY, btoa(serial.join(';')))
     }
@@ -369,11 +396,13 @@
         })
 
         if (complete) {
+            g.complete = true
             endGame(g)
         }
     }
 
     function endGame(g) {
+        stopTimer()
         const scoreData = {
             base: (g.nodes.length * g.edges.length),
             hints: g.hints * HINT_POINT_REDUCTION,
@@ -404,7 +433,6 @@
         }).sort().join('')
         scoreData.alternate = (predicted === actual) ? 0 : ((g.level + 1) * ALTERNATE_POINT_MODIFIER)
 
-
         const finalScore = scoreData.base + scoreData.alternate - scoreData.hints - scoreData.central - scoreData.outlier
         WIN_DIALOG_ELEM.querySelector('.final-score').innerText = finalScore
         WIN_DIALOG_ELEM.querySelector('.score-base').innerText = scoreData.base
@@ -412,6 +440,8 @@
         WIN_DIALOG_ELEM.querySelector('.score-hints').innerText = `-${scoreData.hints} (${g.hints} x ${HINT_POINT_REDUCTION})`
         WIN_DIALOG_ELEM.querySelector('.score-central').innerText = `-${scoreData.central} (${scoreData.centralCount} x ${(g.level + 1) * CENTRAL_NODE_POINT_MODIFIER})`
         WIN_DIALOG_ELEM.querySelector('.score-outlier').innerText = `-${scoreData.outlier} (${scoreData.outlierCount} x ${(g.level + 1) * OUTLIER_NODE_POINT_MODIFIER})`
+
+        WIN_DIALOG_ELEM.querySelector('time').innerText = getTimeDisplay(g.time).words
 
         WIN_DIALOG_ELEM.querySelector('.level').value = GRAPH_ELEM.getAttribute('data-level')
         const snapshot = WIN_DIALOG_ELEM.querySelector('.snapshot')
@@ -461,13 +491,52 @@
         return Math.floor(Math.random() * (max - min)) + min
     }
 
+    function resumeTime(g) {
+        g.time = g.time || 0
+        TIME_ELEM.innerText = getTimeDisplay(g.time).clock
+        gameTimerInterval = setInterval(() => {
+            g.time++
+            TIME_ELEM.innerText = getTimeDisplay(g.time).clock
+            saveGame(g)
+        }, 1000)
+    }
+
+    function stopTimer() {
+        if (gameTimerInterval) {
+            clearInterval(gameTimerInterval)
+            gameTimerInterval = null
+        }
+    }
+
+    function getTimeDisplay(seconds) {
+        seconds = 120
+
+        const h = Math.floor(seconds / 3600)
+        const m = Math.floor((seconds - (3600 * h)) / 60)
+        const s = seconds - (h * 3600) - (m * 60)
+        const elements = [(h) ? `${h} hours` : 0, (m) ? `${m} minutes` : 0, (s) ? `${s} seconds` : 0].filter((t) => t)
+        let words = ''
+        if (elements.length > 2) {
+            words = `${elements[0]}, ${elements[1]}, and ${elements[2]}`
+        } else if (elements.length > 1) {
+            words = elements.join(' and ')
+        } else {
+            words = elements[0] || ''
+        }
+        return {
+            clock: `${(''+h).padStart(2, '0')}:${(''+m).padStart(2, '0')}:${(''+s).padStart(2, '0')}`,
+            words,
+            h, m, s
+        }
+    }
+
 
     /************* ALL THE FUNCTIONALITY *************/
 
     function changeLayout(g) {
         Array.from(GRAPH_ELEM.querySelectorAll('circle, text'))
             .forEach(el => GRAPH_ELEM.removeChild(el))
-        const edgeInfo = Array.from(GRAPH_ELEM.querySelectorAll('line'))
+        const edgeInfo = Array.from(GRAPH_ELEM.querySelectorAll('line:not(.connection-mask)'))
             .map(el => {
                 GRAPH_ELEM.removeChild(el)
                 return el.id.split('-').concat([Number(el.getAttribute('data-weight'))])
@@ -476,6 +545,9 @@
         drawGraphNodes(g)
         edgeInfo.forEach(e => {
             const edge = g.edges.filter(ge => ge.loc && ge.loc[0] === e[0] && ge.loc[1] === e[1] && ge.weight === e[2])[0]
+            if (!edge) {
+                return showMessage('There was a problem changing layout. Please refresh the page!', 'error')
+            }
             edge.loc = null
             addEdge(g, e[0], e[1], e[2], edge)
             if (edge.revealed) {
