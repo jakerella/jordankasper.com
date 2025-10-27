@@ -509,8 +509,6 @@
     }
 
     function getTimeDisplay(seconds) {
-        seconds = 120
-
         const h = Math.floor(seconds / 3600)
         const m = Math.floor((seconds - (3600 * h)) / 60)
         const s = seconds - (h * 3600) - (m * 60)
