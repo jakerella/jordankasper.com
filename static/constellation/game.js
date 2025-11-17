@@ -157,7 +157,7 @@
 
         document.getElementById('reset').addEventListener('click', () => {
             if (!GAME) { return }
-            Array.from(GRAPH_ELEM.querySelectorAll('line')).forEach(el => {
+            Array.from(GRAPH_ELEM.querySelectorAll('line:not(.connection-mask)')).forEach(el => {
                 if (!el.classList.contains('revealed')) {
                     removeEdge(GAME, el)
                 }
