@@ -1120,6 +1120,16 @@
             "topics": [
                 "[Badge Challenge]"
             ]
+        },
+        {
+            "name": "Confoo",
+            "url": "http://confoo.ca/en/2026/",
+            "location": "Monteral, Canada",
+            "date": "Feb 25 2026",
+            "topics": [
+                "Regular Expressions",
+                "Advanced Git"
+            ]
         }
     ]
 }

@@ -29,3 +29,7 @@
   to = "/jquery?path=:splat"
   status = 301
 
+[[redirects]]
+  from = "/regex-101"
+  to = "/regex"
+  status = 301
