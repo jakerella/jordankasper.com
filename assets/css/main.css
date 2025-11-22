@@ -542,17 +542,19 @@ body>footer .rss:active {
     border-bottom-color: #bbb;
 }
 
+.blog-post .post-footer {
+    margin-top: 2em;
+    display: flex;
+    justify-content: space-between;
+}
 .blog-post .publish-time {
     font-size: 0.9em;
     color: #333;
-    float: left;
 }
 
 .blog-post .post-tags {
     font-size: 0.85em;
     color: #333;
-    text-align: right;
-    margin-top: 2em;
 }
 
 .blog-post .tag-list {
@@ -625,6 +627,23 @@ body>footer .rss:active {
     border: none;
 }
 
+.recent-posts h3 {
+    display: flex;
+    justify-content: space-between;
+}
+.recent-posts .publish-time {
+    font-size: 0.8em;
+    font-weight: normal;
+    color: #666;
+}
+@media (max-width: 32em) {
+    .recent-posts h3 {
+        display: block;
+    }
+    .recent-posts .publish-time {
+        display: block;
+    }
+}
 .recent-posts img {
     display: none;
 }

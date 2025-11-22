@@ -12,17 +12,23 @@
 
                 <h2 id='{{ path }}' data-pagefind-meta='title'>{{ title }}</h2>
 
-                {{{ contents }}}
-
                 <p class='publish-time'>
                     <i class='icon-calendar'></i>Published on <date>{{ date }}</date>
                 </p>
-                <p class='post-tags'>
-                    Tagged with
-                    <span class='tag-list'>
-                        {{#each tags as |tag i|}}{{#if i}}, {{/if}}<a href='/tag/{{ tag.slug }}'>{{ tag.name }}</a>{{/each}}
-                    </span>
-                </p>
+
+                {{{ contents }}}
+
+                <aside class='post-footer'>
+                    <p class='publish-time'>
+                        <i class='icon-calendar'></i>Published on <date>{{ date }}</date>
+                    </p>
+                    <p class='post-tags'>
+                        Tagged with
+                        <span class='tag-list'>
+                            {{#each tags as |tag i|}}{{#if i}}, {{/if}}<a href='/tag/{{ tag.slug }}'>{{ tag.name }}</a>{{/each}}
+                        </span>
+                    </p>
+                </aside>
 
                 <aside class='sharing'>
                     <p>
