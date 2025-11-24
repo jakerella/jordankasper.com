@@ -2,12 +2,13 @@
 ;(() => {
 
     // TODO:
-    // save player stats (total running score?, number completed in each level? ...?)
-    // share result online (with snapshot)
-    // allow sharing (and loading) of specific game setup
+    // add time as a component to score (inverse?)
+    // allow player to see stats from win modal
+    // allow sharing (and loading) of specific constellation
+    // share result online with image of constellation without star sizing or link weight and link to play _that_ constellation
+    // have predefined constellations with no layout change ability (actual constellations)
     // allow user to draw connection (in addition to tapping two nodes)
-    // better UI / design overall
-    // never allow multiple graphs in same puzzle (like 2 single-count nodes connected)
+    // never allow multiple graphs in same puzzle (like 2 single-count nodes connected)... is this a thing?
 
     const SHIELD_ELEM = document.getElementById('shield')
     const TIME_ELEM = document.getElementById('game-time')
@@ -15,8 +16,9 @@
     const EDGES_ELEM = document.getElementById('edges')
     const MSG_ELEM = document.getElementById('message')
     const WIN_DIALOG_ELEM = document.getElementById('win-modal')
-    const LOCALSTORAGE_KEY = 'constellation'
+    const LOCALSTORAGE_GAME = 'constellation'
     const LOCALSTORAGE_OPTIONS = 'constellation_options'
+    const LOCALSTORAGE_STATS = 'constellation_stats'
     const MSG_TIMEOUT = 4000
     const MSG_FADEOUT = 2
     const MIN_NODE_SIZE = 7
@@ -28,6 +30,8 @@
     const HINT_POINT_REDUCTION = 5
     const CENTRAL_NODE_POINT_MODIFIER = 2
     const OUTLIER_NODE_POINT_MODIFIER = 3
+    const QUICKEST_STAT_MAX = 9999999999
+    const LOCAL = /^localhost/.test(window.location.host)
     
     const LEVELS = [
         { name: 'Main Sequence', nodeCount: 5, edgeCount: [6, 10], weightRange: [2, 6] },
@@ -38,20 +42,33 @@
 
 
     let OPTIONS = {}
+    let STATS = {}
     let GAME = null
     let messageTimer = null
     let gameTimerInterval = null
     let fullscreen = false
 
 
-    /****************************************************/
+    /**************** LOAD OR START NEW GAME ******************/
     function main() {
         
         setupGameUI()
         setupEventHandlers()
 
-        /************ LOAD OR START NEW GAME ************/
-        const currGame = localStorage.getItem(LOCALSTORAGE_KEY)
+        const emptyStats = LEVELS.map(() => { return {
+            c: 0, // # completed
+            s: 0, // # score
+            t: 0, // # total time
+            q: QUICKEST_STAT_MAX  // # quickest time
+        } })
+        try {
+            STATS = JSON.parse(localStorage.getItem(LOCALSTORAGE_STATS)) || emptyStats
+        } catch (_) {
+            STATS = emptyStats
+            showMessage('Unable to load your stats, they might be reset!', 'error')
+        }
+
+        const currGame = localStorage.getItem(LOCALSTORAGE_GAME)
         if (currGame) {
             let serialized = null
             try {
@@ -59,27 +76,36 @@
             } catch(_) {
                 showMessage('Sorry, but we lost your saved game, please start over!', 'warning')
                 GAME = newGame(0)
-                return 
+                return
             }
             GAME = loadGame(serialized)
             if (GAME.complete) {
                 GAME = null
             }
         } else {
-            showDialog(document.getElementById('welcome-modal'))
-            GAME = newGame(0)
+            let hasPlayed = false
+            STATS.forEach((lv) => { if (lv.c) { hasPlayed = true } })
+            if (hasPlayed) {
+                showDialog('new-game-modal')
+            } else {
+                showDialog('welcome-modal')
+                GAME = newGame(0)
+            }
         }
 
         if (GAME) {
-            resumeTime(GAME)
+            resumeTimer(GAME)
         }
+        writePlayerStats(STATS)
 
-        if (/^localhost/.test(window.location.host)) {
-            console.debug(GAME)
+        if (LOCAL) {
+            console.debug(OPTIONS, STATS, GAME)
         }
     }
     /****************************************************/
 
+
+    /**************** START UP FUNCTIONS ****************/
 
     function setupGameUI() {
         const levelOptions = []
@@ -114,18 +140,20 @@
         // open and close any (simple) modal
         Array.from(document.querySelectorAll('.open-model')).forEach((trigger) => {
             trigger.addEventListener('click', (e) => {
-                if (e.target.classList.contains('disabled')) {
+                if (trigger.classList.contains('disabled')) {
                     return
                 }
-                showDialog(document.getElementById(e.target.id + '-modal'))
+                if (GAME) { stopTimer() }
+                showDialog(document.getElementById(trigger.id + '-modal'))
             })
         })
         Array.from(document.querySelectorAll('dialog .close')).forEach((trigger) => {
             trigger.addEventListener('click', (e) => {
-                let dialog = e.target.parentNode
+                let dialog = trigger.parentNode
                 while (dialog.tagName.toLowerCase() !== 'dialog') {
                     dialog = dialog.parentNode
                 }
+                if (GAME) { resumeTimer(GAME) }
                 hideDialog(dialog)
             })
         })
@@ -152,7 +180,7 @@
         document.querySelector('#new-game-modal .new-game').addEventListener('click', () => {
             GAME = newGame(document.querySelector('#new-game-modal .level').value)
             hideDialog('new-game-modal')
-            resumeTime(GAME)
+            resumeTimer(GAME)
         })
 
         document.getElementById('reset').addEventListener('click', () => {
@@ -188,17 +216,19 @@
             GAME = null
             GAME = newGame(WIN_DIALOG_ELEM.querySelector('.level').value)
             hideDialog(WIN_DIALOG_ELEM)
-            resumeTime(GAME)
+            resumeTimer(GAME)
         })
 
         window.addEventListener('blur', () => {
             stopTimer()
-            document.body.classList.add('paused')
+            if (!LOCAL) {
+                document.body.classList.add('paused')
+            }
         })
         window.addEventListener('focus', () => {
             document.body.classList.remove('paused')
             if (GAME && !gameTimerInterval) {
-                resumeTime(GAME)
+                resumeTimer(GAME)
             }
         })
 
@@ -253,7 +283,7 @@
         document.getElementById('hint').classList.remove('disabled')
 
         saveGame(gameData)
-        if (/^localhost/.test(window.location.host)) {
+        if (LOCAL) {
             console.debug(gameData)
         }
 
@@ -366,7 +396,7 @@
             g.hints,
             g.time
         ]
-        localStorage.setItem(LOCALSTORAGE_KEY, btoa(serial.join(';')))
+        localStorage.setItem(LOCALSTORAGE_GAME, btoa(serial.join(';')))
     }
 
     function checkGraph(g) {
@@ -445,9 +475,26 @@
 
         WIN_DIALOG_ELEM.querySelector('.level').value = GRAPH_ELEM.getAttribute('data-level')
         const snapshot = WIN_DIALOG_ELEM.querySelector('.snapshot')
-        
+
+        STATS[g.level].c++
+        STATS[g.level].s += finalScore
+        STATS[g.level].t += g.time
+        if (finalScore > STATS[g.level].m) {
+            STATS[g.level].m = finalScore
+        }
+        if (g.time < STATS[g.level].q) {
+            STATS[g.level].q = g.time
+        }
+        try {
+            localStorage.setItem(LOCALSTORAGE_STATS, JSON.stringify(STATS))
+        } catch (_) {
+            showMessage('Unable to save your stats, sorry!', 'error')
+        }
+        writePlayerStats(STATS)
+
         GAME = null
         g = null
+        localStorage.removeItem(LOCALSTORAGE_GAME)
         showDialog(WIN_DIALOG_ELEM)
 
         // we have to do this after showing the dialog because otherwise the snapshot has no width
@@ -491,7 +538,7 @@
         return Math.floor(Math.random() * (max - min)) + min
     }
 
-    function resumeTime(g) {
+    function resumeTimer(g) {
         g.time = g.time || 0
         TIME_ELEM.innerText = getTimeDisplay(g.time).clock
         gameTimerInterval = setInterval(() => {
@@ -528,8 +575,65 @@
         }
     }
 
+    function writePlayerStats(playerStats) {
+        const totals = { score: 0, games: 0, time: 0, quickest: [0,0], max: [0,0] }
+        playerStats.forEach((lv, i) => {
+            totals.score += lv.s || 0
+            totals.games += lv.c || 0
+            totals.time += lv.t || 0
+            if (lv.q && (!totals.quickest[1] || lv.q < totals.quickest[1])) {
+                totals.quickest = [i, lv.q]
+            }
+            if (lv.m > totals.max[1]) {
+                totals.max = [i, lv.m]
+            }
+        })
 
-    /************* ALL THE FUNCTIONALITY *************/
+        const levelsElem = document.querySelector('#stats-modal .level-stats')
+        levelsElem.innerHTML = ''
+
+        if (totals.games < 1) {
+            document.querySelector('#stats-modal .no-games').style.display = 'block'
+            document.querySelector('#stats-modal .summary').style.display = 'none'
+            return
+        } else {
+            document.querySelector('#stats-modal .no-games').style.display = 'none'
+            document.querySelector('#stats-modal .summary').style.display = 'block'
+        }
+
+        document.querySelector('#stats-modal .total-score').innerText = totals.score
+        document.querySelector('#stats-modal .total-games').innerText = totals.games
+        document.querySelector('#stats-modal .total-time').innerText = getTimeDisplay(totals.time).words
+        document.querySelector('#stats-modal .quickest-level').innerText = LEVELS[totals.quickest[0]].name
+        document.querySelector('#stats-modal .quickest-time').innerText = getTimeDisplay(totals.quickest[1]).clock
+        document.querySelector('#stats-modal .max-score-level').innerText = LEVELS[totals.max[0]].name
+        document.querySelector('#stats-modal .max-score').innerText = totals.max[1]
+
+        const levelContent = LEVELS.map((level, i) => {
+            const levelStats = playerStats[i]
+            if (levelStats.c < 1) {
+                return `<details>
+                    <summary><h3>${level.name}</h3></summary>
+                    <p>No constellations completed yet.</p>
+                </details>`
+            } else {
+                return `<details>
+                    <summary><h3>${level.name}</h3></summary>
+                    <ul>
+                        <li><dd>Completed:</dd><dt>${levelStats.c}</dt></li>
+                        <li><dd>Average Score:</dd><dt>${Math.round(levelStats.s / levelStats.c)} (${levelStats.s} total)</dt></li>
+                        <li><dd>Highest Score:</dd><dt>${levelStats.m}</dt></li>
+                        <li><dd>Quickest Time:</dd><dt>${getTimeDisplay(levelStats.q).clock}</dt></li>
+                        <li><dd>Average Time:</dd><dt>${getTimeDisplay(Math.round(levelStats.t / levelStats.c)).clock}</dt></li>
+                    </ul>
+                </details>`
+            }
+        })
+        levelsElem.innerHTML = levelContent.join('\n')
+    }
+
+
+    /************* CONSTELLATION FUNCTIONALITY *************/
 
     function changeLayout(g) {
         Array.from(GRAPH_ELEM.querySelectorAll('circle, text'))

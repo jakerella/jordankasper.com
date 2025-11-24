@@ -12,9 +12,10 @@
             <time id='game-time'>00:00:00</time>
             <nav>
                 <ul>
-                    <li id='fullscreen'>⛶</li>
-                    <li id='dark-mode-switch'></li>
-                    <li id='help' class='open-model'>?</li>
+                    <li id='stats' class='open-model' title='view game stats'><span></span><span></span><span></span></li>
+                    <li id='fullscreen' title='go fullscreen'>⛶</li>
+                    <li id='dark-mode-switch' title='toggle between light and dark mode'></li>
+                    <li id='help' class='open-model' title='view help information'>?</li>
                 </ul>
             </nav>
         </header>
@@ -309,12 +310,38 @@
             <svg class='snapshot'></svg>
         </dialog>
 
+        <dialog id='stats-modal'>
+            <button class='close close-icon'>X</button>
+            <h2>Your Stats</h2>
+            
+            <p class='no-games'>
+                You have not completed any constellations yet! 
+                Your overall and level-by-level stats will appear here once you have.
+            </p>
+
+            <aside class='summary'>
+                <p>
+                    You have scored <strong><span class='total-score'>0</span> points</strong> across
+                    <strong><span class='total-games'>0</span> completed constellations</strong> and have played for
+                    <strong><span class='total-time'>0 minutes</span></strong>!
+                </p>
+                <p>
+                    Quickest: <strong><span class='quickest-time'></span> on a <span class='quickest-level'></span></strong>
+                </p>
+                <p>
+                    Highest score: <strong><span class='max-score'></span> on a <span class='max-score-level'></span></strong>
+                </p>
+            </aside>
+
+            <article class='level-stats'></article>
+        </dialog>
+
         <dialog id='new-game-modal'>
-            <h2>Are you sure?</h2>
-            <p>You will be giving up this game, are you sure you want to start a new one?</p>
+            <h2>Start a New Game</h2>
+            <p>If you have a current game in progress, you will lose it!</p>
             <fieldset>
                 <select name='new-level' class='level'></select>
-                <button class='new-game'>New Game</button>
+                <button class='new-game'>Start</button>
             </fieldset>
             <button class='close'>Cancel</button>
         </dialog>
