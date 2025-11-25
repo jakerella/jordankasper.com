@@ -2,9 +2,8 @@
 ;(() => {
 
     // TODO:
-    // add time as a component to score (inverse?)
-    // allow player to see stats from win modal
-    // allow sharing (and loading) of specific constellation
+    // allow player to toggle to stats modal from win modal
+    // allow loading of specific constellation config
     // share result online with image of constellation without star sizing or link weight and link to play _that_ constellation
     // have predefined constellations with no layout change ability (actual constellations)
     // allow user to draw connection (in addition to tapping two nodes)
@@ -56,13 +55,42 @@
         setupEventHandlers()
 
         const emptyStats = LEVELS.map(() => { return {
-            c: 0, // # completed
-            s: 0, // # score
-            t: 0, // # total time
-            q: QUICKEST_STAT_MAX  // # quickest time
+            // per level stats:
+            c: 0, // num completed
+            s: 0, // total score
+            t: 0, // total time
+            m: 0, // single max score
+            q: QUICKEST_STAT_MAX  // quickest time
         } })
         try {
             STATS = JSON.parse(localStorage.getItem(LOCALSTORAGE_STATS)) || emptyStats
+            let modified = false
+            if (Array.isArray(STATS) && STATS.length < LEVELS.length) {
+                STATS = [
+                    ...STATS,
+                    ...(new Array(LEVELS.length - STATS.length)).fill({
+                        c:0, s:0, t:0, m:0, q:QUICKEST_STAT_MAX
+                    })
+                ]
+                modified = true
+            } else if (Array.isArray(STATS) && STATS.length > LEVELS.length) {
+                STATS = STATS.splice(LEVELS.length)
+                modified = true
+            } else if (!Array.isArray(STATS)) {
+                STATS = emptyStats
+                modified = true
+            }
+            STATS.forEach((lvStats, i) => {
+                const malformed = !!Object.keys(emptyStats[0]).filter(k => typeof(lvStats[k]) === 'undefined').length
+                if (malformed) {
+                    STATS[i] = emptyStats[i]
+                    modified = true
+                }
+            })
+            if (modified) {
+                localStorage.setItem(LOCALSTORAGE_STATS, JSON.stringify(STATS))
+                showMessage('Some of your stats were malformed, they have been updated, and there may be some data loss!', 'error')
+            }
         } catch (_) {
             STATS = emptyStats
             showMessage('Unable to load your stats, they might be reset!', 'error')
@@ -479,7 +507,7 @@
         STATS[g.level].c++
         STATS[g.level].s += finalScore
         STATS[g.level].t += g.time
-        if (finalScore > STATS[g.level].m) {
+        if (!STATS[g.level].m || finalScore > STATS[g.level].m) {
             STATS[g.level].m = finalScore
         }
         if (g.time < STATS[g.level].q) {
