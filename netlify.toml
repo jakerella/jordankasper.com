@@ -33,3 +33,9 @@
   from = "/regex-101"
   to = "/regex"
   status = 301
+
+[[redirects]]
+  from = "/constellation"
+  to = "https://constellation.fit"
+  status = 301
+  force = true
