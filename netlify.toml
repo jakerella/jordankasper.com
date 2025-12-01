@@ -2,7 +2,7 @@
   publish = "build/"
 
 [functions]
-  directory = "api/analytics"
+  directory = "api/functions"
 
 [[redirects]]
   from = "/blog/:year/:month/:slug"
