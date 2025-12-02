@@ -2,5 +2,6 @@
     "ANALYTICS_STORE": "analytics",
     "VISITORS_KEY": "site-visitors",
     "PATHS_KEY": "site-paths",
-    "HITS_KEY_PREFIX": "hits--"
+    "HITS_KEY_PREFIX": "hits--",
+    "NEWS_URL": "https://npr.org"
 }

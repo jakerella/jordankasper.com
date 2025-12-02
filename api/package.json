@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "@netlify/blobs": "^10.0.5",
+    "jsdom": "^27.2.0",
     "ua-parser-js": "^2.0.5"
   }
 }

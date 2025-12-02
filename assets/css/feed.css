@@ -1,0 +1,17 @@
+html,body{background-color:#000;margin:0;padding:0;color:#fff}
+body *{margin:0;padding:0;}
+
+header { display: flex; justify-content: space-between; padding: 0.3rem 1rem; border-bottom: 1px solid #fff; }
+h1 { font-size: 1.3rem; }
+header ul { display: flex; justify-content: space-between; }
+header li { list-style: none; margin-left: 1rem; font-size: 1.2rem; }
+header a { color: #ccc; text-decoration: none; }
+
+main { padding: 0.3rem 1rem; }
+article { padding: 2rem 0; border-bottom: 4px solid #fff; }
+article h2 a { color: #fff; text-decoration: none; }
+article img { width: 100%; }
+article p { font-size: 1.3rem; text-align: justify; }
+article aside { float: right; clear: both; background-color: #555; border-radius: 1rem; padding: 0.2rem 1rem; }
+
+footer { text-align: center; margin: 1rem 0; }
