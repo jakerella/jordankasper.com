@@ -1,7 +1,7 @@
 
-import { JSDOM } from 'jsdom'
+import { Browser } from 'happy-dom'
 
-const c = require('../constants.json')
+import c from '../constants.json'
 
 export default async function handler(req, context) {
     try {
@@ -16,16 +16,27 @@ export default async function handler(req, context) {
         return new Response(JSON.stringify(articles), { status: 200 })
 
     } catch(err) {
-        console.error(`Hit catch all block: ${err.message || err.toString()}\n${err.stack.split('\n')[1]}`)
+        console.error(`Hit catch all block: ${err.message || err.toString()}\n${err.stack?.split('\n')[1]}`)
         return new Response('Unable to retrieve news articles', { status: 500 })
     }
 }
 
-async function getNews(){
-    const dom = await JSDOM.fromURL(c.NEWS_URL)
+async function getNews() {
+    const resp = await fetch(c.NEWS_URL)
+    if (resp.status !== 200) {
+        throw new Error(`News site (${c.NEWS_URL}) failed to return content. (${resp.status})`)
+    }
+
+    // TODO: get excerpts for articles that do not have it
+
+    const browser = new Browser()
+    const page = browser.newPage()
+    page.url = c.NEWS_URL
+    page.content = await resp.text()
+    const document = page.mainFrame.document
 
     const data = []
-    Array.from(dom.window.document.querySelectorAll('article.post-type-simple, article.post-type-minimal'))
+    Array.from(document.querySelectorAll('article.post-type-simple, article.post-type-minimal'))
         .forEach(article => {
             const title = article.querySelector('h3')?.textContent
             const link = article.querySelector('a:has(h3)')?.getAttribute('href')
@@ -42,6 +53,7 @@ async function getNews(){
                 data.push({ title, link, text, image, altText, category })
             }
         })
+    await browser.close()
 
     return data
 }
