@@ -3,6 +3,9 @@ import { Browser } from 'happy-dom'
 
 import c from '../constants.json'
 
+// TODO:
+// - get excerpts for articles that do not have it
+
 export default async function handler(req, context) {
     try {
         const queryParams = {}
@@ -26,8 +29,6 @@ async function getNews() {
     if (resp.status !== 200) {
         throw new Error(`News site (${c.NEWS_URL}) failed to return content. (${resp.status})`)
     }
-
-    // TODO: get excerpts for articles that do not have it
 
     const browser = new Browser()
     const page = browser.newPage()

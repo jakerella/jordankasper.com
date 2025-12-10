@@ -1,57 +1,177 @@
 
 ;(async () => {
     const CACHE_KEY = 'jk-feed-source'
-    const main = document.querySelector('main')
+    const FEED_TIMEOUT = (1000 * 60 * 60 * 8)
+    const SCROLL_HANDLER_TIMOUT = 3000
+    const mainContent = document.querySelector('main .content')
 
     // TODO:
-    // - add button to force refresh (no cache)
-    // - hide seen articles (how? by title? some id? manually mark?)
     // - button to exclude category (i.e. "movie interviews")
+    // - save article for later
+    // - cache images
     // - add comics feed!
 
     const templates = {
         start: `<article><h2><a href='{{link}}' target='_blank'>{{title}}</a></h2>`,
         image: `<a href='{{image}}' target='_blank'><img src='{{image}}' alt='{{altText}}' title='{{altText}}'></a>`,
         body: `<p>{{text}}</p>`,
-        category: `<aside>{{category}}</aside>`,
+        footer: `<footer><nav class='read-toggle'>[mark read]</nav><aside>{{category}}</aside></footer>`,
         end: `</article>`
     }
 
-    let articles = checkCache()
-    if (!articles) {
-        articles = await getFresh()
-        if (articles) {
-            localStorage.setItem(CACHE_KEY, JSON.stringify({
-                timeout: Date.now() + (1000 * 60 * 60 * 8),
-                articles
-            }))
+    let scrollBounce = null
+    let scrollStart = 0
+    document.addEventListener('scroll', _ => {
+        if (!scrollStart || (Date.now() - scrollStart) < SCROLL_HANDLER_TIMOUT) {
+            clearTimeout(scrollBounce)
+            scrollStart = Date.now()
+            scrollBounce = setTimeout(() => {
+                scrollBounce = null
+                scrollStart = 0
+                handleScroll()
+            }, SCROLL_HANDLER_TIMOUT)
         }
-    }
+    })
 
-    console.log(articles)
-    if (articles) {
-        main.innerHTML = articles.map(showArticle).join('\n')
-    }
+    document.querySelector('.refresh').addEventListener('click', async _ => {
+        mainContent.innerText = 'Loading...'
+        
+        try {
+            if (scrollBounce) {
+                clearTimeout(scrollBounce)
+            }
+            scrollBounce = null
+            scrollStart = 0
+
+            const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '')
+            if (cache && cache.articles) {
+                cache.articles = []
+                localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
+            }
+            await loadContent()
+            return false
+
+        } catch(err) {
+            return console.warn('unable to mark all articles unread:', err)
+        }
+    })
+
+    document.querySelector('.all-unread').addEventListener('click', async _ => {
+        try {
+            if (scrollBounce) {
+                clearTimeout(scrollBounce)
+            }
+            scrollBounce = null
+            scrollStart = 0
+
+            const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '')
+            if (cache && cache.read) {
+                cache.read = []
+                localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
+                Array.from(document.querySelectorAll('article.read')).forEach(a => {
+                    a.classList.remove('read')
+                    a.querySelector('footer nav').innerText = '[mark read]'
+                })
+            }
+            
+            await loadContent()
+
+        } catch(err) {
+            return console.warn('unable to mark all articles unread:', err)
+        }
+        return false
+    })
+
+    document.querySelector('main .content').addEventListener('click', e => {
+        if (e.target.classList.contains('read-toggle')) {
+            e.stopPropagation()
+            if (scrollBounce) {
+                clearTimeout(scrollBounce)
+            }
+            scrollBounce = null
+            scrollStart = 0
+
+            const article = e.target.parentNode.parentNode
+            if (article.tagName.toLowerCase() === 'article') {
+                if (article.classList.contains('read')) {
+                    article.classList.remove('read')
+                    e.target.innerText = '[mark read]'
+                } else {
+                    article.classList.add('read')
+                    e.target.innerText = '[mark unread]'
+                }
+                toggleReadCache(article.querySelector('h2 a').getAttribute('href'))
+            }
+            return false
+        }
+    })
+
+    // GET THE INITIAL CONTENT
+    await loadContent()
 
 
     // --------------- HELPERS ---------------- //
 
+    function handleScroll() {
+        const articles = Array.from(document.querySelectorAll('article:not(.read)'))
+        for (let i=0; i<articles.length; ++i) {
+            const bounding = articles[i].getBoundingClientRect()
+            if (bounding.top > -10 && bounding.top < (window.innerHeight - (bounding.height / 2))) {
+                articles[i].classList.add('read')
+                articles[i].querySelector('footer nav').innerText = '[mark unread]'
+                toggleReadCache(articles[i].querySelector('h2 a').getAttribute('href'))
+                break // only mark 1 article read per scroll
+            }
+        }
+    }
+
+    async function loadContent() {
+        let cache = checkCache()
+        if (!cache?.articles || cache?.articles?.length < 1) {
+            cache = { timeout: Date.now() + FEED_TIMEOUT, read: cache?.read || [] }
+            cache.articles = (await getFresh()) || []
+            localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
+        }
+
+        if (cache.articles) {
+            mainContent.innerHTML = cache.articles
+                .filter(a => !cache.read?.includes(a.link))
+                .map(showArticle).join('\n')
+        }
+    }
+
     function checkCache() {
         try {
-            const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null')
+            const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '{}')
             if (cache && cache.timeout > Date.now()) {
-                console.log('Using cached articles!')
-                return cache.articles
+                return cache
             }
+            return null
         } catch(err) {
             // we let this go and get fresh content
             return console.error(err)
         }
     }
 
+    function toggleReadCache(id) {
+        try {
+            const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || '')
+            if (cache && Array.isArray(cache.read)) {
+                if (cache.read.includes(id)) {
+                    cache.read.splice(cache.read.indexOf(id), 1)
+                } else {
+                    cache.read.push(id)
+                }
+                localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
+            }
+        } catch(err) {
+            return console.warn('unable to mark article read:', err)
+        }
+    }
+
     async function getFresh() {
         try {
-            const resp = await fetch(`/.netlify/functions/getFeed?feed=`)
+            const resp = await fetch(`/.netlify/functions/feedSource?feed=`)
             if (resp.status > 299) {
                 throw new Error(`Unable to retrieve feed (${resp.status})`)
             } else {
@@ -65,7 +185,7 @@
             return articles
 
         } catch(err) {
-            main.innerHTML = `<p>${err.message || err}</p>`
+            mainContent.innerHTML = `<p>${err.message || err}</p>`
             return console.error(err)
         }
     }
@@ -82,7 +202,9 @@
             content.push(templates.body.replace('{{text}}', data.text))
         }
         if (data.category) {
-            content.push(templates.category.replace('{{category}}', data.category))
+            content.push(templates.footer.replace('{{category}}', data.category))
+        } else {
+            content.push(templates.footer.replace('{{category}}', ''))
         }
         content.push(templates.end)
         return content.join('\n')
