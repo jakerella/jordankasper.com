@@ -1,5 +1,6 @@
 
 import { Browser } from 'happy-dom'
+import { createHash } from 'crypto'
 
 import c from '../constants.json'
 
@@ -37,26 +38,30 @@ async function getNews() {
     const document = page.mainFrame.document
 
     const data = []
-    Array.from(document.querySelectorAll('article.post-type-simple, article.post-type-minimal'))
-        .forEach(article => {
-            const title = article.querySelector('h3')?.textContent
-            const link = article.querySelector('a:has(h3)')?.getAttribute('href')
-            const category = article.querySelector('h2.slug')?.textContent
-            const text = article.querySelector('.teaser')?.textContent
-            const imageElem = article.querySelector('img[data-format="jpeg"]')
-            let image = null
-            let altText = null
-            if (imageElem) {
-                image = imageElem?.getAttribute('src')
-                altText = imageElem?.getAttribute('alt')
-            }
-            if (title && link) {
-                data.push({ title, link, text, image, altText, category })
-            }
-        })
+    const articles = Array.from(document.querySelectorAll('article.post-type-simple, article.post-type-minimal'))
+    for (let article of articles) {
+        const title = article.querySelector('h3')?.textContent
+        const link = article.querySelector('a:has(h3)')?.getAttribute('href')
+        const category = article.querySelector('h2.slug')?.textContent.trim()
+        const text = article.querySelector('.teaser')?.textContent
+        const imageElem = article.querySelector('img[data-format="jpeg"]')
+        let image = null
+        let altText = null
+        if (imageElem) {
+            image = imageElem?.getAttribute('src')
+            altText = imageElem?.getAttribute('alt')
+        }
+        if (title && link) {
+            data.push({ id: getArticleID(link), title, link, text, image, altText, category })
+        }
+    }
     await browser.close()
 
     return data
+}
+
+function getArticleID(link) {
+    return createHash('sha1').update(link).digest('hex').toString()
 }
 
 
