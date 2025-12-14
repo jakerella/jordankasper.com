@@ -7,10 +7,9 @@
     const mainContent = document.querySelector('main .content')
 
     // TODO:
-    // - cache images
-    // - add comics feed (multi-source)
     // - use a hide/show thing for image altText
-    // - button to exclude category (i.e. "movie interviews")
+    // - cache images
+    // - add comics feed (multi-source, select day?)
     // - add options for un-excluding category, light mode, changing feed timeout
     // - save article for later? (otherwise "read" things get cleared out)
 
@@ -20,7 +19,7 @@
         start: `<article id='{{id}}'><h2><a href='{{link}}' target='_blank'>{{title}}</a></h2>`,
         image: `<a href='{{image}}' target='_blank'><img src='{{image}}' alt='{{altText}}' title='{{altText}}'></a>`,
         body: `<p>{{text}}</p>`,
-        footer: `<footer><nav class='read-toggle'>${MARK_READ}</nav><aside>{{category}}</aside></footer>`,
+        footer: `<footer><nav class='read-toggle'>${MARK_READ}</nav><aside class='category'>{{category}}</aside></footer>`,
         end: `</article>`
     }
 
@@ -56,13 +55,11 @@
             } catch(err) {
                 console.warn('unable to mark all articles unread:', err)
             }
-            return false
         })
 
         document.querySelector('.all-unread').addEventListener('click', async _ => {
             try {
                 killScrollTimer()
-
                 const cache = getCache()
                 cache.read = []
                 localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
@@ -75,7 +72,6 @@
             } catch(err) {
                 console.warn('Unable to mark all articles unread:', err)
             }
-            return false
         })
 
         document.querySelector('.trash').addEventListener('click', async _ => {
@@ -87,7 +83,6 @@
             } catch(err) {
                 console.warn('There was a problem removing cached data:', err)
             }
-            return false
         })
 
         document.querySelector('main .content').addEventListener('click', e => {
@@ -106,7 +101,17 @@
                     }
                     toggleReadCache(article.getAttribute('id'))
                 }
-                return false
+            }
+            if (e.target.classList.contains('category')) {
+                e.stopPropagation()
+                killScrollTimer()
+                const category = toggleCategory(e.target.innerText)
+                Array.from(document.querySelectorAll('article')).forEach(articleNode => {
+                    const articleCat = articleNode.querySelector('.category')
+                    if (articleCat && normalizeCategory(articleCat.innerText) === category) {
+                        articleNode.parentNode.removeChild(articleNode)
+                    }
+                })
             }
         })
     }
@@ -150,13 +155,14 @@
 
         if (cache.articles.length) {
             mainContent.innerHTML = cache.articles
-                .filter(a => !cache.read.includes(a.id))
+                .filter(a => !cache.read?.includes(a.id))
+                .filter(a => !cache.exclude?.includes(normalizeCategory(a.category)))
                 .map(showArticle).join('\n')
         }
     }
 
     function getCache() {
-        const empty = { articles: [], timeout: 0, read: [] }
+        const empty = { articles: [], timeout: 0, read: [], exclude: [] }
         try {
             const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null')
             return (cache) ? cache: empty
@@ -203,6 +209,29 @@
 
         } catch(err) {
             return console.warn('unable to mark article read:', err)
+        }
+    }
+
+    function normalizeCategory(category) {
+        return (category || '').toLowerCase().trim()
+    }
+
+    function toggleCategory(category) {
+        const normalized = normalizeCategory(category)
+
+        try {
+            const cache = getCache()
+            if (!cache.exclude) { cache.exclude = [] }
+            if (cache.exclude.includes(normalized)) {
+                cache.exclude.splice(cache.exclude.indexOf(normalized), 1)
+            } else {
+                cache.exclude.push(normalized)
+            }
+            localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
+            return normalized
+
+        } catch(err) {
+            return console.warn('unable to hide category:', err)
         }
     }
 
