@@ -44,6 +44,10 @@ main nav li {
     margin: 0 1rem 0 0;
 }
 
+.content {
+    margin-top: 2rem;
+}
+
 article {
     padding: 2rem 0 1rem 0;
     border-bottom: 4px solid #fff;
@@ -68,6 +72,10 @@ article.read h2 a {
 
 article img {
     width: 100%;
+}
+
+article.read img {
+    filter: grayscale(0.5);
 }
 
 article p {

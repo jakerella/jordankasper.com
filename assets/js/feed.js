@@ -79,6 +79,7 @@
         })
 
         document.querySelector('.trash').addEventListener('click', async _ => {
+            mainContent.innerText = 'Loading...'
             try {
                 killScrollTimer()
                 localStorage.removeItem(CACHE_KEY)
@@ -138,7 +139,7 @@
         let newArticles = null
         if (
             forceNew ||
-            cache.timeout > Date.now() ||
+            cache.timeout < Date.now() ||
             !cache.articles.length
         ) {
             newArticles = (await getContent()) || []
@@ -169,9 +170,16 @@
         const cache = getCache()
         let toSave = cache.articles.concat(articles)
         if (removeRead) {
-            toSave = toSave.filter(a => !cache.read.includes(a.link))
+            toSave = toSave.filter(a => !cache.read.includes(a.id))
         }
-        cache.articles = toSave
+        const uniqueIDs = new Set()
+        cache.articles = toSave.filter(a => {
+            if (!uniqueIDs.has(a.id)) {
+                uniqueIDs.add(a.id)
+                return true
+            }
+            return false
+        })
         if (resetTimeout) {
             cache.timeout = Date.now() + FEED_TIMEOUT
         }
