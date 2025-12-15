@@ -4,6 +4,8 @@ import { createHash } from 'crypto'
 
 import c from '../constants.json'
 
+const MAX_IMAGES_SIZE = 4500000
+
 // TODO:
 // - get excerpts for articles that do not have it
 
@@ -39,20 +41,34 @@ async function getNews() {
 
     const data = []
     const articles = Array.from(document.querySelectorAll('article.post-type-simple, article.post-type-minimal'))
+    let totalImageSize = 0
     for (let article of articles) {
         const title = article.querySelector('h3')?.textContent
         const link = article.querySelector('a:has(h3)')?.getAttribute('href')
         const category = article.querySelector('h2.slug')?.textContent.trim()
         const text = article.querySelector('.teaser')?.textContent
         const imageElem = article.querySelector('img[data-format="jpeg"]')
-        let image = null
-        let altText = null
+        let imageUrl = null
+        let imageData = null
+        let imageAltText = null
         if (imageElem) {
-            image = imageElem?.getAttribute('src')
-            altText = imageElem?.getAttribute('alt')
+            const imgURL = imageElem.getAttribute('src')
+            if (totalImageSize < MAX_IMAGES_SIZE) {
+                try {
+                    const buffer = await (await (await fetch(imgURL)).blob()).arrayBuffer()
+                    totalImageSize += buffer.byteLength
+                    const b64Data = btoa(String.fromCharCode(...new Uint8Array(buffer)))
+                    if (b64Data) { imageData = b64Data }
+                } catch(err) {
+                    console.debug('Unable to convert image to base64:', (err.message || err))
+                }
+            }
+
+            imageUrl = imgURL
+            imageAltText = imageElem.getAttribute('alt') || null
         }
         if (title && link) {
-            data.push({ id: getArticleID(link), title, link, text, image, altText, category })
+            data.push({ id: getArticleID(link), title, link, text, imageUrl, imageData, imageAltText, category })
         }
     }
     await browser.close()

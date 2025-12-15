@@ -8,6 +8,7 @@ body > header {
     position: fixed;
     width: 100%;
     background: #000;
+    z-index: 9;
 }
 
 h1 {
@@ -70,6 +71,35 @@ article.read h2 a {
     color: #ccc;
 }
 
+article .image {
+    position: relative;
+}
+
+article .image .alt-trigger {
+    content: "🖺";
+    display: flex;
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    background: #00000066;
+    width: 2.3rem;
+    border-radius: 50%;
+    justify-content: center;
+    padding-bottom: 0.3rem;
+    z-index: 8;
+}
+
+article .alt-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: calc(100% - 1rem);;
+    background-color: #00000055;
+    padding: 0.5rem;
+    display: none;
+}
+
 article img {
     width: 100%;
 }
@@ -83,7 +113,7 @@ article p {
     text-align: justify;
 }
 
-article aside {
+article .category {
     float: right;
     clear: both;
     background-color: #555;
@@ -105,6 +135,10 @@ article footer nav {
 body > footer {
     text-align: center;
     margin: 1rem 0;
+}
+
+.cache-size {
+    font-weight: bold;
 }
 
 #shadow-source {

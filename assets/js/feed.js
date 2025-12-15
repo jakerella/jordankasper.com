@@ -7,8 +7,6 @@
     const mainContent = document.querySelector('main .content')
 
     // TODO:
-    // - use a hide/show thing for image altText
-    // - cache images
     // - add comics feed (multi-source, select day?)
     // - add options for un-excluding category, light mode, changing feed timeout
     // - save article for later? (otherwise "read" things get cleared out)
@@ -17,9 +15,16 @@
     const MARK_UNREAD = '👁 ☑'
     const templates = {
         start: `<article id='{{id}}'><h2><a href='{{link}}' target='_blank'>{{title}}</a></h2>`,
-        image: `<a href='{{image}}' target='_blank'><img src='{{image}}' alt='{{altText}}' title='{{altText}}'></a>`,
+        image: `<aside class='image'>
+            <div class='alt-trigger'>🖺</div>
+            <a href='{{imageUrl}}' target='_blank'><img src='{{imageData}}' alt='{{imageAltText}}' title='{{imageAltText}}'></a>
+            <p class='alt-text'>{{imageAltText}}</p>
+        </aside>`,
         body: `<p>{{text}}</p>`,
-        footer: `<footer><nav class='read-toggle'>${MARK_READ}</nav><aside class='category'>{{category}}</aside></footer>`,
+        footer: `<footer>
+            <nav class='read-toggle'>${MARK_READ}</nav>
+            <aside class='category'>{{category}}</aside>
+        </footer>`,
         end: `</article>`
     }
 
@@ -101,6 +106,7 @@
                     }
                     toggleReadCache(article.getAttribute('id'))
                 }
+                return false
             }
             if (e.target.classList.contains('category')) {
                 e.stopPropagation()
@@ -112,6 +118,21 @@
                         articleNode.parentNode.removeChild(articleNode)
                     }
                 })
+                return false
+            }
+            if (e.target.classList.contains('alt-trigger')) {
+                e.stopPropagation()
+                e.target.style.display = 'none'
+                const altTextElem = e.target.parentNode.querySelector('.alt-text')
+                if (altTextElem) { altTextElem.style.display = 'block' }
+                return false
+            }
+            if (e.target.classList.contains('alt-text')) {
+                e.stopPropagation()
+                e.target.style.display = 'none'
+                const altTriggerElem = e.target.parentNode.querySelector('.alt-trigger')
+                if (altTriggerElem) { altTriggerElem.style.display = 'flex' }
+                return false
             }
         })
     }
@@ -164,7 +185,9 @@
     function getCache() {
         const empty = { articles: [], timeout: 0, read: [], exclude: [] }
         try {
-            const cache = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null')
+            const data = localStorage.getItem(CACHE_KEY)
+            const cache = JSON.parse(data || 'null')
+            document.querySelector('.cache-size').innerText = Math.round((data || '').length / 10000) / 100
             return (cache) ? cache: empty
         } catch(err) {
             console.warn('Unable to retrieve cache:', err)
@@ -213,7 +236,7 @@
     }
 
     function normalizeCategory(category) {
-        return (category || '').toLowerCase().trim()
+        return (category || 'uncategorized').toLowerCase().trim()
     }
 
     function toggleCategory(category) {
@@ -256,9 +279,14 @@
                 .replace('{{link}}', data.link)
                 .replace('{{title}}', data.title)
         ]
-        if (data.image) {
-            let imageContent = templates.image.replaceAll('{{image}}', data.image)
-            imageContent = imageContent.replaceAll('{{altText}}', data.altText || '')
+        if (data.imageUrl) {
+            let imageContent = templates.image.replaceAll('{{imageUrl}}', data.imageUrl)
+            if (data.imageData) {
+                imageContent = imageContent.replaceAll('{{imageData}}', 'data:image/jpeg;base64,'+data.imageData)
+            } else {
+                imageContent = imageContent.replaceAll('{{imageData}}', data.imageUrl)
+            }
+            imageContent = imageContent.replaceAll('{{imageAltText}}', data.imageAltText || '')
             content.push(imageContent)
         }
         if (data.text) {
@@ -267,7 +295,7 @@
         if (data.category) {
             content.push(templates.footer.replace('{{category}}', data.category))
         } else {
-            content.push(templates.footer.replace('{{category}}', ''))
+            content.push(templates.footer.replace('{{category}}', 'uncategorized'))
         }
         content.push(templates.end)
         return content.join('\n')
