@@ -1,14 +1,13 @@
 
 ;(async () => {
     const CACHE_KEY = 'jk-feed-source'
-    const NEWS_URL = 'https://npr.org'
     const FEED_TIMEOUT = (1000 * 60 * 60 * 8)
     const SCROLL_HANDLER_TIMOUT = 2000
     const mainContent = document.querySelector('main .content')
 
     // TODO:
     // - add comics feed (multi-source, select day?)
-    // - add options for un-excluding category, light mode, changing feed timeout
+    // - add options (⚙) for un-excluding category, light mode, changing feed timeout
     // - save article for later? (otherwise "read" things get cleared out)
 
     const MARK_READ = '👁 ☐'
@@ -16,7 +15,7 @@
     const templates = {
         start: `<article id='{{id}}'><h2><a href='{{link}}' target='_blank'>{{title}}</a></h2>`,
         image: `<aside class='image'>
-            <div class='alt-trigger'>🖺</div>
+            <div class='alt-trigger'>⚎</div>
             <a href='{{imageUrl}}' target='_blank'><img src='{{imageData}}' alt='{{imageAltText}}' title='{{imageAltText}}'></a>
             <p class='alt-text'>{{imageAltText}}</p>
         </aside>`,
