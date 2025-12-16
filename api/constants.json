@@ -3,5 +3,17 @@
     "VISITORS_KEY": "site-visitors",
     "PATHS_KEY": "site-paths",
     "HITS_KEY_PREFIX": "hits--",
-    "NEWS_URL": "https://npr.org"
+    "NEWS_URL": "https://npr.org",
+    "COMICS_SITES": [
+        {
+            "category": "Least I Could Do",
+            "source": "https://leasticoulddo.com/comics-archive/",
+            "type": "archive",
+            "articles": ".type-comic",
+            "title": "h1.elementor-heading-title",
+            "date": "h3",
+            "link": "a",
+            "image": ["img", "srcset", "(?: |^)(http[^ ]+) 1024w"]
+        }
+    ]
 }

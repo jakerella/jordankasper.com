@@ -1,6 +1,7 @@
 
 ;(async () => {
-    const CACHE_KEY = 'jk-feed-source'
+    const DEFAULT_FEED = 'news'
+    const CACHE_PREFIX = 'jk-feed-source'
     const FEED_TIMEOUT = (1000 * 60 * 60 * 8)
     const SCROLL_HANDLER_TIMOUT = 2000
     const mainContent = document.querySelector('main .content')
@@ -19,7 +20,7 @@
             <a href='{{imageUrl}}' target='_blank'><img src='{{imageData}}' alt='{{imageAltText}}' title='{{imageAltText}}'></a>
             <p class='alt-text'>{{imageAltText}}</p>
         </aside>`,
-        body: `<p>{{text}}</p>`,
+        body: `<p>{{text}}</p><time datetime='{{date}}'>{{date}}</time>`,
         footer: `<footer>
             <nav class='read-toggle'>${MARK_READ}</nav>
             <aside class='category'>{{category}}</aside>
@@ -27,6 +28,8 @@
         end: `</article>`
     }
 
+
+    let currentFeed = DEFAULT_FEED
     let scrollBounce = null
     let scrollStart = 0
 
@@ -34,12 +37,22 @@
     // *************************************************** //
     async function main() {
         setEventHandlers()
+        const feed = location.hash.substring(1)
+        console.log(location.hash, feed)
+        currentFeed = feed || DEFAULT_FEED
         await loadContent()
     }
     // *************************************************** //
 
 
     function setEventHandlers() {
+        Array.from(document.querySelectorAll('.read-news, .read-comics')).forEach(trigger => {
+            trigger.addEventListener('click', async e => {
+                const feed = e.target.classList.toString().match(/(?:\s|^)read\-([a-z]+)(?:\s|$)/)[1]
+                await switchFeed(feed)
+            })
+        })
+
         document.addEventListener('scroll', _ => {
             if (!scrollStart || (Date.now() - scrollStart) < SCROLL_HANDLER_TIMOUT) {
                 killScrollTimer()
@@ -52,9 +65,9 @@
         })
 
         document.querySelector('.refresh').addEventListener('click', async _ => {
-            mainContent.innerText = 'Loading...'
             try {
                 killScrollTimer()
+                mainContent.innerText = 'Loading...'
                 await loadContent(true)
             } catch(err) {
                 console.warn('unable to mark all articles unread:', err)
@@ -66,7 +79,7 @@
                 killScrollTimer()
                 const cache = getCache()
                 cache.read = []
-                localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
+                localStorage.setItem(`${CACHE_PREFIX}-${currentFeed}`, JSON.stringify(cache))
                 Array.from(document.querySelectorAll('article.read')).forEach(a => {
                     a.classList.remove('read')
                     a.querySelector('footer nav').innerText = MARK_READ
@@ -79,10 +92,10 @@
         })
 
         document.querySelector('.trash').addEventListener('click', async _ => {
-            mainContent.innerText = 'Loading...'
             try {
                 killScrollTimer()
-                localStorage.removeItem(CACHE_KEY)
+                mainContent.innerText = 'Loading...'
+                localStorage.removeItem(`${CACHE_PREFIX}-${currentFeed}`)
                 await loadContent()
             } catch(err) {
                 console.warn('There was a problem removing cached data:', err)
@@ -160,6 +173,7 @@
     }
 
     async function loadContent(forceNew = false) {
+        const feed = (currentFeed) ? currentFeed : DEFAULT_FEED
         let cache = getCache()
         let newArticles = null
         if (
@@ -167,24 +181,62 @@
             cache.timeout < Date.now() ||
             !cache.articles.length
         ) {
-            newArticles = (await getContent()) || []
+            let since = ''
+            if (cache.articles[0]?.timestamp) {
+                const sinceDate = dateFromTimestamp(cache.articles[0]?.timestamp)
+                if (sinceDate) { since  = `&since=${sinceDate}` }
+            }
+
+            try {
+                const resp = await fetch(`/.netlify/functions/feedSource?feed=${feed}${since}`)
+                if (resp.status !== 200) {
+                    throw new Error(`API failed to return content. (${resp.status})`)
+                }
+                newArticles = (await resp.json()) || []
+
+            } catch(err) {
+                console.error('Unable to get new articles from API:', err)
+                newArticles = []
+            }
         }
+
         if (newArticles) {
             cache = saveArticles(newArticles)
         }
 
-        if (cache.articles.length) {
-            mainContent.innerHTML = cache.articles
-                .filter(a => !cache.read?.includes(a.id))
-                .filter(a => !cache.exclude?.includes(normalizeCategory(a.category)))
-                .map(showArticle).join('\n')
+        showContent(cache)
+    }
+
+    async function switchFeed(feed) {
+        if (feed && feed !== currentFeed) {
+            try {
+                killScrollTimer()
+                mainContent.innerText = 'Loading...'
+                currentFeed = feed
+                location.hash = feed
+                let cache = getCache()
+                if (cache.timeout < Date.now() || !cache.articles.length) {
+                    await loadContent(true)
+                } else {
+                    showContent(cache)
+                }
+            }  catch(err) {
+                console.warn('unable to switch feed source:', err)
+            }
         }
+    }
+
+    function showContent(cache) {
+        mainContent.innerHTML = cache.articles
+            .filter(a => !cache.read?.includes(a.id))
+            .filter(a => !cache.exclude?.includes(normalizeCategory(a.category)))
+            .map(showArticle).join('\n')
     }
 
     function getCache() {
         const empty = { articles: [], timeout: 0, read: [], exclude: [] }
         try {
-            const data = localStorage.getItem(CACHE_KEY)
+            const data = localStorage.getItem(`${CACHE_PREFIX}-${currentFeed}`)
             const cache = JSON.parse(data || 'null')
             document.querySelector('.cache-size').innerText = Math.round((data || '').length / 10000) / 100
             return (cache) ? cache: empty
@@ -212,7 +264,7 @@
             cache.timeout = Date.now() + FEED_TIMEOUT
         }
         try {
-            localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
+            localStorage.setItem(`${CACHE_PREFIX}-${currentFeed}`, JSON.stringify(cache))
         } catch(err) {
             console.warn('Unable to save feed data:', err)
         }
@@ -227,7 +279,7 @@
             } else {
                 cache.read.push(id)
             }
-            localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
+            localStorage.setItem(`${CACHE_PREFIX}-${currentFeed}`, JSON.stringify(cache))
 
         } catch(err) {
             return console.warn('unable to mark article read:', err)
@@ -236,6 +288,11 @@
 
     function normalizeCategory(category) {
         return (category || 'uncategorized').toLowerCase().trim()
+    }
+
+    function dateFromTimestamp(ts) {
+        const d = new Date(ts)
+        return (d.getTime()) ? d.toISOString().split('T')[0] : null
     }
 
     function toggleCategory(category) {
@@ -249,25 +306,11 @@
             } else {
                 cache.exclude.push(normalized)
             }
-            localStorage.setItem(CACHE_KEY, JSON.stringify(cache))
+            localStorage.setItem(`${CACHE_PREFIX}-${currentFeed}`, JSON.stringify(cache))
             return normalized
 
         } catch(err) {
             return console.warn('unable to hide category:', err)
-        }
-    }
-
-    async function getContent() {
-        try {
-            const resp = await fetch(`/.netlify/functions/feedSource?feed=`)
-            if (resp.status !== 200) {
-                throw new Error(`API failed to return content. (${resp.status})`)
-            }
-            return (await resp.json()) || []
-
-        } catch(err) {
-            console.error('Unable to get new articles from API:', err)
-            return []
         }
     }
 
@@ -288,9 +331,14 @@
             imageContent = imageContent.replaceAll('{{imageAltText}}', data.imageAltText || '')
             content.push(imageContent)
         }
-        if (data.text) {
-            content.push(templates.body.replace('{{text}}', data.text))
+        if (data.text || data.timestamp) {
+            let bodyContent = templates.body.replace('{{text}}', data.text || '')
+            if (data.timestamp) {
+                bodyContent = bodyContent.replaceAll('{{date}}', dateFromTimestamp(data.timestamp) || '')
+            }
+            content.push(bodyContent)
         }
+
         if (data.category) {
             content.push(templates.footer.replace('{{category}}', data.category))
         } else {

@@ -5,6 +5,7 @@ import { createHash } from 'crypto'
 import c from '../constants.json'
 
 const MAX_IMAGES_SIZE = 4500000
+const MAX_COMICS_RETRIEVED = 10
 
 // TODO:
 // - get excerpts for articles that do not have it
@@ -17,7 +18,13 @@ export default async function handler(req, context) {
             queryParams[parts[0]] = parts[1]
         })
 
-        const articles = await getNews()
+        let articles = []
+        
+        if (!queryParams.feed || queryParams.feed === 'news') {
+            articles = await getNews()
+        } else if (queryParams.feed === 'comics') {
+            articles = await getComics(queryParams.since || null)
+        }
         
         return new Response(JSON.stringify(articles), { status: 200 })
 
@@ -53,16 +60,16 @@ async function getNews() {
         let imageAltText = null
         if (imageElem) {
             const imgURL = imageElem.getAttribute('src')
-            if (totalImageSize < MAX_IMAGES_SIZE) {
-                try {
-                    const buffer = await (await (await fetch(imgURL)).blob()).arrayBuffer()
-                    totalImageSize += buffer.byteLength
-                    const b64Data = btoa(String.fromCharCode(...new Uint8Array(buffer)))
-                    if (b64Data) { imageData = b64Data }
-                } catch(err) {
-                    console.debug('Unable to convert image to base64:', (err.message || err))
-                }
-            }
+            // if (totalImageSize < MAX_IMAGES_SIZE) {
+            //     try {
+            //         const buffer = await (await (await fetch(imgURL)).blob()).arrayBuffer()
+            //         totalImageSize += buffer.byteLength
+            //         const b64Data = btoa(String.fromCharCode(...new Uint8Array(buffer)))
+            //         if (b64Data) { imageData = b64Data }
+            //     } catch(err) {
+            //         console.debug('Unable to convert image to base64:', (err.message || err))
+            //     }
+            // }
 
             imageUrl = imgURL
             imageAltText = imageElem.getAttribute('alt') || null
@@ -74,6 +81,97 @@ async function getNews() {
     await browser.close()
 
     return data
+}
+
+async function getComics(since) {
+    const data = []
+    for (let details of c.COMICS_SITES) {
+        try {
+            if (details.type === 'archive') {
+                data.push(...(await getComicsFromArchive(details, since)))
+            }
+        } catch(err) {
+            console.warn(`Unable to get comics from ${c.COMICS_SITES.category}: ${err.message || err}`)
+        }
+    }
+    return data.sort((a, b) => b.timestamp - a.timestamp)
+}
+
+async function getComicsFromArchive(details, since) {
+    const resp = await fetch(details.source)
+    if (resp.status !== 200) {
+        throw new Error(`Site failed to return content. (${resp.status})`)
+    }
+
+    const browser = new Browser()
+    const page = browser.newPage()
+    page.url = details.source
+    page.content = await resp.text()
+    const document = page.mainFrame.document
+
+    const data = []
+    const articles = Array.from(document.querySelectorAll(details.articles))
+    for (let article of articles) {
+        const datePosted = new Date((details.date) ? article.querySelector(details.date)?.textContent : null)
+        const timestamp = datePosted.getTime() || Date.now()
+
+        if (since) {
+            const normalizedDate = (new Date(timestamp)).toISOString().split('T')[0]
+            if (normalizedDate <= since) {
+                continue
+            }
+        }
+
+        const title = article.querySelector(details.title)?.textContent
+        const link = article.querySelector(details.link)?.getAttribute('href')
+        const category = details.category
+        const text = (details.body) ? article.querySelector(details.body)?.textContent : null
+        const imageElem = (Array.isArray(details.image)) ? article.querySelector(details.image[0]) : article.querySelector(details.image)
+        let imageUrl = null
+        let imageAltText = null
+        if (!imageElem) {
+            console.warn(`No image element in article for ${details.category}`)
+            continue
+        }
+        
+        let imageSource = null
+        if (Array.isArray(details.image)) {
+            imageSource = imageElem.getAttribute(details.image[1])
+            if (imageSource && details.image[2]) {
+                const srcRegex = new RegExp(details.image[2], 'i')
+                imageSource = imageSource.match(srcRegex)[1]
+            }
+        }
+        if (!imageSource) {
+            imageSource = imageElem.getAttribute('src')
+        }
+
+        imageUrl = imageSource
+        imageAltText = imageElem.getAttribute('alt') || null
+        
+        if (title && link && imageUrl) {
+            data.push({ id: getArticleID(link), title, link, text, imageUrl, imageAltText, category, timestamp })
+        }
+    }
+    await browser.close()
+
+    const comicData = data.sort((a, b) => b.timestamp - a.timestamp).slice(0, Math.min(data.length, MAX_COMICS_RETRIEVED))
+    // let totalImageSize = 0
+    // for (let comic of comicData) {
+    //     if (totalImageSize > MAX_IMAGES_SIZE) {
+    //         break
+    //     }
+    //     try {
+    //         const buffer = await (await (await fetch(comic.imageUrl)).blob()).arrayBuffer()
+    //         totalImageSize += buffer.byteLength
+    //         const b64Data = btoa(String.fromCharCode(...new Uint8Array(buffer)))
+    //         if (b64Data) { comic.imageData = b64Data }
+    //     } catch(err) {
+    //         console.debug('Unable to convert image to base64:', (err.message || err))
+    //     }
+    // }
+
+    return comicData
 }
 
 function getArticleID(link) {
