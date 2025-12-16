@@ -76,18 +76,21 @@ article .image {
 }
 
 article .image .alt-trigger {
-    content: "🖺";
     display: flex;
     position: absolute;
-    bottom: 1rem;
-    right: 1rem;
+    bottom: 0.3rem;
+    right: 0.3rem;
     font-size: 1.5rem;
-    background: #00000066;
+    background: #00000044;
     width: 2.3rem;
     border-radius: 50%;
     justify-content: center;
     padding-bottom: 0.3rem;
     z-index: 8;
+    color: #dddddd99;
+}
+article img[alt=""]+.alt-trigger {
+    display: none;
 }
 
 article .alt-text {

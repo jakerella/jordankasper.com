@@ -16,8 +16,10 @@
     const templates = {
         start: `<article id='{{id}}'><h2><a href='{{link}}' target='_blank'>{{title}}</a></h2>`,
         image: `<aside class='image'>
-            <div class='alt-trigger'>⚎</div>
-            <a href='{{imageUrl}}' target='_blank'><img src='{{imageData}}' alt='{{imageAltText}}' title='{{imageAltText}}'></a>
+            <a href='{{imageUrl}}' target='_blank'>
+                <img src='{{imageData}}' alt='{{imageAltText}}' title='{{imageAltText}}'>
+                <div class='alt-trigger'>⚎</div>
+            </a>
             <p class='alt-text'>{{imageAltText}}</p>
         </aside>`,
         body: `<p>{{text}}</p><time datetime='{{date}}'>{{date}}</time>`,
@@ -38,7 +40,6 @@
     async function main() {
         setEventHandlers()
         const feed = location.hash.substring(1)
-        console.log(location.hash, feed)
         currentFeed = feed || DEFAULT_FEED
         await loadContent()
     }
@@ -133,13 +134,15 @@
                 return false
             }
             if (e.target.classList.contains('alt-trigger')) {
+                e.preventDefault()
                 e.stopPropagation()
                 e.target.style.display = 'none'
-                const altTextElem = e.target.parentNode.querySelector('.alt-text')
+                const altTextElem = e.target.parentNode.parentNode.querySelector('.alt-text')
                 if (altTextElem) { altTextElem.style.display = 'block' }
                 return false
             }
             if (e.target.classList.contains('alt-text')) {
+                e.preventDefault()
                 e.stopPropagation()
                 e.target.style.display = 'none'
                 const altTriggerElem = e.target.parentNode.querySelector('.alt-trigger')
