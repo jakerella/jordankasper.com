@@ -93,13 +93,13 @@ async function getComics(since) {
     for (let details of c.COMICS_SITES) {
         try {
             if (details.type === 'archive') {
-                // data.push(...(await getComicsFromArchive(details, since)))
+                data.push(...(await getComicsFromArchive(details, since)))
             } else if (details.type === 'date-in-url') {
-                // data.push(...(await getComicsByDateInUrl(details, since)))
+                data.push(...(await getComicsByDateInUrl(details, since)))
             } else if (details.type === 'xml') {
                 data.push(...(await getComicsByXML(details, since)))
-            // } else if (details.type === 'xml-with-nav') {
-            //     data.push(...(await getComicsByXMLWithNav(details, since)))
+            } else if (details.type === 'archive-with-nav') {
+                data.push(...(await getComicsWithArchiveNav(details, since)))
             }
         } catch(err) {
             console.warn(`Unable to get comics from ${details.category}: ${err.message || err}\n${err.stack?.split('\n')[1]}`)
@@ -181,7 +181,7 @@ async function getComicsByDateInUrl(details, since) {
         const document = page.mainFrame.document
         const article = document.querySelector(details.articles)
         if (article) {
-            const comicData = getComicArticleData(details, article, since)
+            const comicData = getComicArticleData(details, article, since, url)
             if (comicData) {
                 data.push(comicData)
             }
@@ -202,6 +202,11 @@ async function getComicsByXML(details, since) {
     let text = await resp.text()
     if (details.removeAllCDATA) {
         text = text.replaceAll('<![CDATA[', '').replaceAll(']]>', '').trim()
+    }
+    if (details.changeElem) {
+        text = text
+            .replaceAll(`<${details.changeElem[0]}`, `<${details.changeElem[1]}`)
+            .replaceAll(`</${details.changeElem[0]}>`, `</${details.changeElem[1]}>`)
     }
 
     const document = new XMLParser(new Window()).parse(text)
@@ -225,8 +230,58 @@ async function getComicsByXML(details, since) {
     return comicData
 }
 
-function getComicArticleData(details, article, since) {
-    const datePosted = new Date((details.date) ? article.querySelector(details.date)?.textContent : null)
+async function getComicsWithArchiveNav(details, since) {
+    const data = []
+
+    const resp = await fetch(details.source)
+    if (resp.status !== 200) {
+        throw new Error(`Site failed to return archive content. (${resp.status})`)
+    }
+
+    const browser = new Browser()
+    const page = browser.newPage()
+    page.url = details.source
+    page.content = await resp.text()
+    const document = page.mainFrame.document
+    const links = Array.from(document.querySelectorAll(details.linkList))
+        .slice(0, MAX_COMICS_PER_SOURCE)
+        .map(a => a.getAttribute('href'))
+    
+    let dateCounter = Date.now()
+    for (let path of links) {
+        const url = details.basePath + path
+        
+        const resp = await fetch(url)
+        if (resp.status !== 200) {
+            console.warn(`Site failed to return content from ${url} (${resp.status})`)
+            continue
+        }
+
+        page.url = url
+        page.content = await resp.text()
+        const document = page.mainFrame.document
+        const article = document.querySelector(details.articles)
+        if (article) {
+            if (!details.date) {
+                const forcedDate = (new Date(dateCounter)).toISOString().split('T')[0]
+                article.innerHTML += `<time class='forced-date'>${forcedDate}</time>`
+            }
+            const comicData = getComicArticleData(details, article, since, url)
+            if (comicData) {
+                data.push(comicData)
+            }
+        }
+        dateCounter -= 86400000
+    }
+
+    await browser.close()
+
+    return data
+}
+
+function getComicArticleData(details, article, since, url=null) {
+    const dateElem = (details.date) ? article.querySelector(details.date) : article.querySelector('time.forced-date')
+    const datePosted = new Date(dateElem?.textContent || null)
     const timestamp = datePosted.getTime() || Date.now()
 
     if (since) {
@@ -236,12 +291,12 @@ function getComicArticleData(details, article, since) {
         }
     }
 
-    const title = article.querySelector(details.title)?.textContent
-    const link = article.querySelector(details.link)?.getAttribute('href')
+    const title = details.title ? article.querySelector(details.title)?.textContent : ''
+    const link = url || article.querySelector(details.link)?.getAttribute('href')
     const category = details.category
     let text = null
     if (details.body) {
-        const content = article.querySelector(details.body)?.textContent
+        const content = article.querySelector(details.body)?.textContent || ''
         text = content.substring(0, MAX_COMIC_TEXT) + ((content.length > MAX_COMIC_TEXT) ? '...' : '')
     }
     if (!link) {
@@ -270,6 +325,9 @@ function getComicArticleData(details, article, since) {
         }
         if (!source) {
             source = imageElem.getAttribute('src')
+        }
+        if (details.imageBase) {
+            source = details.imageBase + source
         }
 
         url = source

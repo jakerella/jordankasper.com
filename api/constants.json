@@ -20,9 +20,8 @@
             "source": "https://www.penny-arcade.com/comic/{{YYYY}}/{{MM}}/{{DD}}",
             "type": "date-in-url",
             "articles": "main.comic-page",
-            "title": "#news h1",
-            "date": "#news .date",
-            "link": "#news h1 a",
+            "title": "#comic h1",
+            "date": "#comic .date",
             "image": [".comic-area img", "srcset", "(?: |^)(http[^ ]+) 540w"],
             "body": "#news .post-text"
         },
@@ -62,19 +61,30 @@
         {
             "category": "The Oatmeal",
             "source": "https://theoatmeal.com/feed/rss",
-            "type": "xml-with-nav",
-            "...": "..."
+            "type": "xml",
+            "articles": "item",
+            "parseAsHTML": ["description"],
+            "title": "title",
+            "changeElem": ["dc:date", "date"],
+            "date": "date",
+            "link": "a",
+            "image": "img"
         },
         {
             "category": "Questionable Content",
             "source": "https://www.questionablecontent.net/archive.php",
             "type": "archive-with-nav",
-            "...": "..."
+            "linkList": "#container .row:nth-child(2) a",
+            "basePath": "https://www.questionablecontent.net/",
+            "articles": "#container .row:nth-child(2)",
+            "image": "img",
+            "imageBase": "https://www.questionablecontent.net/",
+            "body": "#newspost"
         },
         {
             "category": "JL8",
             "source": "https://limbero.org/jl8/archive",
-            "type": "archive-with-nav",
+            "type": "???",
             "...": "..."
         }
     ]

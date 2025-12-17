@@ -7,7 +7,6 @@
     const mainContent = document.querySelector('main .content')
 
     // TODO:
-    // - mark read when click through
     // - add options (⚙) for un-excluding category, light mode, changing feed timeout
     // - save article for later? (otherwise "read" things get cleared out)
     // - add blogs (like https://what-if.xkcd.com/feed.atom)
@@ -15,7 +14,7 @@
     const MARK_READ = '👁 ☐'
     const MARK_UNREAD = '👁 ☑'
     const templates = {
-        start: `<article id='{{id}}'><h2><a href='{{link}}' target='_blank'>{{title}}</a></h2>`,
+        start: `<article id='{{id}}'><h2><a href='{{link}}' class='title-link' target='_blank'>{{title}}</a></h2>`,
         image: `<aside class='image'>
             <a href='{{imageUrl}}' target='_blank'>
                 <img src='{{imageData}}' alt="{{imageAltText}}">
@@ -123,6 +122,14 @@
                 }
                 return false
             }
+            if (e.target.classList.contains('title-link')) {
+                const article = e.target.parentNode.parentNode
+                if (article.tagName.toLowerCase() === 'article') {
+                    article.classList.add('read')
+                    article.querySelector('footer nav').innerText = MARK_UNREAD
+                    toggleReadCache(article.getAttribute('id'), true)
+                }
+            }
             if (e.target.classList.contains('category')) {
                 e.stopPropagation()
                 killScrollTimer()
@@ -163,7 +170,7 @@
             if (bounding.top > -20 && bounding.top < (window.innerHeight - (bounding.height / 2))) {
                 articles[i].classList.add('read')
                 articles[i].querySelector('footer nav').innerText = MARK_UNREAD
-                toggleReadCache(articles[i].getAttribute('id'))
+                toggleReadCache(articles[i].getAttribute('id'), true)
                 break // only mark 1 article read per scroll
             }
         }
@@ -276,10 +283,10 @@
         return getCache()
     }
 
-    function toggleReadCache(id) {
+    function toggleReadCache(id, forceRead=false) {
         try {
             const cache = getCache()
-            if (cache.read.includes(id)) {
+            if (!forceRead && cache.read.includes(id)) {
                 cache.read.splice(cache.read.indexOf(id), 1)
             } else {
                 cache.read.push(id)
@@ -324,7 +331,7 @@
             templates.start
                 .replace('{{id}}', data.id)
                 .replace('{{link}}', data.link)
-                .replace('{{title}}', data.title)
+                .replace('{{title}}', data.title || '')
         ]
         if (data.images) {
             data.images.forEach(image => {
