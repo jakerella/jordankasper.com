@@ -5,10 +5,12 @@ import { createHash } from 'crypto'
 import c from '../constants.json'
 
 const MAX_IMAGES_SIZE = 4500000
-const MAX_COMICS_RETRIEVED = 10
+const MAX_COMICS_PER_SOURCE = 5
+const MAX_COMIC_TEXT = 300
 
 // TODO:
 // - get excerpts for articles that do not have it
+// - cache images in Netlify blobs?
 
 export default async function handler(req, context) {
     try {
@@ -29,7 +31,7 @@ export default async function handler(req, context) {
         return new Response(JSON.stringify(articles), { status: 200 })
 
     } catch(err) {
-        console.error(`Hit catch all block: ${err.message || err.toString()}\n${err.stack?.split('\n')[1]}`)
+        console.error(`Hit catch all block: ${err.message || err}\n${err.stack?.split('\n')[1]}`)
         return new Response('Unable to retrieve news articles', { status: 500 })
     }
 }
@@ -54,12 +56,13 @@ async function getNews() {
         const link = article.querySelector('a:has(h3)')?.getAttribute('href')
         const category = article.querySelector('h2.slug')?.textContent.trim()
         const text = article.querySelector('.teaser')?.textContent
+        
+        const images = []
         const imageElem = article.querySelector('img[data-format="jpeg"]')
-        let imageUrl = null
-        let imageData = null
-        let imageAltText = null
+        // let imageData = null
         if (imageElem) {
-            const imgURL = imageElem.getAttribute('src')
+            // const imgURL = imageElem.getAttribute('src')
+            // Not sure we can cache images on the client side, too much data for localStorage
             // if (totalImageSize < MAX_IMAGES_SIZE) {
             //     try {
             //         const buffer = await (await (await fetch(imgURL)).blob()).arrayBuffer()
@@ -70,12 +73,14 @@ async function getNews() {
             //         console.debug('Unable to convert image to base64:', (err.message || err))
             //     }
             // }
-
-            imageUrl = imgURL
-            imageAltText = imageElem.getAttribute('alt') || null
+            images.push({
+                url: imageElem.getAttribute('src'),
+                altText: imageElem.getAttribute('alt') || null
+            })
         }
+
         if (title && link) {
-            data.push({ id: getArticleID(link), title, link, text, imageUrl, imageData, imageAltText, category })
+            data.push({ id: getArticleID(link), title, link, text, images, category })
         }
     }
     await browser.close()
@@ -89,9 +94,11 @@ async function getComics(since) {
         try {
             if (details.type === 'archive') {
                 data.push(...(await getComicsFromArchive(details, since)))
+            } else if (details.type === 'date-in-url') {
+                data.push(...(await getComicsByDateInUrl(details, since)))
             }
         } catch(err) {
-            console.warn(`Unable to get comics from ${c.COMICS_SITES.category}: ${err.message || err}`)
+            console.warn(`Unable to get comics from ${details.category}: ${err.message || err}\n${err.stack?.split('\n')[1]}`)
         }
     }
     return data.sort((a, b) => b.timestamp - a.timestamp)
@@ -112,50 +119,13 @@ async function getComicsFromArchive(details, since) {
     const data = []
     const articles = Array.from(document.querySelectorAll(details.articles))
     for (let article of articles) {
-        const datePosted = new Date((details.date) ? article.querySelector(details.date)?.textContent : null)
-        const timestamp = datePosted.getTime() || Date.now()
-
-        if (since) {
-            const normalizedDate = (new Date(timestamp)).toISOString().split('T')[0]
-            if (normalizedDate <= since) {
-                continue
-            }
-        }
-
-        const title = article.querySelector(details.title)?.textContent
-        const link = article.querySelector(details.link)?.getAttribute('href')
-        const category = details.category
-        const text = (details.body) ? article.querySelector(details.body)?.textContent : null
-        const imageElem = (Array.isArray(details.image)) ? article.querySelector(details.image[0]) : article.querySelector(details.image)
-        let imageUrl = null
-        let imageAltText = null
-        if (!imageElem) {
-            console.warn(`No image element in article for ${details.category}`)
-            continue
-        }
-        
-        let imageSource = null
-        if (Array.isArray(details.image)) {
-            imageSource = imageElem.getAttribute(details.image[1])
-            if (imageSource && details.image[2]) {
-                const srcRegex = new RegExp(details.image[2], 'i')
-                imageSource = imageSource.match(srcRegex)[1]
-            }
-        }
-        if (!imageSource) {
-            imageSource = imageElem.getAttribute('src')
-        }
-
-        imageUrl = imageSource
-        imageAltText = imageElem.getAttribute('alt') || null
-        
-        if (title && link && imageUrl) {
-            data.push({ id: getArticleID(link), title, link, text, imageUrl, imageAltText, category, timestamp })
-        }
+        const articleData = getComicArticleData(details, article, since)
+        if (articleData) { data.push(articleData) }
     }
     await browser.close()
 
-    const comicData = data.sort((a, b) => b.timestamp - a.timestamp).slice(0, Math.min(data.length, MAX_COMICS_RETRIEVED))
+    const comicData = data.sort((a, b) => b.timestamp - a.timestamp).slice(0, Math.min(data.length, MAX_COMICS_PER_SOURCE))
+    // Not sure we can cache images on the client side, too much data for localStorage
     // let totalImageSize = 0
     // for (let comic of comicData) {
     //     if (totalImageSize > MAX_IMAGES_SIZE) {
@@ -172,6 +142,106 @@ async function getComicsFromArchive(details, since) {
     // }
 
     return comicData
+}
+
+async function getComicsByDateInUrl(details, since) {
+    const data = []
+
+    let sinceDate = new Date(since)
+    if (!sinceDate.getTime()) {
+        // this assumes 1 comic a day, but we'll just let that be our default
+        sinceDate = new Date(Date.now() - (86400000 * MAX_COMICS_PER_SOURCE))
+    }
+
+    const browser = new Browser()
+    const page = browser.newPage()
+    let comicDate = new Date(sinceDate.getTime())
+    while (comicDate.getTime() < Date.now()) {
+        comicDate.setTime(comicDate.getTime() + 86400000)
+
+        const url = details.source
+            .replace('{{YYYY}}', comicDate.getFullYear())
+            .replace('{{MM}}', String(comicDate.getMonth()+1).padStart(2, '0'))
+            .replace('{{DD}}', String(comicDate.getDate()).padStart(2, '0'))
+        
+        const resp = await fetch(url)
+        if (resp.status === 404) {
+            continue
+        } else if (resp.status !== 200) {
+            console.warn(`Site failed to return content. (${resp.status})`)
+            continue
+        }
+
+        page.url = details.source
+        page.content = await resp.text()
+        const document = page.mainFrame.document
+        const article = document.querySelector(details.articles)
+        if (article) {
+            const comicData = getComicArticleData(details, article, since)
+            if (comicData) {
+                data.push(comicData)
+            }
+        }
+    }
+
+    await browser.close()
+
+    return data
+}
+
+function getComicArticleData(details, article, since) {
+    const datePosted = new Date((details.date) ? article.querySelector(details.date)?.textContent : null)
+    const timestamp = datePosted.getTime() || Date.now()
+
+    if (since) {
+        const normalizedDate = (new Date(timestamp)).toISOString().split('T')[0]
+        if (normalizedDate <= since) {
+            return null
+        }
+    }
+
+    const title = article.querySelector(details.title)?.textContent
+    const link = article.querySelector(details.link)?.getAttribute('href')
+    const category = details.category
+    let text = null
+    if (details.body) {
+        const content = article.querySelector(details.body)?.textContent
+        text = content.substring(0, MAX_COMIC_TEXT) + ((content.length > MAX_COMIC_TEXT) ? '...' : '')
+    }
+    if (!link) {
+        console.warn(`No link found for comic in ${details.category}`)
+        return null
+    }
+
+    const imageElems = (Array.isArray(details.image)) ? article.querySelectorAll(details.image[0]) : article.querySelectorAll(details.image)
+    if (!imageElems.length) {
+        console.warn(`No image element in comic article for ${details.category}`)
+        return null
+    }
+    
+    const images = []
+    Array.from(imageElems).forEach(imageElem => {
+        let url = null
+        let altText = null
+        let source = null
+        if (Array.isArray(details.image)) {
+            source = imageElem.getAttribute(details.image[1])
+            if (source && details.image[2]) {
+                const srcRegex = new RegExp(details.image[2], 'i')
+                const sourceMatch = source.match(srcRegex)
+                source = (sourceMatch && sourceMatch[1]) || null
+            }
+        }
+        if (!source) {
+            source = imageElem.getAttribute('src')
+        }
+
+        url = source
+        altText = imageElem.getAttribute('alt') || null
+        images.push({ url, altText })
+    })
+    
+    return { id: getArticleID(link), title, link, text, images, category, timestamp }
 }
 
 function getArticleID(link) {

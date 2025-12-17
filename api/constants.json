@@ -14,6 +14,63 @@
             "date": "h3",
             "link": "a",
             "image": ["img", "srcset", "(?: |^)(http[^ ]+) 1024w"]
+        },
+        {
+            "category": "Penny Arcade",
+            "source": "https://www.penny-arcade.com/comic/{{YYYY}}/{{MM}}/{{DD}}",
+            "type": "date-in-url",
+            "articles": "main.comic-page",
+            "title": "#news h1",
+            "date": "#news .date",
+            "link": "#news h1 a",
+            "image": [".comic-area img", "srcset", "(?: |^)(http[^ ]+) 540w"],
+            "body": "#news .post-text"
+        },
+        {
+            "category": "FoxTrot",
+            "source": "https://foxtrot.com",
+            "type": "archive",
+            "articles": ".type-post",
+            "title": "h2",
+            "date": ".entry-summary",
+            "link": "h2 a",
+            "image": ["img", "srcset", "(?: |^)(http[^ ]+) 1536w"]
+        },
+        {
+            "category": "xkcd",
+            "source": "https://xkcd.com/atom.xml",
+            "type": "xml",
+            "...": "..."
+        },
+        {
+            "category": "What If?",
+            "source": "https://what-if.xkcd.com/feed.atom",
+            "type": "xml",
+            "...": "..."
+        },
+        {
+            "category": "SMBC",
+            "source": "https://www.smbc-comics.com/comic/rss",
+            "type": "xml-with-nav",
+            "...": "..."
+        },
+        {
+            "category": "The Oatmeal",
+            "source": "https://theoatmeal.com/feed/rss",
+            "type": "xml-with-nav",
+            "...": "..."
+        },
+        {
+            "category": "Questionable Content",
+            "source": "https://www.questionablecontent.net/archive.php",
+            "type": "archive-with-nav",
+            "...": "..."
+        },
+        {
+            "category": "JL8",
+            "source": "https://limbero.org/jl8/archive",
+            "type": "archive-with-nav",
+            "...": "..."
         }
     ]
 }

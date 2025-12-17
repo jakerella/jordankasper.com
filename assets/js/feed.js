@@ -7,7 +7,7 @@
     const mainContent = document.querySelector('main .content')
 
     // TODO:
-    // - add comics feed (multi-source, select day?)
+    // - mark read when click through
     // - add options (⚙) for un-excluding category, light mode, changing feed timeout
     // - save article for later? (otherwise "read" things get cleared out)
 
@@ -22,7 +22,8 @@
             </a>
             <p class='alt-text'>{{imageAltText}}</p>
         </aside>`,
-        body: `<p>{{text}}</p><time datetime='{{date}}'>{{date}}</time>`,
+        body: `<p>{{text}}</p>`,
+        date: `<time datetime='{{date}}'>{{date}}</time>`,
         footer: `<footer>
             <nav class='read-toggle'>${MARK_READ}</nav>
             <aside class='category'>{{category}}</aside>
@@ -324,22 +325,23 @@
                 .replace('{{link}}', data.link)
                 .replace('{{title}}', data.title)
         ]
-        if (data.imageUrl) {
-            let imageContent = templates.image.replaceAll('{{imageUrl}}', data.imageUrl)
-            if (data.imageData) {
-                imageContent = imageContent.replaceAll('{{imageData}}', 'data:image/jpeg;base64,'+data.imageData)
-            } else {
-                imageContent = imageContent.replaceAll('{{imageData}}', data.imageUrl)
-            }
-            imageContent = imageContent.replaceAll('{{imageAltText}}', data.imageAltText || '')
-            content.push(imageContent)
+        if (data.images) {
+            data.images.forEach(image => {
+                let imageContent = templates.image.replaceAll('{{imageUrl}}', image.url)
+                if (image.data) {
+                    imageContent = imageContent.replaceAll('{{imageData}}', 'data:image/jpeg;base64,'+image.data)
+                } else {
+                    imageContent = imageContent.replaceAll('{{imageData}}', image.url)
+                }
+                imageContent = imageContent.replaceAll('{{imageAltText}}', image.altText || '')
+                content.push(imageContent)
+            })
         }
-        if (data.text || data.timestamp) {
-            let bodyContent = templates.body.replace('{{text}}', data.text || '')
-            if (data.timestamp) {
-                bodyContent = bodyContent.replaceAll('{{date}}', dateFromTimestamp(data.timestamp) || '')
-            }
-            content.push(bodyContent)
+        if (data.text) {
+            content.push(templates.body.replace('{{text}}', data.text || ''))
+        }
+        if (data.timestamp) {
+            content.push(templates.date.replaceAll('{{date}}', dateFromTimestamp(data.timestamp) || ''))
         }
 
         if (data.category) {
