@@ -10,6 +10,7 @@
     // - mark read when click through
     // - add options (⚙) for un-excluding category, light mode, changing feed timeout
     // - save article for later? (otherwise "read" things get cleared out)
+    // - add blogs (like https://what-if.xkcd.com/feed.atom)
 
     const MARK_READ = '👁 ☐'
     const MARK_UNREAD = '👁 ☑'
@@ -17,7 +18,7 @@
         start: `<article id='{{id}}'><h2><a href='{{link}}' target='_blank'>{{title}}</a></h2>`,
         image: `<aside class='image'>
             <a href='{{imageUrl}}' target='_blank'>
-                <img src='{{imageData}}' alt='{{imageAltText}}' title='{{imageAltText}}'>
+                <img src='{{imageData}}' alt="{{imageAltText}}">
                 <div class='alt-trigger'>⚎</div>
             </a>
             <p class='alt-text'>{{imageAltText}}</p>

@@ -1,5 +1,5 @@
 
-import { Browser } from 'happy-dom'
+import { Browser , Window, XMLParser } from 'happy-dom'
 import { createHash } from 'crypto'
 
 import c from '../constants.json'
@@ -93,9 +93,13 @@ async function getComics(since) {
     for (let details of c.COMICS_SITES) {
         try {
             if (details.type === 'archive') {
-                data.push(...(await getComicsFromArchive(details, since)))
+                // data.push(...(await getComicsFromArchive(details, since)))
             } else if (details.type === 'date-in-url') {
-                data.push(...(await getComicsByDateInUrl(details, since)))
+                // data.push(...(await getComicsByDateInUrl(details, since)))
+            } else if (details.type === 'xml') {
+                data.push(...(await getComicsByXML(details, since)))
+            // } else if (details.type === 'xml-with-nav') {
+            //     data.push(...(await getComicsByXMLWithNav(details, since)))
             }
         } catch(err) {
             console.warn(`Unable to get comics from ${details.category}: ${err.message || err}\n${err.stack?.split('\n')[1]}`)
@@ -189,6 +193,38 @@ async function getComicsByDateInUrl(details, since) {
     return data
 }
 
+async function getComicsByXML(details, since) {
+    const resp = await fetch(details.source)
+    if (resp.status !== 200) {
+        throw new Error(`Site failed to return content. (${resp.status})`)
+    }
+
+    let text = await resp.text()
+    if (details.removeAllCDATA) {
+        text = text.replaceAll('<![CDATA[', '').replaceAll(']]>', '').trim()
+    }
+
+    const document = new XMLParser(new Window()).parse(text)
+    
+    const data = []
+    const articles = Array.from(document.querySelectorAll(details.articles))
+    for (let article of articles) {
+        if (details.parseAsHTML) {
+            details.parseAsHTML.forEach(selector => {
+                const elem = article.querySelector(selector)
+                if (elem) {
+                    elem.innerHTML = elem.textContent
+                }
+            })
+        }
+        const articleData = getComicArticleData(details, article, since)
+        if (articleData) { data.push(articleData) }
+    }
+
+    const comicData = data.sort((a, b) => b.timestamp - a.timestamp).slice(0, Math.min(data.length, MAX_COMICS_PER_SOURCE))
+    return comicData
+}
+
 function getComicArticleData(details, article, since) {
     const datePosted = new Date((details.date) ? article.querySelector(details.date)?.textContent : null)
     const timestamp = datePosted.getTime() || Date.now()
@@ -237,7 +273,12 @@ function getComicArticleData(details, article, since) {
         }
 
         url = source
-        altText = imageElem.getAttribute('alt') || null
+        if (details.altText) {
+            altText = article.querySelector(details.altText).textContent
+        } else {
+            altText = imageElem.getAttribute('alt') || imageElem.getAttribute('title') || null
+            if (altText) { altText = altText.replaceAll('"', '\'') }
+        }
         images.push({ url, altText })
     })
     

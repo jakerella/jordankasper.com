@@ -98,7 +98,8 @@ article .alt-text {
     bottom: 0;
     left: 0;
     width: calc(100% - 1rem);;
-    background-color: #00000055;
+    background-color: #00000088;
+    color: #fff;
     padding: 0.5rem;
     display: none;
 }

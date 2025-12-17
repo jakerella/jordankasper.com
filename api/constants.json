@@ -40,19 +40,24 @@
             "category": "xkcd",
             "source": "https://xkcd.com/atom.xml",
             "type": "xml",
-            "...": "..."
-        },
-        {
-            "category": "What If?",
-            "source": "https://what-if.xkcd.com/feed.atom",
-            "type": "xml",
-            "...": "..."
+            "articles": "entry",
+            "parseAsHTML": ["summary"],
+            "title": "title",
+            "date": "updated",
+            "link": "link",
+            "image": "img"
         },
         {
             "category": "SMBC",
             "source": "https://www.smbc-comics.com/comic/rss",
-            "type": "xml-with-nav",
-            "...": "..."
+            "type": "xml",
+            "articles": "item",
+            "removeAllCDATA": true,
+            "title": "title",
+            "link": "a",
+            "date": "pubDate",
+            "image": "img",
+            "altText": "p"
         },
         {
             "category": "The Oatmeal",
