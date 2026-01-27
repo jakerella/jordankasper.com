@@ -1,7 +1,7 @@
 ---
 title: My Dumb Phone
 collection: posts
-date: 2026-11-23
+date: 2025-11-23
 tags: simplicity, time management, miscellaneous, social
 ---
 
