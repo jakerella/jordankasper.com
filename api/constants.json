@@ -2,6 +2,8 @@
     "ANALYTICS_STORE": "analytics",
     "VISITORS_KEY": "site-visitors",
     "PATHS_KEY": "site-paths",
+    "WEATHER_FORECAST_KEY": "weather-forecasts",
+    "WEATHER_HISTORY_KEY": "historical-weather",
     "HITS_KEY_PREFIX": "hits--",
     "NEWS_URL": "https://npr.org",
     "COMICS_SITES": [

@@ -1,0 +1,26 @@
+SITE ANALYTICS NETLIFY BLOBS DATA SCHEMA:
+
+KEY: "weather-forecasts"
+{
+    "date": {             // The forecast date the data is for in YYYY-MM-DD format
+        "loc": {          // The location coordinates for this forecast ("lat_lng")
+            exp: Number,  // The timestamp when this forecast expires
+            txt: String   // The text of the forecast
+        },
+        ...
+    }
+}
+
+KEY: "historical-weather"
+{
+    "year": {                      // The year this data is for in YYYY format
+        "loc": {                   // The location this data is for in the format "lat_lng"
+            tmp: [                 // An array of the average temperatures with each entry being 1 week
+                [Number, Number],  // The [low, high] average temps for this weekly entry
+                ...
+            ]
+        }
+    },
+    ...
+}
+**/

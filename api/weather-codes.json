@@ -1,0 +1,33 @@
+{
+    "0": { "category": "clouds", "description": "clear skies" },
+    "1": { "category": "clouds", "description": "mostly sun" },
+    "2": { "category": "clouds", "description": "some clouds" },
+    "3": { "category": "clouds", "description": "overcast skies" },
+
+    "45": { "category": "atmosphere", "description": "fog" },
+    "48": { "category": "atmosphere", "description": "freezing fog" },
+
+    "51": { "category": "rain", "description": "light drizzle" },
+    "53": { "category": "rain", "description": "moderate drizzle" },
+    "55": { "category": "rain", "description": "heavy drizzle" },
+    "56": { "category": "rain", "description": "freezing drizzle" },
+    "57": { "category": "rain", "description": "heavy freezing drizzle" },
+    "61": { "category": "rain", "description": "light rain" },
+    "63": { "category": "rain", "description": "moderate rain" },
+    "65": { "category": "rain", "description": "heavy rain" },
+    "66": { "category": "rain", "description": "light sleet" },
+    "67": { "category": "rain", "description": "heavy sleet" },
+    "80": { "category": "rain", "description": "light rain showers" },
+    "81": { "category": "rain", "description": "moderate rain showers" },
+    "82": { "category": "rain", "description": "heavy rain showers" },
+    "95": { "category": "rain", "description": "thunderstorm" },
+    "96": { "category": "rain", "description": "thunderstorm with hail" },
+    "99": { "category": "rain", "description": "thunderstorm with heavy hail" },
+
+    "71": { "category": "snow", "description": "light snow" },
+    "73": { "category": "snow", "description": "moderate snow" },
+    "75": { "category": "snow", "description": "heavy snow" },
+    "77": { "category": "snow", "description": "snow grains" },
+    "85": { "category": "snow", "description": "Light snow shower" },
+    "86": { "category": "snow", "description": "heavy snow shower" }
+}
