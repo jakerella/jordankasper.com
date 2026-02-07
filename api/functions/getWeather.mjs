@@ -291,7 +291,7 @@ async function getForecast(options, data, store) {
             prompt += 'Include a very brief summary of the weather for the following day as well.'
         }
     } else {
-        prompt = `Generate a forecast for ${options.forecastDate.format('dddd')} whose date is ${forecastDateSimple}. This is a date in the future. Do not include any information about current conditions. Your forecast should cover weather for the entire day on ${forecastDateSimple}.`
+        prompt = `Generate a forecast for ${options.forecastDate.format('dddd')} whose date is ${forecastDateSimple}. This is a date in the future. Do not include any information about current conditions. Do not use terms like "this morning" or "this afternoon" and instead use "${options.forecastDate.format('dddd')} morning" or "${options.forecastDate.format('dddd')} afternoon". Your forecast should cover weather for the entire day on ${forecastDateSimple}.`
     }
 
     console.debug('Generating a forecast using prompt:\n', prompt)
