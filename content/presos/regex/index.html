@@ -9,6 +9,7 @@ description: Diving into regular expressions. What are they? Why would you use t
     .reveal table { margin-bottom: 1em; }
     .reveal table th { text-align: right; padding: 0 1em 0.5em 0; }
     .reveal table td { text-align: left; padding-bottom: 0.5em; }
+    .reveal pre code { font-size: 0.9em; overflow-x: visible; }
 </style>
 
 
@@ -16,9 +17,19 @@ description: Diving into regular expressions. What are they? Why would you use t
     <h2 style='text-transform: none; font-size: 1.6em; margin-bottom: 1em;'>
         /^[Rr]eg(ular\s)?[Ee]x(p|pressions?)?$/
     </h2>
-    <img src='images/title-diagram.svg' alt='Diagram of the title regex' style='width: 130%; position: relative; left: -15%;'>
+    <img src='images/title-diagram.svg' alt='Diagram of the title regex' style='width: 100%;'>
 
-    <cite style='bottom: -10em;'>
+    <aside style='display: flex; justify-content: center; position: relative; top: 3em;'>
+        <p style='width: 66%;'>
+            <a href='https://jordankasper.com/regex'>jordankasper.com/regex</a>
+        </p>
+        <a href='https://confoo.ca/en/2026/cfp/rr-eg-ular-s-ee-x-p-pressions/feedback' target='_blank' style='width: 33%;'>
+            Session Feedback:
+            <img src='images/confoo-2026-regex-feedback.png' style='width: 40%;' title='A QR code that links to a feedback form for this talk'>
+        </a>
+    </aside>
+
+    <cite style='bottom: -5em;'>
         <a href='https://regexper.com/#%2F%5E%5BRr%5Deg%28ular%5Cs%29%3F%5BEe%5Dx%28p%7Cpressions%3F%29%3F%24%2F'>regexper.com</a>
     </cite>
 </section>
@@ -305,7 +316,7 @@ description: Diving into regular expressions. What are they? Why would you use t
     <pre><code class='lang-javascript' data-trim>
 "#c52a93".match(/[0-9a-f]{6,8}/)   // ["c52a93"]
     </code><code class='fragment lang-javascript' data-trim>
-"#c52a93".match(/#[0-9a-f]{6,8}/)  // ["c52a93"]
+"#c52a93".match(/#[0-9a-f]{6,8}/)  // ["#c52a93"]
     </code><code class='fragment lang-javascript' data-trim>
 "c52a93".match(/#[0-9a-f]{6,8}/)   // null
     </code><code class='fragment lang-javascript' data-trim>
@@ -333,11 +344,11 @@ description: Diving into regular expressions. What are they? Why would you use t
     <p><code>[^]</code></p>
 
     <pre><code class='lang-javascript' data-trim>
-"jordan kasper".match(/[a-z]+/g)     // ["jordan", "kasper"]
+"jordan kasper".match(/[a-z]+/g)     // [ "jordan", "kasper" ]
     </code><code class='fragment lang-javascript' data-trim>
-"jordan o'moran".match(/[a-z]+/g)    // ["jordan", "o", "moran"]
+"jordan o'moran".match(/[a-z]+/g)    // [ "jordan", "o", "moran" ]
     </code><code class='fragment lang-javascript' data-trim>
-"jordan o'moran".match(/[^ ]+/g)     // ["jordan", "o'moran"]
+"jordan o'moran".match(/[^ ]+/g)     // [ "jordan", "o'moran" ]
     </code></pre>
 </section>
 
@@ -349,7 +360,10 @@ description: Diving into regular expressions. What are they? Why would you use t
 
     <pre class='fragment'><code class='lang-javascript' data-trim>
 "&lt;p class='foo' id='bar'>".match(/[a-z]+='.+'/g)
-                            // ["class='foo' id='bar'"]
+        </code><code class='fragment lang-javascript' data-trim>
+// What you wanted: [ "class='foo'", "id='bar'" ]
+        </code><code class='fragment lang-javascript' data-trim>
+// What you got: [ "class='foo' id='bar'" ]
     </code></pre>
 
     <p class='fragment'>The <code>+</code> is greedy: keeps going until repeated token stops.</p>
@@ -366,7 +380,7 @@ description: Diving into regular expressions. What are they? Why would you use t
 
     <pre class='fragment'><code class='lang-javascript' data-trim>
 "&lt;p class='foo' id='bar'>".match(/[a-z]+='.+?'/g)
-                                    // ["class='foo'", "id='bar'"]
+// There it is: [ "class='foo'", "id='bar'" ]
     </code></pre>
 
     <aside class='fragment'>
@@ -377,7 +391,7 @@ description: Diving into regular expressions. What are they? Why would you use t
 
         <pre><code class='lang-javascript' data-trim>
 "&lt;p class='foo' id='bar'>".match(/[a-z]+='[^']+'/g)
-                                    // ["class='foo'", "id='bar'"]
+// Same result: [ "class='foo'", "id='bar'" ]
         </code></pre>
     </aside>
 </section>
@@ -415,22 +429,22 @@ description: Diving into regular expressions. What are they? Why would you use t
 
     <pre><code class='lang-javascript' data-trim>
 "1234 Main St.".match(/[0-9]+ [a-z]+ [a-z\.]+/i)
-                          // ["1234 Main St."]
+// ["1234 Main St."]
         </code><code class='fragment lang-javascript' data-trim>
 "1234 Main St.".match(/([0-9]+) ([a-z]+) ([a-z\.]+)/i)
-                          // ["1234", "Main", "St."]
+// ["1234", "Main", "St."]
         </code><code class='fragment lang-javascript' data-trim>
 "1234 Main St.".match(/([0-9]+) ([a-z]+) (st|rd|ave)\.?/i)
-                          // ["1234", "Main", "St"]
+// ["1234", "Main", "St"]
     </code></pre>
     
     <p class='fragment'>
-        Your groups <em>may</em> include the entire matched string!
+        Your language <em>may</em> include the entire matched string:
     </p>
     
     <pre class='fragment'><code class='lang-javascript' data-trim>
 "1234 Main St.".match(/([0-9]+) ([a-z]+) (st|rd|ave)\.?/i)
-                          // ["1234 Main St.", "1234", "Main", "St"]
+// ["1234 Main St.", "1234", "Main", "St"]
     </code></pre>
 
 </section>
@@ -444,31 +458,33 @@ description: Diving into regular expressions. What are they? Why would you use t
 
     <pre class='fragment'><code class='lang-javascript' data-trim>
 "1234 Main St.".match(/([0-9]+) ([a-z]+) (st|rd|ave)\.?/i)
-                                        // ["1234", "Main", "St"]
+// [ "1234", "Main", "St" ]
     </code><code class='fragment lang-javascript' data-trim>
 "1234 Main St.".match(/[0-9]+ ([a-z]+) (st|rd|ave)\.?/i)
-                                        // ["Main", "St"]
+// [ "Main", "St" ]
     </code><code class='fragment lang-javascript' data-trim>
 "1234 Main St.".match(/[0-9]+ ([a-z]+ (st|rd|ave)\.?)/i)
-                                        // ["Main St.", "St"]
+// [ "Main St.", "St" ]
     </code><code class='fragment lang-javascript' data-trim>
 "1234 Main St.".match(/[0-9]+ ([a-z]+ (?:st|rd|ave)\.?)/i)
-                                        // ["Main St."]
+// [ "Main St." ]
     </code></pre>
 </section>
 
 
 <section>
     <h2>Match Replacement</h2>
-    <p>Differs from language to language!</p>
+    <p><strong>Caution!</strong> Varies widely across languages!</p>
 
     <pre class='fragment'><code class='lang-javascript' data-trim>
 "I like {{fav}} the most".replace(/{{fav}}/, "dogs")
-                                        // "I like dogs the most"
-    </code><code class='fragment lang-javascript' data-trim>
+        </code><code class='fragment lang-javascript' data-trim>
+// "I like dogs the most"
+        </code><code class='fragment lang-javascript' data-trim>
 const email = "jordan@jordankasper.com"
 email.replace(/([a-z]+)@([a-z.]+)/i, "https://$2/users/$1")
-                       // "https://jordankasper.com/users/jordan"
+        </code><code class='fragment lang-javascript' data-trim>
+// "https://jordankasper.com/users/jordan"
     </code></pre>
 </section>
 
@@ -511,8 +527,8 @@ email.replace(/([a-z]+)@([a-z.]+)/i, "https://$2/users/$1")
     <pre><code class='lang-javascript' data-trim>
 const users = [
     "jakerella      Jordan 42",
-    "roro	Alex	999",
-    "ZeeTwii Nick 13"
+    "ro_ro	Alex	999",
+    "Zee3ii Nick 13"
 ]
     </code></pre>
 
@@ -521,8 +537,8 @@ users.forEach((user) => {
     console.log(  user.match(/(\w+)\s+(\w+)\s+(\d+)/)  )
 })
 // ["jakerella", "Jordan", "42"]
-// ["roro", "Alex", "999"]
-// ["ZeeTwii", "Nick", "13"]
+// ["ro_ro", "Alex", "999"]
+// ["Zee3ii", "Nick", "13"]
     </code></pre>
 </section>
 
@@ -544,27 +560,41 @@ const input = "576.99"
 </section>
 
 <section>
-    <h2>Anchors</h2>
+    <h2>Anchors &amp; Multiline</h2>
     <p><code>^</code> and <code>$</code></p>
 
     <pre><code class='lang-text' data-trim>
 jakerella      Jordan 42
-roro	Alex	999
-ZeeTwii Nick 13
+ro_ro	Alex	999
+Zee3ii Nick 13
+    </code></pre>
+
+    <p>What if we want all of the usernames?</p>
+
+    <pre class='fragment'><code class='lang-javascript' data-trim>
+file.match(/\w+/)   // [ "jakerella" ]
+        </code><code class='fragment lang-javascript' data-trim>
+file.match(/\w+/g)  // [ "jakerella", "Jordan", "42", "ro_ro", ... ]
+        </code><code class='fragment lang-javascript' data-trim>
+file.match(/^\w+/g) // [ "jakerella" ]
+    </code></pre>
+</section>
+
+<section>
+    <h2>The Multiline Flag</h2>
+
+    <p class='fragment'>Use the global <strong>and</strong> multiline flags: <code>g</code> &amp; <code>m</code></p>
+
+    <pre class='fragment'><code class='lang-text' data-trim>
+jakerella      Jordan 42
+ro_ro	Alex	999
+Zee3ii Nick 13
     </code></pre>
 
     <pre class='fragment'><code class='lang-javascript' data-trim>
-userFile.match(/\w+/)    // ["jakerella"]
+file.match(/^\w+/g)   // [ "jakerella" ]
         </code><code class='fragment lang-javascript' data-trim>
-userFile.match(/\w+/g)   // ["jakerella", "Jordan", "42", "roro", ...]
-        </code><code class='fragment lang-javascript' data-trim>
-userFile.match(/^\w+/)   // ["jakerella"]
-    </code></pre>
-
-    <p class='fragment'>Enter the multiline flag: <code>m</code></p>
-
-    <pre class='fragment'><code class='lang-javascript' data-trim>
-userFile.match(/^\w+/gm) // ["jakerella", "roro", "ZeeTwii"]
+file.match(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
     </code></pre>
 </section>
 
@@ -615,11 +645,19 @@ userFile.match(/^\w+/gm) // ["jakerella", "roro", "ZeeTwii"]
     <h3 style='margin-top:1.5em;text-transform: none;'>/^[Rr]eg(ular\s)?[Ee]x(p|pressions?)?$/</h3>
     <img src='images/title-diagram.svg' alt='Diagram of the title regex' style='width: 100%;'>
 
-    <p style='margin-top: 2em'>Jordan Kasper | <a href='http://twitter.com/jakerella'>@jakerella</a></p>
+    <aside style='display: flex; justify-content: center;'>
+        <div style='width: 66%;'>
+            <p style='margin-top: 2em'>Jordan Kasper | <a href='http://twitter.com/jakerella'>@jakerella</a></p>
 
-    <p contenteditable>
-      <a href='https://jordankasper.com/regex-101'>jordankasper.com/regex-101</a>
-    </p>
+            <p>
+            <a href='https://jordankasper.com/regex'>jordankasper.com/regex</a>
+            </p>
+        </div>
+        <a href='https://confoo.ca/en/2026/cfp/rr-eg-ular-s-ee-x-p-pressions/feedback' target='_blank' style='width: 33%;'>
+            Session Feedback:
+            <img src='images/confoo-2026-regex-feedback.png' style='width: 70%;' title='A QR code that links to a feedback form for this talk'>
+        </a>
+    </aside>
 </section>
 
 <section data-background='#fff'>

@@ -18,6 +18,8 @@
 // https://github.com/hakimel/reveal.js#configuration
 Reveal.initialize({
     controls: ((/hide\-controls/.test(document.location.search)) ? false : true),
+    width: 1150,
+    height: 700,
     progress: false,
     history: true,
     center: true,
