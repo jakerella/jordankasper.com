@@ -6,14 +6,24 @@ description: A deep dive into the Git version control system
 ---
 
 <style>
-    .reveal pre code {
-        padding: 0 0.3em;
-        line-height: 1.5em;
-    }
+    .reveal pre code { padding: 0 0.3em; line-height: 1.5em; }
+    .reveal pre code { font-size: 0.9em; overflow-x: visible; }
+    .reveal table.list th { width: 4em; text-align: right; padding: 0.3em 0.5em 0 0; }
+    .reveal table.list td { text-align: left; }
 </style>
 
-<section data-background='/images/morpheus.jpg'>
-    <h2 style='color:#fff;font-size:1.5em;position:absolute;top:-6em;left:-1em;text-shadow:3px 3px 4px #000;'>Gitting More Out of Git</h2>
+<section data-background='#000'>
+    <h1 style='color: #fff; text-shadow: 3px 3px 4px #666;'>Gitting More Out of Git</h1>
+
+    <aside style='display: flex; justify-content: center; margin-top: 4em;'>
+        <p style='width: 49%;'>
+            <a href='https://jordankasper.com/git'>jordankasper.com/git</a>
+        </p>
+        <a href='https://confoo.ca/en/2026/cfp/gitting-more-out-of-git/feedback' target='_blank' style='width: 49%;'>
+            Session Feedback:<br>
+            <img src='images/confoo-2026-git-feedback.png' style='width: 40%;' title='A QR code that links to a feedback form for this talk'>
+        </a>
+    </aside>
 </section>
 
 
@@ -77,8 +87,8 @@ description: A deep dive into the Git version control system
 ~$ git clone git@github.com:jakerella/foo.git repo
         </code><code class='fragment no-highlight' data-trim>
 ~$ cd repo
-        </code><code class='fragment no-highlight' data-trim>
-~/repo$ git branch -a
+        </code><code class='fragment no-highlight' data-noescape data-trim>
+~/repo$ git branch <strong>-a</strong>
 * main
   remotes/origin/main
     </code></pre>
@@ -95,8 +105,8 @@ description: A deep dive into the Git version control system
 
     <p>Any local branch can "track" a remote URL:</p>
 
-    <pre><code class='no-highlight' data-trim>
-~/repo$ git branch -vv
+    <pre><code class='no-highlight' data-noescape data-trim>
+~/repo$ git branch <strong>-vv</strong>
 * main               b956c45c [origin/main] Initial commit
   some-local-branch  a74b2950 Implemented that cool feature
     </code></pre>
@@ -110,8 +120,8 @@ description: A deep dive into the Git version control system
 <section>
     <h3>Wherezitat?</h3>
 
-    <pre><code class='no-highlight' data-trim>
-~/repo$ git remote -v
+    <pre><code class='no-highlight' data-noescape data-trim>
+~/repo$ git <strong>remote -v</strong>
 origin  git@github.com:jakerella/foo.git (fetch)
 origin  git@github.com:jakerella/foo.git (push)
     </code></pre>
@@ -127,11 +137,11 @@ origin  git@github.com:jakerella/foo.git (push)
         How do I make a new branch "track" that remote repo?
     </p>
 
-    <pre class='fragment'><code class='no-highlight' data-trim>
+    <pre class='fragment'><code class='no-highlight' data-noescape data-trim>
 ~/repo$ git checkout -b new-feature
-~/repo$ git branch --set-upstream-to=origin/new-feature
-        </code><code class='fragment no-highlight' data-trim>
-~/repo$ git push -u origin new-feature
+~/repo$ git branch <strong>--set-upstream-to=origin/new-feature</strong>
+        </code><code class='fragment no-highlight' data-noescape data-trim>
+~/repo$ git push <strong>-u origin</strong> new-feature
         </code><code class='fragment no-highlight' data-trim>
 ~/repo$ git branch -vv
   main              b956c45c [origin/main] Initial commit
@@ -152,8 +162,8 @@ origin  git@github.com:jakerella/foo.git (push)
 ~/node$ git remote -v
 origin  git@github.com:jakerella/node.git (fetch)
 origin  git@github.com:jakerella/node.git (push)
-        </code><code class='fragment no-highlight'>
-~/node$ git remote add node-source git@github.com:nodejs/node.git
+        </code><code class='fragment no-highlight' data-noescape data-trim>
+~/node$ git <strong>remote add node-source</strong> git@github.com:nodejs/node.git
         </code><code class='fragment no-highlight' data-trim>
 ~/node$ git remote -v
 origin         git@github.com:jakerella/node.git (fetch)
@@ -169,21 +179,17 @@ node-source    git@github.com:nodejs/node.git (push)
 
     <p>This is the nature of open source development on Git.</p>
 
-    <pre class='fragment'><code class='no-highlight' data-trim>
-~/node$ git fetch node-source
+    <pre class='fragment'><code class='no-highlight' data-noescape data-trim>
+~/node$ git <strong>fetch</strong> node-source
 remote: Enumerating objects: 6018, done.
 ...
 From github.com/nodejs/node
  * [new branch] ...
- ...
- * [new tag] ...
- ...
-        </code><code class='fragment no-highlight'>
-~/node$ git merge node-source/main
+        </code><code class='fragment no-highlight' data-noescape>
+~/node$ git checkout main
+~/node$ git merge <strong>node-source/main</strong>
 Updating 40f7a8ea..a479419b
 ...
-        </code><code class='fragment no-highlight' data-trim>
-~/node$ git checkout -b new-feature
     </code></pre>
 </section>
 
@@ -201,13 +207,13 @@ Updating 40f7a8ea..a479419b
     <pre class='fragment'><code class='no-highlight' data-trim>
 ~/node$ git diff main new-feature
         </code><code class='fragment no-highlight' data-trim data-noescape>
-diff --git a/README.md b/README.md
+<strong>diff --git a/README.md b/README.md</strong>
 index a479419b..b5a9776f 100644
-<strong>--- a/README.md</strong>
+--- a/README.md
 +++ b/README.md
 @@ -1 +0,0 @@
--This is the readme
-        </code><code class='fragment no-highlight' data-noescape>
+-This is a bad line, remove it!
+        </code><code class='fragment no-highlight' data-noescape data-trim>
 diff --git a/feature.js b/feature.js
 <strong>new file mode 100644</strong>
 index 0000000..b5a9776f
@@ -218,7 +224,9 @@ index 0000000..b5a9776f
 <section>
     <h3>Branch Differences</h3>
 
-    <p class='fragment'>What if that README change wasn't ours?</p>
+    <p>What if that README change was from another merge?</p>
+
+    <img src='images/git_merge-2.png' alt='A diagram of a git repo with a feature branch and divergent change'>
 
     <aside class='fragment'>
         <pre><code class='no-highlight' data-trim>
@@ -234,21 +242,37 @@ index 0000000..b5a9776f
 
 
 <section>
-    <h3>Single-Branch Differences</h3>
+    <h3>Single-Branch Differences (<code>..</code>)</h3>
 
     <pre><code class='no-highlight' data-trim data-noescape>
 ~$ git diff <strong>main..new-feature</strong>
+        </code><code class='fragment no-highlight' data-noescape data-trim>
 diff --git a/feature.js b/feature.js
-new file mode 100644
+<strong>new file</strong> mode 100644
 index 00000000..b5a9776f
 --- /dev/null
 +++ b/feature.js
 ...
     </code></pre>
+
+    <table class='list fragment' style='font-size: 0.8em;'>
+        <tr>
+            <th><code>..</code>:</th>
+            <td>show all commits on "new-feature" not on "main"</td>
+        </tr>
+        <tr>
+            <th><code>space</code>:</th>
+            <td>show all commit differences between "new-feature" and "main"</td>
+        </tr>
+        <tr>
+            <th><code>...</code>:</th>
+            <td>same as <code>space</code></td>
+        </tr>
+    </table>
 </section>
 
 
-<section>
+<section class='cut-me-1'>
     <h2>Git and Data Integrity</h2>
 
     <div class='fragment'>
@@ -258,7 +282,7 @@ index 00000000..b5a9776f
 </section>
 
 
-<section>
+<section class='cut-me-1'>
     <h3>File Diffs</h3>
 
     <img src='images/file-diffs.png' alt='file diff diagram'>
@@ -267,7 +291,7 @@ index 00000000..b5a9776f
 </section>
 
 
-<section>
+<section class='cut-me-1'>
     <h3>Snapshots</h3>
 
     <img src='images/snapshots.png' alt='snapshots diagram'>
@@ -276,7 +300,7 @@ index 00000000..b5a9776f
 </section>
 
 
-<section>
+<section class='cut-me-1'>
     <h3>Commit Hashes</h3>
 
     <pre><code class='no-highlight' data-trim data-noescape>
@@ -293,7 +317,7 @@ Added documentation
 </section>
 
 
-<section>
+<section class='cut-me-1'>
     <h3>Local Repos</h3>
 
     <p>Every local instance of a git repo has ALL of the data.</p>
@@ -304,10 +328,10 @@ Added documentation
     <p class='fragment'>
         ...even with other people / machines.
     </p>
-</section>
+</section class='cut-me-1'>
 
 
-<section data-background='#fff'>
+<section class='cut-me-1' data-background='#fff'>
     <h3>A distributued VCS</h3>
 
     <img src='images/DistributedVCS_Complex.png' alt='dsitributed vcs (complex)'>
@@ -330,7 +354,7 @@ Added documentation
         </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/repo$ git status
 On branch new-feature
-Changes not staged for commit:
+Changes <strong>not staged</strong> for commit:
   (use "git add &lt;file>..." to update what will be committed)
   <strong>(use "git restore &lt;file>..." to discard changes in working directory)</strong>
         modified:   README.md
@@ -341,8 +365,8 @@ Changes not staged for commit:
 <section>
     <h3>Unstaged Changes</h3>
 
-    <pre><code class='no-highlight' data-trim>
-~/repo$ git restore README.md
+    <pre><code class='no-highlight' data-noescape data-trim>
+~/repo$ git <strong>restore</strong> README.md
         </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/repo$ git status
 On branch new-feature
@@ -364,22 +388,24 @@ On branch new-feature
     <p>Careful, <strong>NEW</strong> files will not be removed!</p>
 
     <aside class='fragment'>
-        <pre><code class='no-highlight' data-trim data-noescape>
-~/repo$ echo "testing" >> source/routes/test.js
+        <pre><code class='no-highlight' data-trim>
+~/repo$ echo "testing" > source/routes/new-file.js
+            </code><code class='fragment no-highlight' data-trim>
 ~/repo$ git restore source/routes/
+            </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/repo$ git status
 On branch new-feature
-Untracked files:
-  (use "git add <file>..." to include in what will be committed)
-       	sourc/routes/test.js
+<strong>Untracked files</strong>:
+  (use "git add &lt;file>..." to include in what will be committed)
+       	sourc/routes/new-file.js
         </code></pre>
 
-        <p class='fine'>(You can just delete the file if not needed.)</p>
+        <p class='fragment fine'>(You can just delete the file if not needed.)</p>
     </aside>
 </section>
 
 
-<section data-transition='none'>
+<section>
     <h3>Staged Changes</h3>
 
     <pre><code class='no-highlight' data-trim>
@@ -389,7 +415,7 @@ Untracked files:
 ~/repo$ git status
 On branch new-feature
 Changes to be committed:
-  (use "<strong>git restore --staged &lt;file></strong>..." to unstage)
+  (use "git restore <strong>--staged</strong> &lt;file>..." to unstage)
         modified:   README.md
     </code></pre>
 </section>
@@ -417,13 +443,11 @@ Changes to be committed:
 
     <pre><code class='no-highlight' data-trim data-noescape>
 ~/repo$ git commit -m "This is <strong>teh</strong> best"
-[feature-branch 54af593b] This is teh best.
+[feature-branch 54af593b] This is teh best
 1 file changed, 1 insertion(+)
-    </code></pre>
-
-    <pre class='fragment'><code class='no-highlight' data-trim data-noescape>
+    </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/repo$ git commit <strong>--amend</strong> -m "This is <strong>the</strong> best"
-[feature-branch 0486a7d6] This is the best.
+[feature-branch 0486a7d6] This is the best
 1 file changed, 1 insertion(+)
     </code></pre>
 </section>
@@ -436,9 +460,7 @@ Changes to be committed:
 ~/repo$ git commit -m "This is teh best"
 [feature-branch <strong>54af593b</strong>] This is teh best
 1 file changed, 1 insertion(+)
-    </code></pre>
-
-    <pre><code class='no-highlight' data-trim data-noescape>
+        </code><code class='no-highlight' data-trim data-noescape>
 ~/repo$ git commit --amend -m "This is the best"
 [feature-branch <strong>0486a7d6</strong>] This is the best
 1 file changed, 1 insertion(+)
@@ -476,9 +498,9 @@ Bug fixes for older features
     </p>
 
     <pre class='fragment'><code class='no-highlight' data-trim data-noescape>
-~/repo$ git add forgotten.js
+~/repo$ git <strong>add</strong> forgotten.js
         </code><code class='fragment no-highlight' data-trim data-noescape>
-~/repo$ git commit --amend
+~/repo$ git commit <strong>--amend</strong>
 [new-feature <strong>3e81873b</strong>] This is the best
  Date: Thu Jan 29 11:49:54 2026 -0400
  2 files changed, 1 insertion(+), 1 deletion(-)
@@ -491,7 +513,8 @@ Bug fixes for older features
     <h3>Caution When Amending!</h3>
 
     <p>
-        If you <strong>push</strong> your bad change, then amend it, 
+        If you <strong>push</strong> your bad change,<br>
+        then amend it,<br>
         you might cause a nasty conflict for someone else.
     </p>
 </section>
@@ -500,12 +523,12 @@ Bug fixes for older features
 <section>
     <h3>Gone, but not forgotten</h3>
 
-    <pre class='fragment'><code class='no-highlight' data-trim data-noescape>
+    <pre class='fragment'><code class='no-highlight' data-trim>
 ~/repo$ git log --oneline
 3e81873b (HEAD -> new-feature) This is the best
 72267fc2 (origin/main, origin/HEAD, main) Bug fixes for older features
-        </code><code class='fragment no-highlight' data-noescape>
-~/repo$ git reflog
+        </code><code class='fragment no-highlight' data-noescape data-noescape>
+~/repo$ git <strong>reflog</strong>
 <strong>3e81873b</strong> HEAD@{0}: commit (amend): This is the best
 <strong>0486a7d6</strong> HEAD@{1}: commit (amend): This is the best
 <strong>54af593b</strong> HEAD@{2}: commit: This is teh best.
@@ -535,13 +558,11 @@ pick 72267fc2 Bug fixes for older features
 pick 3e81873b This is the best
 
 # Rebase 5a39902..3e81873b onto 5a39902 (3 command(s))
-#
 # Commands:
 # p, pick &lt;commit> = use commit
 # r, reword &lt;commit> = use commit, but edit the commit message
 # e, edit &lt;commit> = use commit, but stop for amending
 # s, squash &lt;commit> = use commit, but meld into previous commit
-...
 # d, drop &lt;commit> = remove commit
 ...
     </code></pre>
@@ -561,13 +582,11 @@ pick 7e10e41c some old commit
 pick 3e81873b This is the best
 
 # Rebase 5a39902..3e81873b onto 5a39902 (3 command(s))
-#
 # Commands:
 # p, pick &lt;commit> = use commit
 # r, reword &lt;commit> = use commit, but edit the commit message
 # e, edit &lt;commit> = use commit, but stop for amending
 # s, squash &lt;commit> = use commit, but meld into previous commit
-...
 # d, drop &lt;commit> = remove commit
 ...
     </code></pre>
@@ -608,7 +627,6 @@ Successfully rebased and updated refs/heads/new-feature.
 
     <pre class='fragment'><code class='no-highlight' data-trim data-noescape>
 ~/repo$ git reflog
-
 7650aafe HEAD@{0}: rebase -i (finish): returning to refs/heads/new-feature
 <strong>7650aafe</strong> HEAD@{1}: rebase -i (pick): This is the best
 <strong>bcb51f9a</strong> HEAD@{2}: commit (amend): Bug fixes for older features
@@ -661,12 +679,10 @@ Successfully rebased and updated refs/heads/new-feature.
     <h3>Soft Reset</h3>
 
     <pre><code class='no-highlight' data-trim data-noescape>
-~/repo$ git reset --soft HEAD^
+~/repo$ git reset <strong>--soft HEAD^</strong>
 ~/repo$ git log
 commit b86e65dab535623d487e063ef1337cfdecfaf99d
-Author: jdoe &lt;john@doe.com&gt;
-Date:   Wed Jan 28 09:45:10 2026 -0400
-
+...
 the immediately previous change (totally normal)
 ...
         </code><code class='fragment no-highlight' data-trim data-noescape>
@@ -674,12 +690,30 @@ the immediately previous change (totally normal)
 On branch new-feature
 <strong>Changes to be committed</strong>:
   (use "git restore --staged &lt;file>..." to unstage)
-        modified:   Readme.md
+        modified:   README.md
     </code></pre>
 </section>
 
 
 <section data-background='#fff'>
+    <h3>Understanding the Three States</h3>
+
+    <img src='images/git_reset-2.png' alt='soft reset diagram' style='width:70%;'>
+
+    <p><code>git reset --soft HEAD^</code></p>
+</section>
+
+
+<section data-transition='none' data-background='#fff'>
+    <h3>Understanding the Three States</h3>
+
+    <img src='images/git_reset-1.png' alt='three states of a git repo' style='width:70%;'>
+
+    <p>&nbsp;</p>
+</section>
+
+
+<section data-transition='none' data-background='#fff'>
     <h3>Understanding the Three States</h3>
 
     <img src='images/git_reset-3.png' alt='mixed reset diagram' style='width:70%;'>
@@ -692,12 +726,10 @@ On branch new-feature
     <h3>Mixed Reset</h3>
 
     <pre><code class='no-highlight' data-trim data-noescape>
-~/repo$ git reset --mixed HEAD^
+~/repo$ git reset <strong>--mixed HEAD^</strong>
 ~/repo$ git log
 commit b86e65dab535623d487e063ef1337cfdecfaf99d
-Author: jdoe &lt;john@doe.com&gt;
-Date:   Wed Jan 28 09:45:10 2026 -0400
-
+...
 the immediately previous change (totally normal)
 ...
         </code><code class='fragment no-highlight' data-trim data-noescape>
@@ -711,7 +743,25 @@ On branch new-feature
 </section>
 
 
-<section data-background='#fff'>
+<section data-transition='none' data-background='#fff'>
+    <h3>Understanding the Three States</h3>
+
+    <img src='images/git_reset-3.png' alt='mixed reset diagram' style='width:70%;'>
+
+    <p><code>git reset --mixed HEAD^</code></p>
+</section>
+
+
+<section data-transition='none' data-background='#fff'>
+    <h3>Understanding the Three States</h3>
+
+    <img src='images/git_reset-1.png' alt='three states of a git repo' style='width:70%;'>
+
+    <p>&nbsp;</p>
+</section>
+
+
+<section data-transition='none' data-background='#fff'>
     <h3>Understanding the Three States</h3>
 
     <img src='images/git_reset-4.png' alt='hard reset diagram' style='width:70%;'>
@@ -724,11 +774,9 @@ On branch new-feature
     <h3>Hard Reset</h3>
 
     <pre><code class='no-highlight' data-trim data-noescape>
-~/repo$ git reset --hard HEAD^
+~/repo$ git reset <strong>--hard HEAD^</strong>
 ~/repo$ git log
 commit b86e65dab535623d487e063ef1337cfdecfaf99d
-Author: jdoe &lt;john@doe.com&gt;
-Date:   Wed Jan 28 09:45:10 2026 -0400
 
 the immediately previous change (totally normal)
 ...
@@ -737,6 +785,15 @@ the immediately previous change (totally normal)
 On branch new-feature
 <strong>nothing to commit, working tree clean</strong>
     </code></pre>
+</section>
+
+
+<section data-transition='none' data-background='#fff'>
+    <h3>Understanding the Three States</h3>
+
+    <img src='images/git_reset-4.png' alt='hard reset diagram' style='width:70%;'>
+
+    <p><code>git reset --hard HEAD^</code></p>
 </section>
 
 
@@ -762,8 +819,8 @@ d42c3864 HEAD@{1}: commit: this is not a good change
 <strong>b86e65da</strong> HEAD@{2}: commit: the immediately previous change (totally normal)
 b9bdb02f HEAD@{3}: checkout: moving from main to new-feature
 b9bdb02f HEAD@{4}: commit: a really good change
-        </code><code class='fragment no-highlight'>
-~/repo$ git reset --hard HEAD@{1}</code><code class='fragment no-highlight' data-trim>
+        </code><code class='fragment no-highlight' data-noescape>
+~/repo$ git reset --hard <strong>HEAD@{1}</strong></code><code class='fragment no-highlight' data-trim>
 HEAD is now at d42c3864 this is not a good change
     </code></pre>
 </section>
@@ -774,7 +831,6 @@ HEAD is now at d42c3864 this is not a good change
 
     <pre><code class='no-highlight' data-trim data-noescape>
 ~/repo$ git reflog
-
 <strong>d42c3864</strong> HEAD@{0}: reset: moving to HEAD@{1}
 b86e65da HEAD@{1}: reset: moving to HEAD^
 <strong>d42c3864</strong> HEAD@{2}: commit: this is not a good change
@@ -785,8 +841,7 @@ b9bdb02f HEAD@{5}: commit: a really good change
 ~$ git log --oneline
 <strong>d42c386</strong> this is not a good change
 <strong>b86e65d</strong> the immediately previous change (totally normal)
-<strong>b9bdb02</strong> a really good change
-    </code></pre>
+<strong>b9bdb02</strong> a really good change</code></pre>
 </section>
 
 
@@ -820,14 +875,13 @@ commit d42c38691161f42fcc07d806f7df4579e8cd189e
 Author: jakerella &lt;me@example.com&gt;
 Date:   Fri Jan 30 13:57:36 2026 -0400
 
-Added new API route to readme
+Added new API route to readme docs
 
 commit b9bdb0261ee9bcaa31d7eb062c0bcafee3e530f0
 Author: jakerella &lt;me@example.com&gt;
 Date:   Thu Jan 29 09:14:16 2026 -0400
 
 Various grammar edits to documentation
-...
     </code></pre>
 </section>
 
@@ -837,7 +891,7 @@ Various grammar edits to documentation
     <pre><code class='no-highlight' data-trim data-noescape>
 ~/repo$ git log <strong>--oneline</strong>
 
-d42c3869 Added new API route to readme
+d42c3869 Added new API route to readme docs
 b9bdb026 Various grammar edits to documentation
 c2cb87e3 Remove unused files from test harness
 2e8a119c Merge pull request #186 from jakerella/new-feature
@@ -850,9 +904,9 @@ c2cb87e3 Remove unused files from test harness
 <section>
     <h3>Formatting and Graphing</h3>
 
-    <pre><code class='no-highlight' data-trim data-noescape>
+    <pre><code class='no-highlight' data-trim>
 ~/repo$ git log --pretty="tformat:%h %as %an: %s" --graph
-
+    </code><code class='fragment no-highlight' data-trim data-noescape>
 * 714e0dd9 2026-01-30 jakerella: Merge pull request #220 from foobar/feature-two
 <span style='color:green !important'>|</span><span style='color:blue !important'>\</span>
 <span style='color:green !important'>|</span> * c8bcfc14 2026-01-29 roro: last update for feature two
@@ -896,59 +950,6 @@ alias gl="git log --pretty='tformat:%h %as %an: %s' --graph"
 
 
 <section>
-    <h2>Pointing Blame</h2>
-
-    <p class='fragment'>(Possibly at yourself...)</p>
-</section>
-
-
-<section>
-    <h3>Blame Game</h3>
-
-    <pre><code class='lang-javascript' data-trim>
-function divide(x, y) { ... }
-function multiply(x, y) { ... }
-function add(x, y) {
-    return x + x;
-}
-function subtract(x, y) { ... }
-    </code></pre>
-
-    <pre class='fragment'><code class='no-highlight' data-trim data-noescape>
-~/repo$ git blame source/math.js
-        </code><code class='fragment no-highlight' data-noescape>
-ca5dc559 (roro        2025-03-13   1) function divide(x, y) { ... }
-ca5dc559 (roro        2025-03-13   2) function muiltiply(x, y) { ... }
-d35241e6 (drnick      2026-01-22   3) function add(x, y) {
-<strong>27cc7225 (jakerella   2026-01-29   4)     return x + x;</strong>
-d35241e6 (drnick      2026-01-22   5) }
-d35241e6 (drnick      2026-01-22   6) function subtract(x, y) { ... }
-    </code></pre>
-</section>
-
-
-<section>
-    <h3>Blame Game</h3>
-
-    <p>Know where to look?</p>
-
-    <pre class='fragment'><code class='no-highlight' data-trim data-noescape>
-~/repo$ git blame <strong>-L3,5</strong> source/utilities.js
-
-d35241e6 (drnick      2026-01-22   3) function add(x, y) {
-27cc7225 (jakerella   2026-01-29   4)     return x + x;
-d35241e6 (drnick      2026-01-22   5) }
-        </code><code class='fragment no-highlight' data-noescape>
-~/repo$ git log --oneline source/utilities.js
-
-27cc7225 Tweaked math add to double input
-d35241e6 Expanded common math ops for new feature use
-ca5dc559 Created helper file for common math ops
-    </code></pre>
-</section>
-
-
-<section>
     <h2>Playing Nice With Others</h2>
 
     <p>
@@ -984,8 +985,23 @@ Updating b86e65d..d42c386
 source/some-file.js |   13 ++++--+++
 1 files changed, 7 insertions(+), 2 deletions(-)
     </code></pre>
+</section>
 
-    <img class='fragment' src='images/git_merge_ff.png' alt='git merge diagram, fast-forward' style='width:60%;'>
+
+<section data-transition='none' data-background='#fff'>
+    <h3>Merging</h3>
+
+    <p>With fast forward...</p>
+
+    <img src='images/git_merge-1.png' alt='git pre-merge diagram with one commit' style='width:60%;'>
+</section>
+
+<section data-transition='none' data-background='#fff'>
+    <h3>Merging</h3>
+
+    <p>With fast forward...</p>
+
+    <img src='images/git_merge_ff.png' alt='git merge diagram, fast-forward' style='width:60%;'>
 </section>
 
 
@@ -997,11 +1013,26 @@ source/some-file.js |   13 ++++--+++
 ~/repo$ git merge feature --no-ff
     </code></pre>
 
-    <h4>Why?</h4>
+    <aside class='fragment'>
+        <h4>Why?</h4>
+        <p>Because you lose merge history with fast-forward.</p>
+    </aside>
+</section>
 
-    <p class='fragment'>
-        Because you lose merge history with fast-forward.
-    </p>
+
+<section>
+    <h3>No Fast Forward</h3>
+
+    <pre><code class='no-highlight' data-trim data-noescape>
+~/repo$ git log --oneline
+
+d42c3869 Added new API route to readme docs
+b9bdb026 Various grammar edits to documentation
+c2cb87e3 Remove unused files from test harness
+3e3a8fdf <strong>Merge branch 'feature-two-tweak' into feature-two</strong>
+79eec03a Reorganized documentation sections and renamed
+...
+    </code></pre>
 </section>
 
 
@@ -1056,11 +1087,10 @@ source/some-file.js |   13 ++++--+++
 
     <pre><code class='no-highlight' data-trim data-noescape>
 ~/repo$ git log --oneline
-c345d92 Merge pull request #123 from otheruser/new-feature
+c345d92 <strong>Merge branch 'feature' into main</strong>
 d42c386 Added new-feature to library
 7a652d8 A piece of divergent work
 b86e65d Some older work
-...
     </code></pre>
 </section>
 
@@ -1094,11 +1124,11 @@ Automatic merge failed; fix conflicts and then commit the result.
     <pre><code class='no-highlight' data-trim data-noescape>
 ...some text common to both branches
 
-&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+<strong>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</strong>
 text only in main
-=======
+<strong>=======</strong>
 same line, different text in branch
-&gt;&gt;&gt;&gt;&gt;&gt;&gt; new-feature
+<strong>&gt;&gt;&gt;&gt;&gt;&gt;&gt; new-feature</strong>
 
 more common text...
     </code></pre>
@@ -1133,11 +1163,11 @@ more common text...
     <p>Struggling to resolve the conflict?</p>
 
     <aside class='fragment'>
-        <p>Abort and ask for help!</p>
-
-        <pre><code class='no-highlight' data-trim>
-~/repo$ git merge --abort
+        <pre><code class='no-highlight' data-trim data-noescape="">
+~/repo$ git merge <strong>--abort</strong>
         </code></pre>
+
+        <p>Abort and ask for help!</p>
     </aside>
 </section>
 
@@ -1236,6 +1266,7 @@ Failed to merge in the changes.
     </ol>
 </section>
 
+
 <section>
     <h3>Not going well?</h3>
 
@@ -1245,25 +1276,31 @@ Failed to merge in the changes.
         </p>
 
         <pre><code class='no-highlight' data-trim data-noescape>
-~/repo$ git rebase --abort
+~/repo$ git rebase <strong>--abort</strong>
         </code></pre>
     </aside>
 </section>
 
+
+<section data-background='#fff'>
+    <h3>Use GitHub? No problem.</h3>
+
+    <img src='images/github_rebase.png' alt='A screenshot of GitHubs Pull Request screen using rebase versus merge.'>
+</section>
+
+
 <section>
-    <h3>A recommendation...</h3>
+    <h3>A Recommendation...</h3>
 
     <p>If you plan to use rebase versus merge, <strong>always</strong> use rebase.</p>
 
     <pre class='fragment'><code class='no-highlight' data-trim>
-git pull  ===  git fetch && git merge
-    </code></pre>
-
-    <pre class='fragment'><code class='no-highlight' data-trim>
-~/repo$ git pull --rebase
-    </code></pre>
-
-    <pre class='fragment'><code class='no-highlight' data-trim>
+~/repo$ git pull
+        </code><code class='fragment no-highlight' data-trim>
+~/repo$ git fetch && git merge
+        </code><code class='fragment no-highlight' data-trim data-noescape="">
+~/repo$ git pull <strong>--rebase</strong>
+        </code><code class='fragment no-highlight'>
 ~$ git config branch.main.rebase true
 ~$ git config branch.another-branch.rebase true
         </code><code class='fragment no-highlight' data-trim>
@@ -1278,7 +1315,7 @@ git pull  ===  git fetch && git merge
 
 
 <section data-transition='none' data-background='#fff'>
-    <h3>Multiple Branches</h3>
+    <h3>Cherry Pick</h3>
 
     <img style='margin-right: 3.2em; width: 47%;' src='images/git_cherry-pick_1.png' alt='git multiple branch diagram'>
 
@@ -1304,18 +1341,39 @@ git pull  ===  git fetch && git merge
 
     <img style='width: 60%;' src='images/git_cherry-pick_3.png' alt='git branch deletion after cherry-pick diagram'>
 
-    <pre class='fragment'><code class='no-highlight'>~$ git branch -D old-feature
+    <pre><code class='no-highlight' data-trim>
+        ~$ git branch -D old-feature
     </code></pre>
+</section>
+
+
+<section>
+    <h3>Cherry Pick</h3>
+
+    <p>Yes, you can still get conflicts with a <code>cherry-pick</code>!</p>
+
+    <p class='fragment'>Don't keep that old branch around!</p>
 </section>
 
 
 <!-- END OF MAIN CONTENT -->
 
-<section data-background='#f5ffff'>
-    <h2>Thank You!</h2>
-    <h3 style='margin-top:1.5em;'>Gitting More Out of Git</h3>
-    <p style='margin-top: 2em'>Jordan Kasper | <a href='https://jordankasper.com'>@jakerella</a></p>
-    <p><a href='https://jordankasper.com/git'>jordankasper.com/git</a></p>
+<section data-background='#fff'>
+    <h1>Thank You!</h1>
+    <h2 style='margin-top:1.5em;'>Gitting More Out of Git</h2>
+    
+    <aside style='display: flex; justify-content: center; margin-top: 4em;'>
+        <div style='width: 60%;'>
+            <p style='margin-top: 2em'>Jordan Kasper | <a href='https://jordankasper.com'>@jakerella</a></p>
+            <p>
+                <a href='https://jordankasper.com/git'>jordankasper.com/git</a>
+            </p>
+        </div>
+        <a href='https://confoo.ca/en/2026/cfp/gitting-more-out-of-git/feedback' target='_blank' style='width: 39%;'>
+            Session Feedback:<br>
+            <img src='images/confoo-2026-git-feedback.png' style='width: 40%;' title='A QR code that links to a feedback form for this talk'>
+        </a>
+    </aside>
 </section>
 
 <!-- END OF MAIN CONTENT -->
@@ -1323,6 +1381,59 @@ git pull  ===  git fetch && git merge
 
 <section data-background='#f5ffff'>
     <h2>Bonus Content!</h2>
+</section>
+
+
+<section>
+    <h2>Pointing Blame</h2>
+
+    <p class='fragment'>(Possibly at yourself...)</p>
+</section>
+
+
+<section>
+    <h3>Blame Game</h3>
+
+    <pre><code class='lang-javascript' data-trim style='font-size:0.8em;'>
+1.  function divide(x, y) { ... }
+2.  function multiply(x, y) { ... }
+3.  function add(x, y) {
+4.      return x + x;
+5.  }
+6.  function subtract(x, y) { ... }
+    </code></pre>
+
+    <pre class='fragment'><code class='no-highlight' data-trim data-noescape>
+~/repo$ git blame source/math.js
+        </code><code class='fragment no-highlight' data-trim data-noescape>
+ca5dc559 (roro        2025-03-13   1) function divide(x, y) { ... }
+ca5dc559 (roro        2025-03-13   2) function muiltiply(x, y) { ... }
+d35241e6 (drnick      2026-01-22   3) function add(x, y) {
+<strong>27cc7225 (jakerella   2026-01-29   4)     return x + x;</strong>
+d35241e6 (drnick      2026-01-22   5) }
+d35241e6 (drnick      2026-01-22   6) function subtract(x, y) { ... }
+    </code></pre>
+</section>
+
+
+<section>
+    <h3>Blame Game</h3>
+
+    <p>Know where to look?</p>
+
+    <pre class='fragment'><code class='no-highlight' data-trim data-noescape>
+~/repo$ git blame <strong>-L3,5</strong> source/utilities.js
+        </code><code class='fragment no-highlight' data-trim data-noescape>
+d35241e6 (drnick      2026-01-22   3) function add(x, y) {
+27cc7225 (jakerella   2026-01-29   4)     return x + x;
+d35241e6 (drnick      2026-01-22   5) }
+        </code><code class='fragment no-highlight' data-noescape>
+~/repo$ git log --oneline source/utilities.js
+
+27cc7225 Tweaked math add to double input
+d35241e6 Expanded common math ops for new feature use
+ca5dc559 Created helper file for common math ops
+    </code></pre>
 </section>
 
 

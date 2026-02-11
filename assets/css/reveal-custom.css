@@ -114,15 +114,12 @@ aside.title-text h3 {
     color: #888 !important;
 }
 
-.slides p code, .slides li > code, .slides h3 code, .slides h4 code {
+.slides p code, .slides li > code, .slides h3 code, .slides h4 code, .slides table code {
     background-color: #ddeff0;
     color: #2f85aa;
     font-size: 0.8em;
     padding: 0.05em 0.2em;
-
-    -webkit-border-radius: 0.4em;
-    -moz-border-radius: 0.4em;
-    border-radius: 0.4em;
+    border-radius: 0.3em;
 }
 .slides h3 code, .slides h4 code {
     font-size: 0.9em;
