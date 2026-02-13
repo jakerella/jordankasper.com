@@ -95,14 +95,17 @@ aside.title-text h3 {
     background-color: #fff;
     margin: 0.3em;
 }
-.reveal pre code {
+.reveal .slides pre code {
     line-height: 1.15em;
     max-height: 600px;
     padding: 0.3em;
     display: block;
-    font-size: 0.7em;
+    font-size: 0.8em;
     text-align: left;
     font-family: Consolas, monospace;
+    border-radius: 0.3em;
+    background-color: #fff;
+    color: #4d4d4c;
 }
 .reveal .xml .javascript {
     opacity: 1;

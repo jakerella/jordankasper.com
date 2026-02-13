@@ -42,33 +42,15 @@ description: Diving into regular expressions. What are they? Why would you use t
 
 
 <section>
-    <ol>
-        <li>What are they?</li>
-        <li class='fragment'>Common Elements</li>
-        <li class='fragment'>Special Characters</li>
-        <li class='fragment'>Grouping, Shorthands, and Efficiency</li>
-    </ol>
-</section>
+    <h2>What are They?</h2>
+    <h3 class='fragment'>String Pattern Matchers</h3>
 
-
-<section data-background='images/rubber-duck.jpg'>
-    <h1 style='text-shadow: 4px 4px 0 #000; color: #fff; font-size: 3em; font-weight: bold; text-transform: none; margin: 2em 0 0 2em;'>wut</h1>
-    <cite style='bottom: -11em;'>www.thebigduck.us</cite>
-</section>
-
-
-<section>
-    <h2>String Pattern Matchers</h2>
-
-    <ul>
+    <ul style='margin-left: 1em;'>
         <li class='fragment'>Test a string against a pattern (true/false)</li>
         <li class='fragment'>Match specific data in a string</li>
         <li class='fragment'>Often used for data/input validation</li>
-        <li class='fragment'>Can efficiently find data in large text (e.g. log files)</li>
-        <li class='fragment'>
-            Sometimes used to find and replace specific text<br>
-            (e.g. change all instances of "admin" to "jordan")
-        </li>
+        <li class='fragment'>Can efficiently* find data in large text (e.g. log files)</li>
+        <li class='fragment'>Sometimes used to find and replace specific text</li>
     </ul>
 </section>
 
@@ -256,11 +238,6 @@ description: Diving into regular expressions. What are they? Why would you use t
 
 
 <section>
-    <h2>Special Characters</h2>
-</section>
-
-
-<section>
     <h2>Match Any Character</h2>
 
     <pre><code class='lang-javascript' data-trim>
@@ -295,6 +272,8 @@ description: Diving into regular expressions. What are they? Why would you use t
 "b5d055".match(/c52a93/)               // null
     </code><code class='fragment lang-javascript' data-trim>
 "c52a93".match(/[0123456789abcdef]/)   // ["c"]
+    </code><code class='fragment lang-javascript' data-trim>
+"c52a93".match(/[0123456789abcdef]/g)  // ["c", "5", "2", "a", "9", 3"]
     </code><code class='fragment lang-javascript' data-trim>
 "c52a93".match(/[0123456789abcdef]+/)  // ["c52a93"]
     </code><code class='fragment lang-javascript' data-trim>
@@ -414,12 +393,27 @@ description: Diving into regular expressions. What are they? Why would you use t
         </code><code class='fragment lang-javascript' data-trim>
 "567a99".match(/[0-9]+\.[0-9]{2}/)  // null
     </code></pre>
-
 </section>
 
 
 <section>
-    <h2>Grouping, Shorthands, and Efficiency</h2>
+    <h2>Anchors</h2>
+    <p><code>^</code> and <code>$</code></p>
+
+    <pre><code class='lang-javascript' data-trim>
+/[0-9]+\.[0-9]{2}/.test("576.99")       // true
+        </code><code class='fragment lang-javascript' data-trim>
+/[0-9]+\.[0-9]{2}/.test("f00.00bar")    // true
+        </code><code class='fragment lang-javascript' data-trim>
+/^[0-9]+\.[0-9]{2}$/.test("f00.00bar")  // false
+        </code><code class='fragment lang-javascript' data-trim>
+/^[0-9]+\.[0-9]{2}$/.test("576.99")     // true
+    </code></pre>
+</section>
+
+
+<section>
+    <h2>Grouping, Efficiency, and Shorthands</h2>
 </section>
 
 
@@ -481,12 +475,13 @@ description: Diving into regular expressions. What are they? Why would you use t
         </code><code class='fragment lang-javascript' data-trim>
 // "I like dogs the most"
         </code><code class='fragment lang-javascript' data-trim>
-const email = "jordan@jordankasper.com"
+const email = "mary@example.com"
 email.replace(/([a-z]+)@([a-z.]+)/i, "https://$2/users/$1")
         </code><code class='fragment lang-javascript' data-trim>
-// "https://jordankasper.com/users/jordan"
+// "https://example.com/users/mary"
     </code></pre>
 </section>
+
 
 <section>
     <h2>Whitespace &amp; Shorthands</h2>
@@ -521,6 +516,7 @@ email.replace(/([a-z]+)@([a-z.]+)/i, "https://$2/users/$1")
     </p>
 </section>
 
+
 <section>
     <h2>Shorthand Example</h2>
 
@@ -542,22 +538,6 @@ users.forEach((user) => {
     </code></pre>
 </section>
 
-<section>
-    <h2>Anchors</h2>
-    <p><code>^</code> and <code>$</code></p>
-
-    <pre><code class='lang-javascript' data-trim>
-const input = "576.99"
-        </code><code class='fragment lang-javascript' data-trim>
-/\d+\.\d{2}/.test(input)         // true
-        </code><code class='fragment lang-javascript' data-trim>
-/\d+\.\d{2}/.test("f00.00bar")   // true
-        </code><code class='fragment lang-javascript' data-trim>
-/^\d+\.\d{2}$/.test("f00.00bar") // false
-        </code><code class='fragment lang-javascript' data-trim>
-/^\d+\.\d{2}$/.test("576.99")    // true
-    </code></pre>
-</section>
 
 <section>
     <h2>Anchors &amp; Multiline</h2>
@@ -580,20 +560,21 @@ file.match(/^\w+/g) // [ "jakerella" ]
     </code></pre>
 </section>
 
+
 <section>
     <h2>The Multiline Flag</h2>
 
-    <p class='fragment'>Use the global <strong>and</strong> multiline flags: <code>g</code> &amp; <code>m</code></p>
+    <aside class='fragment'>
+        <p>Use the global <strong>and</strong> multiline flags: <code>g</code> &amp; <code>m</code></p>
 
-    <pre class='fragment'><code class='lang-text' data-trim>
+        <pre><code class='lang-text' data-trim>
 jakerella      Jordan 42
 ro_ro	Alex	999
 Zee3ii Nick 13
-    </code></pre>
+        </code></pre>
+    </aside>
 
     <pre class='fragment'><code class='lang-javascript' data-trim>
-file.match(/^\w+/g)   // [ "jakerella" ]
-        </code><code class='fragment lang-javascript' data-trim>
 file.match(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
     </code></pre>
 </section>
@@ -604,7 +585,7 @@ file.match(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
 
     <p>Watch out for:</p>
 
-    <ul>
+    <ul style='margin-left: 1em;'>
         <li class='fragment'>Too many groups (use non-matching)</li>
         <li class='fragment'>Large source texts (use anchors)</li>
         <li class='fragment'>Unstructured data (like HTML)</li>
@@ -627,9 +608,7 @@ file.match(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
 <section>
     <h2>Resources</h2>
 
-    <p><a href='https://jordankasper.com/regex-101'>jordankasper.com/regex-101</a></p>
-
-    <ul class='fragment'>
+    <ul style='margin-left: 1em;'>
         <li>Playground: <a href='http://regex101.com'>regex101.com</a></li>
         <li>Various Engine Info: <a href='https://en.wikipedia.org/wiki/Comparison_of_regular_expression_engines'>Wikipedia</a></li>
         <li>Reference Docs: <a href='http://regular-expressions.info'>regular-expressions.info</a></li>
@@ -638,6 +617,7 @@ file.match(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
         <li>Fun: <a href='http://regexcrossword.com'>regexcrossword.com</a></li>
     </ul>
 </section>
+
 
 <section data-background='#f5ffff'>
     <h2>Thank You!</h2>
@@ -660,6 +640,7 @@ file.match(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
     </aside>
 </section>
 
+
 <section data-background='#fff'>
     <h2>Bonus Content!</h2>
 </section>
@@ -673,30 +654,41 @@ file.match(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
 </section>
 
 <section>
-    <h2>Positive Look Ahead</h2>
-    <p><code>(?=)</code></p>
+    <h2>Look Aheads</h2>
 
-    <pre><code class='no-highlight'>/(the)(?=\sfat)/i</code></pre>
+    <p>Assert that the group exists ahead of the match: <code>(?=)</code></p>
 
-    <p><strong>The</strong> fat cat sat on the mat</p>
+    <pre><code class='lang-javascript' data-trim data-noescape>
+"<strong>The</strong> fat cat sat on the mat".match(/(the)(?=\sfat)/ig)
+                            // ["The"]
+    </code></pre>
+
+    <aside class='fragment'>
+        <p>Assert that the group doesn't exist ahead of the match: <code>(?!)</code></p>
+
+        <pre><code class='lang-javascript' data-trim data-noescape>
+"The fat cat sat on <strong>the</strong> mat".match(/(the)(?!\sfat)/ig)
+                            // ["the"]
+        </code></pre>
+    </aside>
 </section>
 
 <section>
-    <h2>Negative Look Ahead</h2>
-    <p><code>(?!)</code></p>
+    <h2>Look Behinds</h2>
 
-    <pre><code class='no-highlight'>/(the)(?!\sfat)/i</code></pre>
+    <p>Assert that the group exists behind the match: <code>(?&lt;=)</code></p>
 
-    <p>The fat cat sat on <strong>the</strong> mat</p>
-</section>
+    <pre><code class='lang-javascript' data-trim data-noescape>
+"The <strong>fat</strong> cat sat on the <strong>mat</strong>".match(/(?&lt;=the\s)([a-z]at)/ig)
+                            // ["fat", "mat"]
+    </code></pre>
 
-<section>
-    <h2>Look Behind</h2>
-    <p><code>(?&lt;=)</code></p>
+    <aside class='fragment'>
+        <p>Assert that the group doesn't exist behind the match: <code>(?&lt;!)</code></p>
 
-    <pre><code class='no-highlight'>/(?&lt;=the\s)([a-z]at)/ig</code></pre>
-
-    <p>The <strong>fat</strong> cat sat on the <strong>mat</strong></p>
-
-    <p class='fragment'> We also have negative look behind with: <code>(?&lt;!)</code></p>
+        <pre><code class='lang-javascript' data-trim data-noescape>
+"The fat <strong>cat sat</strong> on the mat".match(/(?&lt;!the\s)([a-z]at)/ig)
+                            // ["cat", "sat"]
+        </code></pre>
+    </aside>
 </section>
