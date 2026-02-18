@@ -10,19 +10,25 @@ description: A deep dive into the Git version control system
     .reveal pre code { font-size: 0.9em; overflow-x: visible; }
     .reveal table.list th { width: 4em; text-align: right; padding: 0.3em 0.5em 0 0; }
     .reveal table.list td { text-align: left; }
+    .reveal .link-display { display: flex; justify-content: center; }
+    .reveal .link-display div { width: 49%; }
 </style>
 
-<section data-background='#000'>
-    <h1 style='color: #fff; text-shadow: 3px 3px 4px #666;'>Gitting More Out of Git</h1>
+<section data-background='#fff'>
+    <h1>Gitting More Out of Git</h1>
 
-    <aside style='display: flex; justify-content: center; margin-top: 4em;'>
-        <p style='width: 49%;'>
+    <aside><img src='images/title-screen-git-diagram.png' style='width:70%;'></aside>
+
+    <aside class='link-display' style='margin-top:1em;'>
+        <div>
             <a href='https://jordankasper.com/git'>jordankasper.com/git</a>
-        </p>
-        <a href='https://confoo.ca/en/2026/cfp/gitting-more-out-of-git/feedback' target='_blank' style='width: 49%;'>
-            Session Feedback:<br>
-            <img src='images/confoo-2026-git-feedback.png' style='width: 40%;' title='A QR code that links to a feedback form for this talk'>
-        </a>
+        </div>
+        <div>
+            <a href='https://confoo.ca/en/2026/cfp/gitting-more-out-of-git/feedback' target='_blank'>
+                Session Feedback:<br>
+                <img src='images/confoo-2026-git-feedback.png' style='width: 25%;' title='A QR code that links to a feedback form for this talk'>
+            </a>
+        </div>
     </aside>
 </section>
 
@@ -107,7 +113,7 @@ description: A deep dive into the Git version control system
 
     <pre><code class='no-highlight' data-noescape data-trim>
 ~/repo$ git branch <strong>-vv</strong>
-* main               b956c45c [origin/main] Initial commit
+* main               b956c45c <strong>[origin/main]</strong> Initial commit
   some-local-branch  a74b2950 Implemented that cool feature
     </code></pre>
 
@@ -177,7 +183,7 @@ node-source    git@github.com:nodejs/node.git (push)
 <section>
     <h3>Open Source Flow</h3>
 
-    <p>This is the nature of open source development on Git.</p>
+    <p class='fragment'>How do I get the latest changes from Nodejs?</p>
 
     <pre class='fragment'><code class='no-highlight' data-noescape data-trim>
 ~/node$ git <strong>fetch</strong> node-source
@@ -185,11 +191,16 @@ remote: Enumerating objects: 6018, done.
 ...
 From github.com/nodejs/node
  * [new branch] ...
-        </code><code class='fragment no-highlight' data-noescape>
+        </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/node$ git checkout main
+        </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/node$ git merge <strong>node-source/main</strong>
 Updating 40f7a8ea..a479419b
 ...
+        </code><code class='fragment no-highlight' data-trim data-noescape>
+~/node$ git checkout new-feature
+        </code><code class='fragment no-highlight' data-trim data-noescape>
+~/node$ git merge main
     </code></pre>
 </section>
 
@@ -342,7 +353,7 @@ Added documentation
 
 
 <section>
-    <h2>Fixing Changes Before Commit</h2>
+    <h2>Fixing Changes</h2>
 </section>
 
 
@@ -409,7 +420,7 @@ On branch new-feature
     <h3>Staged Changes</h3>
 
     <pre><code class='no-highlight' data-trim>
-~/repo$ echo "foobar" >> README.md
+~/repo$ echo "testing" >> README.md
 ~/repo$ git add README.md
         </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/repo$ git status
@@ -417,12 +428,13 @@ On branch new-feature
 Changes to be committed:
   (use "git restore <strong>--staged</strong> &lt;file>..." to unstage)
         modified:   README.md
+        </code><code class='fragment no-highlight' data-trim data-noescape>
+~/repo$ git <strong>restore --staged</strong> README.md
+~/repo$ git status
+On branch new-feature
+Changes <strong>not staged</strong> for commit:
+        modified:   README.md
     </code></pre>
-</section>
-
-
-<section>
-    <h3>So what is "staging" and "working directory"?</h3>
 </section>
 
 
@@ -539,6 +551,11 @@ Bug fixes for older features
 
 
 <section>
+    <p><strong>The <code>reflog</code> is never pushed to a remote.</strong></p>
+</section>
+
+
+<section>
     <h3>What if I need to amend an older commit?</h3>
 
     <p class='fragment illuminate'>You'll need to use <code>git rebase</code></p>
@@ -644,7 +661,12 @@ Successfully rebased and updated refs/heads/new-feature.
 <section>
     <h2>Understanding the Three <del>Seashells</del> States</h2>
 
-    <p class='fragment'>Or... how to use <code>reset</code> for fun and profit.</p>
+    <p>Or... how to use <code>reset</code> for fun and profit.</p>
+
+    <p class='fragment'>
+        FYI, <code>reset</code> is the OG <code>restore</code>.<br>
+        Here's a very helpful <a href='https://stackoverflow.com/questions/58003030/what-is-git-restore-and-how-is-it-different-from-git-reset'>StackOverflow answer on the differences</a>.
+    </p>
 </section>
 
 
@@ -680,11 +702,6 @@ Successfully rebased and updated refs/heads/new-feature.
 
     <pre><code class='no-highlight' data-trim data-noescape>
 ~/repo$ git reset <strong>--soft HEAD^</strong>
-~/repo$ git log
-commit b86e65dab535623d487e063ef1337cfdecfaf99d
-...
-the immediately previous change (totally normal)
-...
         </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/repo$ git status
 On branch new-feature
@@ -727,11 +744,6 @@ On branch new-feature
 
     <pre><code class='no-highlight' data-trim data-noescape>
 ~/repo$ git reset <strong>--mixed HEAD^</strong>
-~/repo$ git log
-commit b86e65dab535623d487e063ef1337cfdecfaf99d
-...
-the immediately previous change (totally normal)
-...
         </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/repo$ git status
 On branch new-feature
@@ -775,11 +787,6 @@ On branch new-feature
 
     <pre><code class='no-highlight' data-trim data-noescape>
 ~/repo$ git reset <strong>--hard HEAD^</strong>
-~/repo$ git log
-commit b86e65dab535623d487e063ef1337cfdecfaf99d
-
-the immediately previous change (totally normal)
-...
         </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/repo$ git status
 On branch new-feature
@@ -840,8 +847,8 @@ b9bdb02f HEAD@{5}: commit: a really good change
         </code><code class='fragment no-highlight' data-noescape>
 ~$ git log --oneline
 <strong>d42c386</strong> this is not a good change
-<strong>b86e65d</strong> the immediately previous change (totally normal)
-<strong>b9bdb02</strong> a really good change</code></pre>
+b86e65d the immediately previous change (totally normal)
+b9bdb02 a really good change</code></pre>
 </section>
 
 
@@ -1117,6 +1124,24 @@ Automatic merge failed; fix conflicts and then commit the result.
 
 
 <section>
+    <h3>Resolving the Conflict</h3>
+
+    <ol>
+        <li>Fix the conflict in the file!</li>
+        <li class='fragment'>
+            Stage the fixed file<br>
+            <code>~$ git add README.md</code>
+        </li>
+        <li class='fragment'>
+            Commit the files<br>
+            <span class='fine'>(This is your merge commit, it may include other files!)</span><br>
+            <code>~$ git commit</code>
+        </li>
+    </ol>
+</section>
+
+
+<section>
     <h3>Conflicts</h3>
 
     <p>Opening up the <code>README.md</code> file...</p>
@@ -1132,28 +1157,6 @@ same line, different text in branch
 
 more common text...
     </code></pre>
-</section>
-
-
-<section>
-    <h3>Resolving the Conflict</h3>
-
-    <ol>
-        <li>Fix the conflict in the file!</li>
-        <li class='fragment'>
-            Stage the fixed file<br>
-            <code>~$ git add README.md</code>
-        </li>
-        <li class='fragment'>
-            Commit the files<br>
-            <span class='fine'>(This is your merge commit, it may include other files!)</span><br>
-            <code>~$ git commit</code>
-        </li>
-        <li class='fragment'>
-            Remove the "orig"inal file from the branch <span class='fine'>(if present)</span><br>
-            <code>~$ rm README.md.orig</code>
-        </li>
-    </ol>
 </section>
 
 
@@ -1302,8 +1305,6 @@ Failed to merge in the changes.
 ~/repo$ git pull <strong>--rebase</strong>
         </code><code class='fragment no-highlight'>
 ~$ git config branch.main.rebase true
-~$ git config branch.another-branch.rebase true
-        </code><code class='fragment no-highlight' data-trim>
 ~$ git config branch.autosetuprebase always
     </code></pre>
 </section>
@@ -1362,17 +1363,21 @@ Failed to merge in the changes.
     <h1>Thank You!</h1>
     <h2 style='margin-top:1.5em;'>Gitting More Out of Git</h2>
     
-    <aside style='display: flex; justify-content: center; margin-top: 4em;'>
-        <div style='width: 60%;'>
-            <p style='margin-top: 2em'>Jordan Kasper | <a href='https://jordankasper.com'>@jakerella</a></p>
+    <aside class='link-display' style='margin-top: 2em;'>
+        <div>
+            <p>Jordan Kasper | <a href='https://jordankasper.com'>@jakerella</a></p>
             <p>
                 <a href='https://jordankasper.com/git'>jordankasper.com/git</a>
             </p>
         </div>
-        <a href='https://confoo.ca/en/2026/cfp/gitting-more-out-of-git/feedback' target='_blank' style='width: 39%;'>
-            Session Feedback:<br>
-            <img src='images/confoo-2026-git-feedback.png' style='width: 40%;' title='A QR code that links to a feedback form for this talk'>
-        </a>
+        <div>
+            <p>
+                <a href='https://confoo.ca/en/2026/cfp/gitting-more-out-of-git/feedback' target='_blank'>
+                    Session Feedback:<br>
+                    <img src='images/confoo-2026-git-feedback.png' style='width: 40%;' title='A QR code that links to a feedback form for this talk'>
+                </a>
+            </p>
+        </div>
     </aside>
 </section>
 
