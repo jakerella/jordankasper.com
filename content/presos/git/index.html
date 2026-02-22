@@ -283,75 +283,6 @@ index 00000000..b5a9776f
 </section>
 
 
-<section class='cut-me-1'>
-    <h2>Git and Data Integrity</h2>
-
-    <div class='fragment'>
-        <p class='illuminate'>Git uses snapshots</p>
-        <p class='fine'>(versus file diffs)</p>
-    </div>
-</section>
-
-
-<section class='cut-me-1'>
-    <h3>File Diffs</h3>
-
-    <img src='images/file-diffs.png' alt='file diff diagram'>
-
-    <cite>http://git-scm.com/book/en/Getting-Started-Git-Basics</cite>
-</section>
-
-
-<section class='cut-me-1'>
-    <h3>Snapshots</h3>
-
-    <img src='images/snapshots.png' alt='snapshots diagram'>
-
-    <cite>http://git-scm.com/book/en/Getting-Started-Git-Basics</cite>
-</section>
-
-
-<section class='cut-me-1'>
-    <h3>Commit Hashes</h3>
-
-    <pre><code class='no-highlight' data-trim data-noescape>
-~/repo$ git commit -m "Added documentation"
-[main (root-commit) <strong>b9bdb026</strong>] Added documentation
-        </code><code class='fragment no-highlight' data-noescape>
-~/repo$ git log
-commit <strong>b9bdb0261ee9bcaa31d7eb062c0bcafee3e530f0</strong>
-Author: jdoe &lt;john@doe.com&gt;
-Date:   Thu Jan 29 11:27:14 2026 -0400
-
-Added documentation
-    </code></pre>
-</section>
-
-
-<section class='cut-me-1'>
-    <h3>Local Repos</h3>
-
-    <p>Every local instance of a git repo has ALL of the data.</p>
-
-    <p class='fragment'>
-        That means when GitHub goes down, you keep working...
-    </p>
-    <p class='fragment'>
-        ...even with other people / machines.
-    </p>
-</section class='cut-me-1'>
-
-
-<section class='cut-me-1' data-background='#fff'>
-    <h3>A distributued VCS</h3>
-
-    <img src='images/DistributedVCS_Complex.png' alt='dsitributed vcs (complex)'>
-
-    <cite>https://docs.joomla.org/Dvcs</cite>
-</section>
-
-
-
 <section>
     <h2>Fixing Changes</h2>
 </section>
@@ -864,98 +795,6 @@ b9bdb02 a really good change</code></pre>
 </section>
 
 
-<section data-background='#fff' style='height:15em'>
-    <h2 style='margin-top:4em;'>Logs</h2>
-
-    <img src='images/log.png' alt='Log (from Ren &amp; Stimpy)' style='position:absolute; bottom:-1em; left:0;'>
-
-    <cite>http://thedailyomnivore.net/2012/02/20/ren-stimpy/</cite>
-</section>
-
-
-<section>
-    <h3>The Basic Log</h3>
-
-    <pre><code class='no-highlight' data-trim>
-~/repo$ git log
-commit d42c38691161f42fcc07d806f7df4579e8cd189e
-Author: jakerella &lt;me@example.com&gt;
-Date:   Fri Jan 30 13:57:36 2026 -0400
-
-Added new API route to readme docs
-
-commit b9bdb0261ee9bcaa31d7eb062c0bcafee3e530f0
-Author: jakerella &lt;me@example.com&gt;
-Date:   Thu Jan 29 09:14:16 2026 -0400
-
-Various grammar edits to documentation
-    </code></pre>
-</section>
-
-<section>
-    <h3>Log Options</h3>
-
-    <pre><code class='no-highlight' data-trim data-noescape>
-~/repo$ git log <strong>--oneline</strong>
-
-d42c3869 Added new API route to readme docs
-b9bdb026 Various grammar edits to documentation
-c2cb87e3 Remove unused files from test harness
-2e8a119c Merge pull request #186 from jakerella/new-feature
-79eec03a Reorganized documentation sections and renamed
-...
-    </code></pre>
-</section>
-
-
-<section>
-    <h3>Formatting and Graphing</h3>
-
-    <pre><code class='no-highlight' data-trim>
-~/repo$ git log --pretty="tformat:%h %as %an: %s" --graph
-    </code><code class='fragment no-highlight' data-trim data-noescape>
-* 714e0dd9 2026-01-30 jakerella: Merge pull request #220 from foobar/feature-two
-<span style='color:green !important'>|</span><span style='color:blue !important'>\</span>
-<span style='color:green !important'>|</span> * c8bcfc14 2026-01-29 roro: last update for feature two
-<span style='color:green !important'>|</span> * 3e3a8fdf 2026-01-28 jakerella: Merge branch 'feature-two-tweak' into feature-two
-<span style='color:green !important'>|</span> <span style='color:blue !important'>|</span><span style='color:red !important'>\</span>
-<span style='color:green !important'>|</span> <span style='color:blue !important'>|</span> * 46f4cf12 2026-01-28 drnick: tweak for feature two
-<span style='color:green !important'>|</span> * <span style='color:red !important'>|</span> 1471f2b8 2026-01-27 drnick: one more thing on feature two
-<span style='color:green !important'>|</span> <span style='color:blue !important'>|</span><span style='color:red !important'>/</span>
-<span style='color:green !important'>|</span> * 5ce150bc 2026-01-26 drnick: feature two initial work
-<span style='color:green !important'>|</span><span style='color:blue !important'>/</span>
-* 062b1f01 2026-01-25 roro: some previous work
-    </code></pre>
-</section>
-
-<section>
-    <h3>Make it Easy</h3>
-
-    <p>Add an alias to your bash or gitbash profile:</p>
-
-    <pre><code class='no-highlight' data-trim data-noescape>
-alias gl="git log --pretty='tformat:%h %as %an: %s' --graph"
-    </code></pre>
-</section>
-
-
-<section>
-    <h3>Filtering the Log</h3>
-
-    <pre><code class='no-highlight' data-trim data-noescape>
-~/repo$ git log <strong>--no-merges</strong>
-
-~/repo$ git log <strong>--author="jakerella"</strong>
-
-~/repo$ git log <strong>--before="2026-02-01"</strong>
-
-~/repo$ git log <strong>-- source/routes</strong>
-
-~/repo$ git log <strong>--grep=4\.31\.[0-9]+ -E</strong>
-    </code></pre>
-</section>
-
-
 <section>
     <h2>Playing Nice With Others</h2>
 
@@ -1386,6 +1225,174 @@ Failed to merge in the changes.
 
 <section data-background='#f5ffff'>
     <h2>Bonus Content!</h2>
+</section>
+
+
+<section class='cut-me-1'>
+    <h2>Git and Data Integrity</h2>
+
+    <div class='fragment'>
+        <p class='illuminate'>Git uses snapshots</p>
+        <p class='fine'>(versus file diffs)</p>
+    </div>
+</section>
+
+
+<section class='cut-me-1'>
+    <h3>File Diffs</h3>
+
+    <img src='images/file-diffs.png' alt='file diff diagram'>
+
+    <cite>http://git-scm.com/book/en/Getting-Started-Git-Basics</cite>
+</section>
+
+
+<section class='cut-me-1'>
+    <h3>Snapshots</h3>
+
+    <img src='images/snapshots.png' alt='snapshots diagram'>
+
+    <cite>http://git-scm.com/book/en/Getting-Started-Git-Basics</cite>
+</section>
+
+
+<section class='cut-me-1'>
+    <h3>Commit Hashes</h3>
+
+    <pre><code class='no-highlight' data-trim data-noescape>
+~/repo$ git commit -m "Added documentation"
+[main (root-commit) <strong>b9bdb026</strong>] Added documentation
+        </code><code class='fragment no-highlight' data-noescape>
+~/repo$ git log
+commit <strong>b9bdb0261ee9bcaa31d7eb062c0bcafee3e530f0</strong>
+Author: jdoe &lt;john@doe.com&gt;
+Date:   Thu Jan 29 11:27:14 2026 -0400
+
+Added documentation
+    </code></pre>
+
+    <p class='fragment'>
+        A Git commit hash is a checksum of <em>everything</em> in that repository.
+    </p>
+
+    <p class='fragment'>
+        Every file, every character, every commit message, etc.
+    </p>
+</section>
+
+
+<section class='cut-me-1'>
+    <h3>Local Repos</h3>
+
+    <p>Every local instance of a git repo has ALL of the data.</p>
+
+    <p class='fragment'>
+        That means when GitHub goes down, you keep working...
+    </p>
+    <p class='fragment'>
+        ...even with other people / machines.
+    </p>
+</section class='cut-me-1'>
+
+
+<section class='cut-me-1' data-background='#fff'>
+    <h3>A distributued VCS</h3>
+
+    <img src='images/DistributedVCS_Complex.png' alt='dsitributed vcs (complex)'>
+
+    <cite>https://docs.joomla.org/Dvcs</cite>
+</section>
+
+
+<section data-background='#fff' style='height:15em'>
+    <h2 style='margin-top:4em;'>Logs</h2>
+
+    <img src='images/log.png' alt='Log (from Ren &amp; Stimpy)' style='position:absolute; bottom:-1em; left:0;'>
+
+    <cite>http://thedailyomnivore.net/2012/02/20/ren-stimpy/</cite>
+</section>
+
+
+<section>
+    <h3>The Basic Log</h3>
+
+    <pre><code class='no-highlight' data-trim>
+~/repo$ git log
+commit d42c38691161f42fcc07d806f7df4579e8cd189e
+Author: jakerella &lt;me@example.com&gt;
+Date:   Fri Jan 30 13:57:36 2026 -0400
+
+Added new API route to readme docs
+
+commit b9bdb0261ee9bcaa31d7eb062c0bcafee3e530f0
+Author: jakerella &lt;me@example.com&gt;
+Date:   Thu Jan 29 09:14:16 2026 -0400
+
+Various grammar edits to documentation
+    </code></pre>
+</section>
+
+<section>
+    <h3>Log Options</h3>
+
+    <pre><code class='no-highlight' data-trim data-noescape>
+~/repo$ git log <strong>--oneline</strong>
+
+d42c3869 Added new API route to readme docs
+b9bdb026 Various grammar edits to documentation
+c2cb87e3 Remove unused files from test harness
+2e8a119c Merge pull request #186 from jakerella/new-feature
+79eec03a Reorganized documentation sections and renamed
+...
+    </code></pre>
+</section>
+
+
+<section>
+    <h3>Formatting and Graphing</h3>
+
+    <pre><code class='no-highlight' data-trim>
+~/repo$ git log --pretty="tformat:%h %as %an: %s" --graph
+    </code><code class='fragment no-highlight' data-trim data-noescape>
+* 714e0dd9 2026-01-30 jakerella: Merge pull request #220 from foobar/feature-two
+<span style='color:green !important'>|</span><span style='color:blue !important'>\</span>
+<span style='color:green !important'>|</span> * c8bcfc14 2026-01-29 roro: last update for feature two
+<span style='color:green !important'>|</span> * 3e3a8fdf 2026-01-28 jakerella: Merge branch 'feature-two-tweak' into feature-two
+<span style='color:green !important'>|</span> <span style='color:blue !important'>|</span><span style='color:red !important'>\</span>
+<span style='color:green !important'>|</span> <span style='color:blue !important'>|</span> * 46f4cf12 2026-01-28 drnick: tweak for feature two
+<span style='color:green !important'>|</span> * <span style='color:red !important'>|</span> 1471f2b8 2026-01-27 drnick: one more thing on feature two
+<span style='color:green !important'>|</span> <span style='color:blue !important'>|</span><span style='color:red !important'>/</span>
+<span style='color:green !important'>|</span> * 5ce150bc 2026-01-26 drnick: feature two initial work
+<span style='color:green !important'>|</span><span style='color:blue !important'>/</span>
+* 062b1f01 2026-01-25 roro: some previous work
+    </code></pre>
+</section>
+
+<section>
+    <h3>Make it Easy</h3>
+
+    <p>Add an alias to your bash or gitbash profile:</p>
+
+    <pre><code class='no-highlight' data-trim data-noescape>
+alias gl="git log --pretty='tformat:%h %as %an: %s' --graph"
+    </code></pre>
+</section>
+
+
+<section>
+    <h3>Filtering the Log</h3>
+
+    <pre><code class='no-highlight' data-trim data-noescape>
+~/repo$ git log <strong>--no-merges</strong>
+
+~/repo$ git log <strong>--author="jakerella"</strong>
+
+~/repo$ git log <strong>--before="2026-02-01"</strong>
+
+~/repo$ git log <strong>-- source/routes</strong>
+
+~/repo$ git log <strong>--grep=4\.31\.[0-9]+ -E</strong>
+    </code></pre>
 </section>
 
 
