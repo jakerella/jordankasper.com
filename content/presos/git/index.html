@@ -139,14 +139,10 @@ origin  git@github.com:jakerella/foo.git (push)
 <section>
     <h3>Going Upstream</h3>
 
-    <p>
-        How do I make a new branch "track" that remote repo?
-    </p>
+    <p>How do I make a remote repo "track" my new branch?</p>
 
     <pre class='fragment'><code class='no-highlight' data-noescape data-trim>
 ~/repo$ git checkout -b new-feature
-~/repo$ git branch <strong>--set-upstream-to=origin/new-feature</strong>
-        </code><code class='fragment no-highlight' data-noescape data-trim>
 ~/repo$ git push <strong>-u origin</strong> new-feature
         </code><code class='fragment no-highlight' data-trim>
 ~/repo$ git branch -vv
@@ -154,6 +150,14 @@ origin  git@github.com:jakerella/foo.git (push)
 * new-feature       b956c45c [origin/new-feature] Initial commit
   some-local-branch a74b2950 Implemented that cool feature
     </code></pre>
+
+    <p class='fragment'>What if the branch already existed in the remote?</p>
+
+    <pre class='fragment'><code class='no-highlight' data-noescape data-trim>
+~/repo$ git branch <strong>--set-upstream-to=origin/new-feature</strong>
+    </code></pre>
+
+    <p class='fragment'>But do you <em>really</em> want to do that?</p>
 </section>
 
 
@@ -183,16 +187,19 @@ node-source    git@github.com:nodejs/node.git (push)
 <section>
     <h3>Open Source Flow</h3>
 
-    <p class='fragment'>How do I get the latest changes from Nodejs?</p>
+    <p class='fragment'>
+        I've been working on this new feature a while,<br>
+        how do I get the latest changes from upstream?
+    </p>
 
     <pre class='fragment'><code class='no-highlight' data-noescape data-trim>
+~/node$ git checkout main
 ~/node$ git <strong>fetch</strong> node-source
 remote: Enumerating objects: 6018, done.
 ...
 From github.com/nodejs/node
  * [new branch] ...
-        </code><code class='fragment no-highlight' data-trim data-noescape>
-~/node$ git checkout main
+...
         </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/node$ git merge <strong>node-source/main</strong>
 Updating 40f7a8ea..a479419b
@@ -213,22 +220,36 @@ Updating 40f7a8ea..a479419b
 <section>
     <h3>Branch Differences</h3>
 
-    <p>We commit some changes to our local feature branch.</p>
+    <p>We've added a new file to our local feature branch...</p>
 
     <pre class='fragment'><code class='no-highlight' data-trim>
 ~/node$ git diff main new-feature
         </code><code class='fragment no-highlight' data-trim data-noescape>
+diff --git a/feature.js b/feature.js
+<strong>new file mode 100644</strong>
+index 0000000..b5a9776f
+...
+        </code><code class='fragment no-highlight' data-noescape data-trim>
 <strong>diff --git a/README.md b/README.md</strong>
 index a479419b..b5a9776f 100644
 --- a/README.md
 +++ b/README.md
 @@ -1 +0,0 @@
 -This is a bad line, remove it!
-        </code><code class='fragment no-highlight' data-noescape data-trim>
-diff --git a/feature.js b/feature.js
-<strong>new file mode 100644</strong>
-index 0000000..b5a9776f
-...</code></pre>
+    </code></pre>
+</section>
+
+
+<section>
+    <h3>Branch Differences - Compact Summary</h3>
+
+    <pre class='fragment'><code class='no-highlight' data-trim data-noescape>
+~/node$ git diff main new-feature <strong>--compact-summary</strong>
+        </code><code class='fragment no-highlight' data-trim data-noescape>
+README.md        | 1 -
+feature.js (new) | 1 +
+2 files changed, 1 insertion(+), 1 deletion(-)
+    </code></pre>
 </section>
 
 
@@ -245,7 +266,7 @@ index 0000000..b5a9776f
         </code></pre>
 
         <p>
-            This is ALL changes between <code>main</code> and <code>new-feature</code>,<br>
+            Shows ALL missing commits between <code>main</code> and <code>new-feature</code>,<br>
             (regardless of what branch those came from).
         </p>
     </aside>
@@ -253,22 +274,18 @@ index 0000000..b5a9776f
 
 
 <section>
-    <h3>Single-Branch Differences (<code>..</code>)</h3>
+    <h3>Single-Direction Differences (<code>...</code>)</h3>
 
     <pre><code class='no-highlight' data-trim data-noescape>
-~$ git diff <strong>main..new-feature</strong>
+~$ git diff <strong>main...new-feature</strong> --compact-summary
         </code><code class='fragment no-highlight' data-noescape data-trim>
-diff --git a/feature.js b/feature.js
-<strong>new file</strong> mode 100644
-index 00000000..b5a9776f
---- /dev/null
-+++ b/feature.js
-...
+feature.js (new) | 1 +
+1 files changed, 1 insertion(+)
     </code></pre>
 
     <table class='list fragment' style='font-size: 0.8em;'>
         <tr>
-            <th><code>..</code>:</th>
+            <th><code>...</code>:</th>
             <td>show all commits on "new-feature" not on "main"</td>
         </tr>
         <tr>
@@ -276,7 +293,7 @@ index 00000000..b5a9776f
             <td>show all commit differences between "new-feature" and "main"</td>
         </tr>
         <tr>
-            <th><code>...</code>:</th>
+            <th><code>..</code>:</th>
             <td>same as <code>space</code></td>
         </tr>
     </table>
