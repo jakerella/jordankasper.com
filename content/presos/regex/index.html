@@ -49,7 +49,9 @@ description: Diving into regular expressions. What are they? Why would you use t
         <li class='fragment'>Test a string against a pattern (true/false)</li>
         <li class='fragment'>Match specific data in a string</li>
         <li class='fragment'>Often used for data/input validation</li>
-        <li class='fragment'>Can efficiently* find data in large text (e.g. log files)</li>
+        <li class='fragment'>
+            Can efficiently* find data in large text (e.g. <a href='https://gist.github.com/jakerella/3520941015d6367d9abc4ed033530789'>log files</a>)
+        </li>
         <li class='fragment'>Sometimes used to find and replace specific text</li>
     </ul>
 </section>
@@ -577,6 +579,13 @@ Zee3ii Nick 13
     <pre class='fragment'><code class='lang-javascript' data-trim>
 file.match(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
     </code></pre>
+
+    <aside class='fragment'>
+        <p>But also, JavaScript wants you to use a different method:</p>
+        <pre class='fragment'><code class='lang-javascript' data-trim data-noescape>
+file.<strong>matchAll</strong>(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
+        </code></pre>
+    </aside>
 </section>
 
 
