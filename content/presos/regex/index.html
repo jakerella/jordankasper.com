@@ -10,6 +10,7 @@ description: Diving into regular expressions. What are they? Why would you use t
     .reveal table th { text-align: right; padding: 0 1em 0.5em 0; }
     .reveal table td { text-align: left; padding-bottom: 0.5em; }
     .reveal pre code { font-size: 0.9em; overflow-x: visible; }
+    .reveal .slides ul, .reveal .slides ol { margin-left: 2em; }
     .social-logo { width: 1em; }
 </style>
 
@@ -36,7 +37,7 @@ description: Diving into regular expressions. What are they? Why would you use t
     <h2>What are They?</h2>
     <h3 class='fragment'>String Pattern Matchers</h3>
 
-    <ul style='margin-left: 1em;'>
+    <ul>
         <li class='fragment'>Test a string against a pattern (true/false)</li>
         <li class='fragment'>Match specific data in a string</li>
         <li class='fragment'>Often used for data/input validation</li>
@@ -256,64 +257,88 @@ description: Diving into regular expressions. What are they? Why would you use t
 
 
 <section>
+    <p>Use Case: Matching a hexadecimal color</p>
+
+    <pre class='fragment'><code class='lang-javascript' data-trim>
+"c52a93".match(/c52a93/)               // ["c52a93"]
+        </code><code class='fragment lang-javascript' data-trim>
+"cc5500".match(/c52a93/)               // null
+    </code></pre>
+</section>
+
+
+<section>
+    <h2>Classes, Ranges, and Repetition</h2>
+    <p><code>[ ]</code>, <code>+</code>, <code>{ }</code></p>
+
+    <pre class='fragment'><code class='lang-javascript' data-trim>
+"c52a93".match(/[0123456789abcdef]/)   // ["c"]
+        </code><code class='fragment lang-javascript' data-trim>
+"c52a93".match(/[0123456789abcdef]/g)  // ["c", "5", "2", "a", "9", 3"]
+        </code><code class='fragment lang-javascript' data-trim>
+"c52a93".match(/[0123456789abcdef]+/)  // ["c52a93"]
+        </code><code class='fragment lang-javascript' data-trim>
+"cc5500".match(/[0123456789abcdef]+/)  // ["cc5500"]
+        </code><code class='fragment lang-javascript' data-trim>
+"c52a93".match(/[0-9a-f]+/)            // ["c52a93"]
+    </code></pre>
+</section>
+
+
+<section>
     <h2>Classes, Ranges, and Repetition</h2>
     <p><code>[ ]</code>, <code>+</code>, <code>{ }</code></p>
 
     <pre><code class='lang-javascript' data-trim>
-"c52a93".match(/c52a93/)               // ["c52a93"]
-    </code><code class='fragment lang-javascript' data-trim>
-"b5d055".match(/c52a93/)               // null
-    </code><code class='fragment lang-javascript' data-trim>
-"c52a93".match(/[0123456789abcdef]/)   // ["c"]
-    </code><code class='fragment lang-javascript' data-trim>
-"c52a93".match(/[0123456789abcdef]/g)  // ["c", "5", "2", "a", "9", 3"]
-    </code><code class='fragment lang-javascript' data-trim>
-"c52a93".match(/[0123456789abcdef]+/)  // ["c52a93"]
-    </code><code class='fragment lang-javascript' data-trim>
 "c52a93".match(/[0-9a-f]+/)            // ["c52a93"]
-    </code><code class='fragment lang-javascript' data-trim>
-"c52a9300".match(/[0-9a-f]+/)          // ["c52a9300"]
-    </code><code class='fragment lang-javascript' data-trim>
-"c52a9300".match(/[0-9a-f]{6}/)        // ["c52a93"]
-    </code><code class='fragment lang-javascript' data-trim>
-"c52a9300".match(/[0-9a-f]{6,8}/)      // ["c52a9300"]
+        </code><code class='fragment lang-javascript' data-trim>
+"c52a9388fb210a".match(/[0-9a-f]+/)    // ["c52a9388fb210a"]
+        </code><code class='fragment lang-javascript' data-trim>
+"c52a9388fb210a".match(/[0-9a-f]{6}/)  // ["c52a93"]
+        </code><code class='fragment lang-javascript' data-trim>
+"c52a9388".match(/[0-9a-f]{6}/)        // ["c52a93"]
+        </code><code class='fragment lang-javascript' data-trim>
+"c52a9388".match(/[0-9a-f]{6,8}/)      // ["c52a9388"]
+        </code><code class='fragment lang-javascript' data-trim>
+"c52a938".match(/[0-9a-f]{6,8}/)       // ["c52a938"]  oops...
     </code></pre>
 </section>
 
 
 <section>
-    <h2>Making Something Optional</h2>
-    <p><code>?</code></p>
+    <h3>Making Something Optional (<code>?</code>)</h3>
 
     <pre><code class='lang-javascript' data-trim>
-"#c52a93".match(/[0-9a-f]{6,8}/)   // ["c52a93"]
-    </code><code class='fragment lang-javascript' data-trim>
-"#c52a93".match(/#[0-9a-f]{6,8}/)  // ["#c52a93"]
-    </code><code class='fragment lang-javascript' data-trim>
-"c52a93".match(/#[0-9a-f]{6,8}/)   // null
-    </code><code class='fragment lang-javascript' data-trim>
-"c52a93".match(/#?[0-9a-f]{6,8}/)  // ["c52a93"]
+"#c52a93".match(/[0-9a-f]{6,8}/)    // ["c52a93"]
+        </code><code class='fragment lang-javascript' data-trim>
+"#c52a93".match(/#[0-9a-f]{6,8}/)   // ["#c52a93"]
+        </code><code class='fragment lang-javascript' data-trim>
+"c52a93".match(/#[0-9a-f]{6,8}/)    // null
+        </code><code class='fragment lang-javascript' data-trim>
+"c52a93".match(/#?[0-9a-f]{6,8}/)   // ["c52a93"]
+        </code><code class='fragment lang-javascript' data-trim>
+"#c52a93".match(/#?[0-9a-f]{6,8}/)  // ["#c52a93"]
     </code></pre>
 </section>
 
 
 <section>
-    <h2>Zero or More</h2>
-    <p><code>*</code></p>
+    <h3>Zero or More (<code>*</code>)</h3>
 
-    <pre><code class='lang-javascript' data-trim>
-"value='c52a93'".match(/value='[0-9a-f]+'/)  // ["value='c52a93'"]
-    </code><code class='fragment lang-javascript' data-trim>
-"value=''".match(/value='[0-9a-f]+'/)        // null
-    </code><code class='fragment lang-javascript' data-trim>
-"value=''".match(/value='[0-9a-f]*'/)        // ["value=''"]
+    <p>What if the value is of arbitrary length?</p>
+
+    <pre class='fragment'><code class='lang-javascript' data-trim>
+"id='4b0ac2305c9f7'".match(/id='[0-9a-f]+'/) // ["id='4b0ac2305c9f7'"]
+        </code><code class='fragment lang-javascript' data-trim>
+"id=''".match(/id='[0-9a-f]+'/)              // null
+        </code><code class='fragment lang-javascript' data-trim>
+"id=''".match(/id='[0-9a-f]*'/)              // ["id=''"]
     </code></pre>
 </section>
 
 
 <section>
-    <h2>Negation</h2>
-    <p><code>[^]</code></p>
+    <h3>Negation (<code>[^]</code>)</h3>
 
     <pre><code class='lang-javascript' data-trim>
 "jordan kasper".match(/[a-z]+/g)     // [ "jordan", "kasper" ]
@@ -339,9 +364,12 @@ description: Diving into regular expressions. What are they? Why would you use t
     </code></pre>
 
     <p class='fragment'>The <code>+</code> is greedy: keeps going until repeated token stops.</p>
-    <p class='fragment'><code>.</code> is the token, which matches everything...</p>
-    <p class='fragment'>it matches the "f" in "foo", then "o" and "o"</p>
-    <p class='fragment'>then matches the single quote after "foo" and keeps going!</p>
+    <ol>
+        <li class='fragment'><code>.</code> is the token, which matches everything...</li>
+        <li class='fragment'>it matches the "f" in "foo", then "o" and "o"</li>
+        <li class='fragment'>then matches the single quote after "foo" and keeps going!</li>
+    </ol>
+    
 </section>
 
 
@@ -357,8 +385,8 @@ description: Diving into regular expressions. What are they? Why would you use t
 
     <aside class='fragment'>
         <p>
-            However, less efficient due to backtracking required...<br>
-            instead, we can use negation:
+            However, this is less efficient due to backtracking.<br>
+            Instead, we can use negation!
         </p>
 
         <pre><code class='lang-javascript' data-trim>
@@ -415,45 +443,45 @@ description: Diving into regular expressions. What are they? Why would you use t
     <p><code>( )</code> and <code>|</code></p>
 
     <pre><code class='lang-javascript' data-trim>
-"1234 Main St.".match(/[0-9]+ [a-z]+ [a-z\.]+/i)
+"1234 Main St.".match(/^[0-9]+ [a-z\-]+ [a-z]+\.?$/i)
 // ["1234 Main St."]
         </code><code class='fragment lang-javascript' data-trim>
-"1234 Main St.".match(/([0-9]+) ([a-z]+) ([a-z\.]+)/i)
-// ["1234", "Main", "St."]
+"1234 Main St.".match(/^([0-9]+) ([a-z\-]+) ([a-z]+)\.?$/i)
+// ["1234", "Main", "St"]
         </code><code class='fragment lang-javascript' data-trim>
-"1234 Main St.".match(/([0-9]+) ([a-z]+) (st|rd|ave)\.?/i)
+"1234 Main St.".match(/^([0-9]+) ([a-z\-]+) (st|rd|ave)\.?$/i)
 // ["1234", "Main", "St"]
     </code></pre>
     
-    <p class='fragment'>
-        Your language <em>may</em> include the entire matched string:
-    </p>
-    
-    <pre class='fragment'><code class='lang-javascript' data-trim>
-"1234 Main St.".match(/([0-9]+) ([a-z]+) (st|rd|ave)\.?/i)
+    <aside class='fragment'>
+        <p>
+            Note: your language <em>may</em> include the entire matched string!
+        </p>
+        
+        <pre><code class='lang-javascript' data-trim>
+"1234 Main St.".match(/^([0-9]+) ([a-z]+) (st|rd|ave)\.?$/i)
 // ["1234 Main St.", "1234", "Main", "St"]
-    </code></pre>
-
+        </code></pre>
+    </aside>
 </section>
 
 
 <section>
     <h2>Grouping Efficiency</h2>
-    <p>Caution: matched groups add processing time & memory!</p>
 
     <p class='fragment'>Use non-matching groups when possible: <code>(?:)</code></p>
 
     <pre class='fragment'><code class='lang-javascript' data-trim>
-"1234 Main St.".match(/([0-9]+) ([a-z]+) (st|rd|ave)\.?/i)
+"1234 Main St.".match(/^([0-9]+) ([a-z\-]+) (st|rd|ave)\.?$/i)
 // [ "1234", "Main", "St" ]
     </code><code class='fragment lang-javascript' data-trim>
-"1234 Main St.".match(/[0-9]+ ([a-z]+) (st|rd|ave)\.?/i)
+"1234 Main St.".match(/^[0-9]+ ([a-z\-]+) (st|rd|ave)\.?$/i)
 // [ "Main", "St" ]
     </code><code class='fragment lang-javascript' data-trim>
-"1234 Main St.".match(/[0-9]+ ([a-z]+ (st|rd|ave)\.?)/i)
+"1234 Main St.".match(/^[0-9]+ ([a-z\-]+ (st|rd|ave)\.?)$/i)
 // [ "Main St.", "St" ]
     </code><code class='fragment lang-javascript' data-trim>
-"1234 Main St.".match(/[0-9]+ ([a-z]+ (?:st|rd|ave)\.?)/i)
+"1234 Main St.".match(/^[0-9]+ ([a-z\-]+ (?:st|rd|ave)\.?)$/i)
 // [ "Main St." ]
     </code></pre>
 </section>
@@ -461,15 +489,15 @@ description: Diving into regular expressions. What are they? Why would you use t
 
 <section>
     <h2>Match Replacement</h2>
-    <p><strong>Caution!</strong> Varies widely across languages!</p>
+    <p>Varies widely across languages!</p>
 
     <pre class='fragment'><code class='lang-javascript' data-trim>
-"I like {{fav}} the most".replace(/{{fav}}/, "dogs")
+"{{fav}} are great, I love {{fav}}".replaceAll(/{{fav}}/g, "dogs")
         </code><code class='fragment lang-javascript' data-trim>
-// "I like dogs the most"
+// "dogs are great, I love dogs"
         </code><code class='fragment lang-javascript' data-trim>
 const email = "mary@example.com"
-email.replace(/([a-z]+)@([a-z.]+)/i, "https://$2/users/$1")
+email.replace(/^([a-z]+)@([a-z.]+)$/i, "https://$2/users/$1")
         </code><code class='fragment lang-javascript' data-trim>
 // "https://example.com/users/mary"
     </code></pre>
@@ -496,7 +524,7 @@ email.replace(/([a-z]+)@([a-z.]+)/i, "https://$2/users/$1")
                 <p class='fragment'>Digits: <code>\d</code> (same as <code>[0-9]</code>)</p>
                 <p class='fragment'>
                     Word characters: <code>\w</code><br>
-                    (generally: <code>[A-Za-z0-9_]</code>)
+                    (same as <code>[A-Za-z0-9_]</code>)
                 </p>
             </blockquote>
         </div>
@@ -533,8 +561,9 @@ users.forEach((user) => {
 
 
 <section>
-    <h2>Anchors &amp; Multiline</h2>
-    <p><code>^</code> and <code>$</code></p>
+    <h2>Multiline Content</h2>
+
+    <p>What if we want to pull out just the usernames?</p>
 
     <pre><code class='lang-text' data-trim>
 jakerella      Jordan 42
@@ -542,22 +571,20 @@ ro_ro	Alex	999
 Zee3ii Nick 13
     </code></pre>
 
-    <p>What if we want all of the usernames?</p>
-
     <pre class='fragment'><code class='lang-javascript' data-trim>
-file.match(/\w+/)   // [ "jakerella" ]
+fileText.match(/\w+/)   // [ "jakerella" ]
         </code><code class='fragment lang-javascript' data-trim>
-file.match(/\w+/g)  // [ "jakerella", "Jordan", "42", "ro_ro", ... ]
+fileText.match(/\w+/g)  // [ "jakerella", "Jordan", "42", "ro_ro", ... ]
         </code><code class='fragment lang-javascript' data-trim>
-file.match(/^\w+/g) // [ "jakerella" ]
+fileText.match(/^\w+/g) // [ "jakerella" ]
     </code></pre>
 </section>
 
 
 <section>
-    <h2>The Multiline Flag</h2>
+    <h2>Multiline Content</h2>
 
-    <aside class='fragment'>
+    <aside>
         <p>Use the global <strong>and</strong> multiline flags: <code>g</code> &amp; <code>m</code></p>
 
         <pre><code class='lang-text' data-trim>
@@ -567,16 +594,11 @@ Zee3ii Nick 13
         </code></pre>
     </aside>
 
-    <pre class='fragment'><code class='lang-javascript' data-trim>
-file.match(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
+    <pre class='fragment'><code class='lang-javascript' data-trim data-noescape>
+file.<strong>matchAll</strong>(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
     </code></pre>
 
-    <aside class='fragment'>
-        <p>But also, JavaScript wants you to use a different method:</p>
-        <pre class='fragment'><code class='lang-javascript' data-trim data-noescape>
-file.<strong>matchAll</strong>(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
-        </code></pre>
-    </aside>
+    <p class='fragment'>Note that JavaScript uses a different method for this: <code>matchAll()</code></p>
 </section>
 
 
@@ -585,9 +607,15 @@ file.<strong>matchAll</strong>(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
 
     <p>Watch out for:</p>
 
-    <ul style='margin-left: 1em;'>
-        <li class='fragment'>Too many groups (use non-matching)</li>
-        <li class='fragment'>Large source texts (use anchors)</li>
+    <ul>
+        <li class='fragment'>Greedy repitition (use the lazy modifier: <code>+?</code>)</li>
+        <li class='fragment'>Too many groups (use non-matching groups: <code>(?:)</code>)</li>
+        <li class='fragment'>
+            <a href='https://gist.github.com/jakerella/3520941015d6367d9abc4ed033530789'>
+                Large source texts
+            </a>
+            (use anchors and multiline: <code>/^...$/m</code>)
+        </li>
         <li class='fragment'>Unstructured data (like HTML)</li>
     </ul>
 </section>
@@ -608,7 +636,7 @@ file.<strong>matchAll</strong>(/^\w+/gm)  // [ "jakerella", "ro_ro", "Zee3ii" ]
 <section>
     <h2>Resources</h2>
 
-    <ul style='margin-left: 1em;'>
+    <ul>
         <li>Playground: <a href='http://regex101.com'>regex101.com</a></li>
         <li>Various Engine Info: <a href='https://en.wikipedia.org/wiki/Comparison_of_regular_expression_engines'>Wikipedia</a></li>
         <li>Reference Docs: <a href='http://regular-expressions.info'>regular-expressions.info</a></li>
