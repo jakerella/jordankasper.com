@@ -14,25 +14,15 @@ description: Diving into regular expressions. What are they? Why would you use t
 </style>
 
 
-<section data-background='#ffffff'>
-    <h2 style='text-transform: none; font-size: 1.6em; margin-bottom: 1em;'>
+<section data-background='#ffffff' style='position: relative;'>
+    <h2 style='text-transform: none; font-size: 1.6em; margin-bottom: 2em;'>
         /^[Rr]eg(ular\s)?[Ee]x(p|pressions?)?$/
     </h2>
     <img src='images/title-diagram.svg' alt='Diagram of the title regex' style='width: 100%;'>
 
-    <aside style='display: flex; justify-content: center; position: relative; top: 3em;'>
-        <p style='width: 66%;'>
-            <a href='https://jordankasper.com/regex'>jordankasper.com/regex</a>
-        </p>
-        <a href='https://confoo.ca/en/2026/cfp/rr-eg-ular-s-ee-x-p-pressions/feedback' target='_blank' style='width: 33%;'>
-            Session Feedback:
-            <img src='images/confoo-2026-regex-feedback.png' style='width: 40%;' title='A QR code that links to a feedback form for this talk'>
-        </a>
-    </aside>
-
-    <cite style='bottom: -5em;'>
-        <a href='https://regexper.com/#%2F%5E%5BRr%5Deg%28ular%5Cs%29%3F%5BEe%5Dx%28p%7Cpressions%3F%29%3F%24%2F'>regexper.com</a>
-    </cite>
+    <p style='margin-top: 1em;'>
+        <a href='https://jordankasper.com/regex'>jordankasper.com/regex</a>
+    </p>
 </section>
 
 
@@ -79,24 +69,24 @@ description: Diving into regular expressions. What are they? Why would you use t
         <table>
             <tbody>
                 <tr>
-                    <th>PCRE</th>
+                    <th>PCRE:</th>
                     <td>Apache, Nginx, PHP, Erlang, Elixir</td>
                 </tr>
                 <tr class='fragment'>
-                    <th>POSIX (BRE/ERE)</th>
-                    <td>grep, sed, MySQL, Oracle, R*</td>
+                    <th>POSIX (BRE/ERE):</th>
+                    <td>grep, sed, MySQL, Oracle, R</td>
                 </tr>
                 <tr class='fragment'>
-                    <th>Oniguruma</th>
-                    <td>Ruby, Atom, Sublime, jq</td>
-                </tr>
-                <tr class='fragment'>
-                    <th>Irregexp</th>
+                    <th>Irregexp:</th>
                     <td>Node.js, Chrome, Firefox</td>
                 </tr>
                 <tr class='fragment'>
+                    <th>Oniguruma:</th>
+                    <td>Ruby, Atom, Sublime, jq</td>
+                </tr>
+                <tr class='fragment'>
                     <th>Standard libs</th>
-                    <td>Java*, Perl, Python*, Rust, .NET</td>
+                    <td>Java, Perl, Python, Rust, .NET</td>
                 </tr>
             </tbody>
         </table>
