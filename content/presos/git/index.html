@@ -100,20 +100,56 @@ description: A deep dive into the Git version control system
 </section>
 
 
-<section>
+<section data-transition='none'>
     <h3>Tracking</h3>
 
     <p>Any local branch can "track" a remote URL:</p>
 
     <pre><code class='no-highlight' data-noescape data-trim>
-~/repo$ git branch <strong>-vv</strong>
-* main               b956c45c <strong>[origin/main]</strong> Initial commit
-  some-local-branch  a74b2950 Implemented that cool feature
+~/repo$ git branch -a <strong>-vv</strong>
+* main                 b956c45c <strong>[origin/main]</strong> Latest working commit
+  new-feature          a74b2950 Cool new feature
+  remotes/origin/main  98e8fe83 An older commit
     </code></pre>
 
     <p class='fragment'>
         Note the double "vv" here. A single "v" will not show you the remote branch being tracked.
     </p>
+</section>
+
+
+<section data-transition='none'>
+    <h3>Tracking</h3>
+
+    <p>Any local branch can "track" a remote URL:</p>
+
+    <pre><code class='no-highlight' data-noescape data-trim>
+~/repo$ git branch -a -vv
+* main                 <strong>b956c45c</strong> [origin/main] Latest working commit
+  new-feature          a74b2950 Cool new feature
+  remotes/origin/main  <strong>98e8fe83</strong> An older commit
+    </code></pre>
+
+    <p style='opacity: 0;'>
+        Note the double "vv" here. A single "v" will not show you the remote branch being tracked.
+    </p>
+</section>
+
+
+<section>
+    <h3>Remotes have branches!</h3>
+    
+    <pre><code class='no-highlight' data-noescape data-trim>
+~/repo$ git checkout <strong>remotes/origin/main</strong>
+        </code><code class='fragment no-highlight' data-trim>
+Note: switching to 'remotes/origin/main'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+...
+    </code></pre>
 </section>
 
 
@@ -138,11 +174,12 @@ origin  git@github.com:jakerella/foo.git (push)
     <pre class='fragment'><code class='no-highlight' data-noescape data-trim>
 ~/repo$ git checkout -b new-feature
 ~/repo$ git push <strong>-u origin</strong> new-feature
-        </code><code class='fragment no-highlight' data-trim>
-~/repo$ git branch -vv
-  main              b956c45c [origin/main] Initial commit
-* new-feature       b956c45c [origin/new-feature] Initial commit
-  some-local-branch a74b2950 Implemented that cool feature
+        </code><code class='fragment no-highlight' data-noescape data-trim>
+~/repo$ git branch -a -vv
+  main                       b956c45c [origin/main] Latest working commit
+* new-feature                <strong>a74b2950</strong> [origin/new-feature] Cool new feature
+  remotes/origin/main        98e8fe83 An older commit
+  remotes/origin/new-feature <strong>a74b2950</strong> Cool new feature
     </code></pre>
 
     <p class='fragment'>What if the branch already existed in the remote?</p>
@@ -168,12 +205,12 @@ origin  git@github.com:jakerella/node.git (fetch)
 origin  git@github.com:jakerella/node.git (push)
         </code><code class='fragment no-highlight' data-noescape data-trim>
 ~/node$ git <strong>remote add node-source</strong> git@github.com:nodejs/node.git
-        </code><code class='fragment no-highlight' data-trim>
+        </code><code class='fragment no-highlight' data-noescape data-trim>
 ~/node$ git remote -v
 origin         git@github.com:jakerella/node.git (fetch)
 origin         git@github.com:jakerella/node.git (push)
-node-source    git@github.com:nodejs/node.git (fetch)
-node-source    git@github.com:nodejs/node.git (push)
+<strong>node-source</strong>    git@github.com:nodejs/node.git (fetch)
+<strong>node-source</strong>    git@github.com:nodejs/node.git (push)
     </code></pre>
 </section>
 
@@ -187,14 +224,30 @@ node-source    git@github.com:nodejs/node.git (push)
     </p>
 
     <pre class='fragment'><code class='no-highlight' data-noescape data-trim>
-~/node$ git checkout main
 ~/node$ git <strong>fetch</strong> node-source
-remote: Enumerating objects: 6018, done.
+remote: Enumerating objects: 42, done.
 ...
 From github.com/nodejs/node
  * [new branch] ...
 ...
         </code><code class='fragment no-highlight' data-trim data-noescape>
+~/node$ git branch -a -vv
+  main                       <strong>704f7d5</strong> [origin/main] Some older commit
+* new-feature                a74b2950 [origin/new-feature] Cool new feature
+  remotes/origin/main        704f7d5 Some older commit
+  remotes/origin/new-feature a74b2950 Cool new feature
+  remotes/node-source/main   <strong>d5b0f19</strong> The latest commit
+    </code></pre>
+</section>
+
+
+<section>
+    <h3>Open Source Flow</h3>
+
+    <p>Okay, I've got the nodejs source changes... now what?</p>
+
+    <pre class='fragment'><code class='no-highlight' data-noescape data-trim>
+~/node$ git checkout main
 ~/node$ git merge <strong>node-source/main</strong>
 Updating 40f7a8ea..a479419b
 ...
@@ -202,6 +255,24 @@ Updating 40f7a8ea..a479419b
 ~/node$ git checkout new-feature
         </code><code class='fragment no-highlight' data-trim data-noescape>
 ~/node$ git merge main
+    </code></pre>
+</section>
+
+
+<section>
+    <h3>Open Source Flow</h3>
+
+    <p>Do I really need to do all that?</p>
+
+    <p class='fragment' style='line-height: 1.2em;'>
+        <code>git pull</code> is:<br>
+        <code>git fetch</code> from default remote ("origin") <strong>and</strong><br>
+        <code>git merge</code> remote branch to current branch (by name).
+    </p>
+
+    <pre class='fragment'><code class='no-highlight' data-noescape data-trim>
+~/node$ git checkout new-feature
+~/node$ git pull node-source main
     </code></pre>
 </section>
 
@@ -237,7 +308,7 @@ index a479419b..b5a9776f 100644
 <section>
     <h3>Branch Differences - Compact Summary</h3>
 
-    <pre class='fragment'><code class='no-highlight' data-trim data-noescape>
+    <pre><code class='no-highlight' data-trim data-noescape>
 ~/node$ git diff main new-feature <strong>--compact-summary</strong>
         </code><code class='fragment no-highlight' data-trim data-noescape>
 README.md        | 1 -
@@ -332,29 +403,6 @@ On branch new-feature
 ~/repo$ git restore source/routes/
         </code></pre>
     </div>
-</section>
-
-
-<section>
-    <h3>Unstaged Changes</h3>
-
-    <p>Careful, <strong>NEW</strong> files will not be removed!</p>
-
-    <aside class='fragment'>
-        <pre><code class='no-highlight' data-trim>
-~/repo$ echo "testing" > source/routes/new-file.js
-            </code><code class='fragment no-highlight' data-trim>
-~/repo$ git restore source/routes/
-            </code><code class='fragment no-highlight' data-trim data-noescape>
-~/repo$ git status
-On branch new-feature
-<strong>Untracked files</strong>:
-  (use "git add &lt;file>..." to include in what will be committed)
-       	sourc/routes/new-file.js
-        </code></pre>
-
-        <p class='fragment fine'>(You can just delete the file if not needed.)</p>
-    </aside>
 </section>
 
 
@@ -558,24 +606,15 @@ pick 3e81873b This is the best
     <pre><code class='no-highlight' data-trim data-noescape>
 ~/repo$ git rebase --interactive HEAD^^^
 <strong>Stopped at 72267fc2... Bug fixes for older features</strong>
-You can amend the commit now, with
-  git commit --amend
-Once you are satisfied with your changes, run
-  git rebase --continue
-    </code></pre>
-
-    <div class='fragment'>
-        <p>Now amend the commit just like before...</p>
-
-        <pre><code class='no-highlight' data-trim>
+...
+        </code><code class='fragment no-highlight' data-trim>
 ~/repo$ git add another-file.js
-            </code><code class='fragment no-highlight' data-trim>
+        </code><code class='fragment no-highlight' data-trim>
 ~/repo$ git commit --amend
-            </code><code class='fragment no-highlight' data-trim>
-~/repo$ git rebase --continue
+        </code><code class='fragment no-highlight' data-noescape data-trim>
+~/repo$ git <strong>rebase --continue</strong>
 Successfully rebased and updated refs/heads/new-feature.
-        </code></pre>
-    </div>
+    </code></pre>
 </section>
 
 
