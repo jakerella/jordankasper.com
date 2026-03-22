@@ -7,6 +7,7 @@
   },
   "description": "Static homepage for me",
   "scripts": {
+    "noop": "echo \"No Op!\"",
     "clean": "rm -rf build/",
     "build": "npm run clean && DEBUGLEVEL=INFO SKIP_LINK_CHECK=true npx metalsmith && rm -rf build/static/ && npx pagefind",
     "debug": "npm run clean && DEBUG=metalsmith:*,@metalsmith/*,metalsmith-* DEBUGLEVEL=DEBUG SKIP_LINK_CHECK=true npx metalsmith && cp -r build/presos/* build/ && rm -rf build/presos/ && rm -rf build/static/ && npx pagefind --verbose",
