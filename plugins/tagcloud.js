@@ -10,7 +10,7 @@ module.exports = function tagcloud(opts){
     const data = metalsmith.metadata();
     data.tagcloud = [];
     Object.keys(data[opts.key]).forEach(function(name) {
-      logger.debug('Adding tag entry with data:', name, data[opts.key][name].urlSafe, data[opts.key][name].length);
+      logger.debug('  Adding tag entry with data:', name, data[opts.key][name].urlSafe, data[opts.key][name].length);
       data.tagcloud.push({
         name,
         slug: data[opts.key][name].urlSafe,

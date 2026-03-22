@@ -5,6 +5,8 @@ npm-debug.log*
 build/
 node_modules/
 
+link-check*
+
 # Netlify things
 .netlify
 api/test-blobs/

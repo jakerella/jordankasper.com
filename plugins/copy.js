@@ -9,7 +9,7 @@ module.exports = function copy(opts){
     logger.info('Copying static files');
 
     locations.forEach(loc => {
-      logger.debug(`copying ${loc.from} to ${loc.to}`);
+      logger.debug(`  Copying: ${loc.from} >> to >> ${loc.to}`);
       if (/fingerprintjs/.test(loc.from)) {
         let content = fs.readFileSync(loc.from).toString().replace('.001', '.00000001');
         fs.writeFileSync(loc.to, content)

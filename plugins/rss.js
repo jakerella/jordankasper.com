@@ -32,7 +32,7 @@ module.exports = function rss(opts){
     });
 
     data.posts.forEach(function(post) {
-      logger.debug(`Created RSS entry for post: ${post.title}`)
+      logger.debug(`  Created RSS entry for post: ${post.title}`)
       feed.item({
         title:  post.title,
         description: post.excerpt,
@@ -49,15 +49,15 @@ module.exports = function rss(opts){
     const xml = feed.xml({indent: true});
 
     if (!fs.existsSync(buildDir)) {
-      logger.debug('Build directory does not exist, creating it...');
+      logger.debug('  Build directory does not exist, creating it...');
       fs.mkdirSync(buildDir);
     }
 
-    logger.debug('Writing blog post XML to', location);
+    logger.debug('  Writing blog post XML to', location);
     
     fs.writeFile(location, xml, function functionName(err) {
       if (err) { return done(err); }
-      logger.debug('Wrote XML content to destination');
+      logger.debug('  Wrote XML content to destination');
       done();
     });
   };

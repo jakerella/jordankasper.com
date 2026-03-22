@@ -1,6 +1,12 @@
 {{#each events}}
     <li>
-        <span class='event-name'><a href='{{ url }}' title='Visit this event website'>{{ name }}</a></span>
+        <strong class='event-name'>
+            {{#if url}}
+                <a href='{{ url }}' title='Visit this event website'>{{ name }}</a>
+            {{else}}
+                {{ name }}
+            {{/if}}
+        </strong>
         <span class='event-location'>{{ location }}</span>
         <span class='event-date'>{{ monthDate }}</span>
         <span class='event-topics'>

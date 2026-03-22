@@ -2,7 +2,7 @@
     "events": [
         {
             "name": "BarCamp Nashville",
-            "url": "#",
+            "url": null,
             "location": "Nashville, TN",
             "date": "Nov 2 2013",
             "topics": [
@@ -15,7 +15,7 @@
         },
         {
             "name": "JavaScript Summit",
-            "url": "http://jssummit.com",
+            "url": null,
             "location": "(Virtual)",
             "date": "Nov 19 2014",
             "topics": [
@@ -24,7 +24,7 @@
         },
         {
             "name": "Modern Web Conference",
-            "url": "#",
+            "url": null,
             "location": "(Virtual)",
             "date": "Oct 29 2014",
             "topics": [
@@ -37,7 +37,7 @@
         },
         {
             "name": "True North PHP",
-            "url": "http://truenorthphp.ca",
+            "url": null,
             "location": "Toronto, Canada",
             "date": "Nov 6 2014",
             "topics": [
@@ -50,7 +50,7 @@
         },
         {
             "name": "DevLink",
-            "url": "http://devlink.net",
+            "url": null,
             "location": "Chattanooga, TN",
             "date": "Aug 26 2014",
             "topics": [
@@ -64,7 +64,7 @@
         },
         {
             "name": "Codestock",
-            "url": "http://codestock.org",
+            "url": "https://codestock.org",
             "location": "Knoxville, TN",
             "date": "Jul 12 2014",
             "topics": [
@@ -91,7 +91,7 @@
         },
         {
             "name": "Dutch PHP",
-            "url": "http://www.phpconference.nl",
+            "url": "https://www.phpconference.nl",
             "location": "Amsterdam, Netherlands",
             "date": "Jun 28 2014",
             "topics": [
@@ -100,7 +100,7 @@
         },
         {
             "name": "jQuery UK",
-            "url": "http://jqueryuk.com/2014",
+            "url": null,
             "location": "Oxford, England",
             "date": "May 15 2014",
             "topics": [
@@ -109,7 +109,7 @@
         },
         {
             "name": "NashJS",
-            "url": "http://nashjs.org",
+            "url": null,
             "location": "Nashville, TN",
             "date": "Apr 9 2014",
             "topics": [
@@ -118,7 +118,7 @@
         },
         {
             "name": "Confoo",
-            "url": "http://confoo.ca/en/2014/sessions",
+            "url": "https://confoo.ca/en/2014/sessions",
             "location": "Monteral, Canada",
             "date": "Feb 27 2014",
             "topics": [
@@ -132,7 +132,7 @@
         },
         {
             "name": "SunshinePHP",
-            "url": "http://2014.sunshinephp.com",
+            "url": null,
             "location": "Miami, FL",
             "date": "Feb 7 2014",
             "topics": [
@@ -144,7 +144,7 @@
         },
         {
             "name": "ZendCon",
-            "url": "http://zendcon.com",
+            "url": "https://zendcon.com",
             "location": "San Jose, CA",
             "date": "Oct 8 2013",
             "topics": [
@@ -158,7 +158,7 @@
         },
         {
             "name": "NashJS",
-            "url": "http://nashjs.org",
+            "url": null,
             "location": "Nashville, TN",
             "date": "Sep 11 2013",
             "topics": [
@@ -170,7 +170,7 @@
         },
         {
             "name": "DevLink",
-            "url": "http://devlink.net",
+            "url": null,
             "location": "Chattanooga, TN",
             "date": "Aug 28 2013",
             "topics": [
@@ -184,7 +184,7 @@
         },
         {
             "name": "CoderFaire",
-            "url": "http://coderfaire.com",
+            "url": null,
             "location": "Nashville, TN",
             "date": "Aug 17 2013",
             "topics": [
@@ -196,7 +196,7 @@
         },
         {
             "name": "STL.JS",
-            "url": "http://www.meetup.com/STL-JS-meetup",
+            "url": "https://www.meetup.com/STL-JS-meetup",
             "location": "St. Louis, O",
             "date": "Jul 18 2013",
             "topics": [
@@ -262,7 +262,7 @@
         },
         {
             "name": "DCJS",
-            "url": "http://www.meetup.com/DC-JavaScript/events/218040632/",
+            "url": "https://www.meetup.com/DC-JavaScript/events/218040632/",
             "location": "Washington, DC",
             "date": "Dec 11 2014",
             "topics": [
@@ -271,7 +271,7 @@
         },
         {
             "name": "CodeMash",
-            "url": "http://www.codemash.org",
+            "url": "https://www.codemash.org",
             "location": "Sandusky, OH",
             "date": "Jan 8 2015",
             "topics": [
@@ -285,7 +285,7 @@
         },
         {
             "name": "SF Node.js Meetup",
-            "url": "http://www.meetup.com/Node-js-Serverside-Javascripters-Club-SF/events/219937616/",
+            "url": "https://www.meetup.com/Node-js-Serverside-Javascripters-Club-SF/events/219937616/",
             "location": "San Francisco, CA",
             "date": "Feb 9 2015",
             "topics": [
@@ -294,7 +294,7 @@
         },
         {
             "name": "Node Summit",
-            "url": "http://nodesummit.com",
+            "url": "https://nodesummit.com",
             "location": "San Francisco, CA",
             "date": "Feb 10 2015",
             "topics": [
@@ -303,7 +303,7 @@
         },
         {
             "name": "ConFoo",
-            "url": "http://confoo.ca",
+            "url": "https://confoo.ca",
             "location": "Montreal, Canada",
             "date": "Feb 18 2015",
             "topics": [
@@ -316,7 +316,7 @@
         },
         {
             "name": "jQuery UK",
-            "url": "http://jqueryuk.com/2015/",
+            "url": null,
             "location": "Oxford, England",
             "date": "Mar 5 2015",
             "topics": [
@@ -343,7 +343,7 @@
         },
         {
             "name": "Lone Star PHP",
-            "url": "http://lonestarphp.com",
+            "url": null,
             "location": "Dallas, TX",
             "date": "Apr 17 2015",
             "topics": [
@@ -357,7 +357,7 @@
         },
         {
             "name": "Fluent",
-            "url": "http://fluentconf.com",
+            "url": "https://fluentconf.com",
             "location": "San Francisco, CA",
             "date": "Apr 20 2015",
             "topics": [
@@ -369,7 +369,7 @@
         },
         {
             "name": "EmpireJS",
-            "url": "http://2015.empirejs.org",
+            "url": null,
             "location": "Washington, DC",
             "date": "Apr 26 2015",
             "topics": [
@@ -382,7 +382,7 @@
         },
         {
             "name": "node.dc",
-            "url": "http://www.meetup.com/node-dc/",
+            "url": "https://www.meetup.com/node-dc/",
             "location": "Washington, DC",
             "date": "May 18 2015",
             "topics": [
@@ -421,7 +421,7 @@
         },
         {
             "name": "KCDC",
-            "url": "http://www.kcdc.info/#!/",
+            "url": "https://www.kcdc.info/",
             "location": "Kansas City, MO",
             "date": "Jun 24 2015",
             "topics": [
@@ -444,7 +444,7 @@
         },
         {
             "name": "NYC Node UG",
-            "url": "http://www.meetup.com/nyc-node-js/events/223011090/",
+            "url": "https://www.meetup.com/nyc-node-js/events/223011090/",
             "location": "New York City, NY",
             "date": "Jul 27 2015",
             "topics": [
@@ -456,7 +456,7 @@
         },
         {
             "name": "MidwestJS",
-            "url": "http://midwestjs.com/",
+            "url": null,
             "location": "Minneapolis, MN",
             "date": "Aug 12 2015",
             "topics": [
@@ -466,7 +466,7 @@
         },
         {
             "name": "East Valley Web Workers",
-            "url": "http://www.meetup.com/WebWorkers/events/221911631/",
+            "url": "https://www.meetup.com/WebWorkers/events/221911631/",
             "location": "Gilbert, AZ",
             "date": "Sep 19 2015",
             "topics": [
@@ -475,7 +475,7 @@
         },
         {
             "name": "NCDevCon",
-            "url": "http://www.ncdevcon.com/",
+            "url": null,
             "location": "Raleigh, NC",
             "date": "Sep 26 2015",
             "topics": [
@@ -487,8 +487,8 @@
             ]
         },
         {
-            "name": "ConnectJS",
-            "url": "http://connect-js.com",
+            "name": "ConnectJS (ConnectTech)",
+            "url": "https://connect.tech",
             "location": "Atlanta, GA",
             "date": "Oct 16 2015",
             "topics": [
@@ -500,7 +500,7 @@
         },
         {
             "name": "DC PHP",
-            "url": "http://www.meetup.com/DC-PHP/events/220739659/",
+            "url": "https://www.meetup.com/DC-PHP/events/220739659/",
             "location": "Washington, DC",
             "date": "Nov 11 2015",
             "topics": [
@@ -513,7 +513,7 @@
         },
         {
             "name": "Nodevember",
-            "url": "http://nodevember.org/",
+            "url": null,
             "location": "Nashville, TN",
             "date": "Nov 14 2015",
             "topics": [
@@ -522,7 +522,7 @@
         },
         {
             "name": "Big Data Developers",
-            "url": "http://www.meetup.com/Big-Data-Developers-in-Phoenix/",
+            "url": "https://www.meetup.com/Big-Data-Developers-in-Phoenix/",
             "location": "Phoenix, AZ",
             "date": "Nov 18 2015",
             "topics": [
@@ -540,7 +540,7 @@
         },
         {
             "name": "Code Junkies",
-            "url": "http://www.meetup.com/Code-Junkies/events/227293599/",
+            "url": "https://www.meetup.com/Code-Junkies/events/227293599/",
             "location": "New Providence, NJ",
             "date": "Feb 3 2016",
             "topics": [
@@ -565,7 +565,7 @@
         },
         {
             "name": "Render",
-            "url": "http://2016.render-conf.com/workshop/325/rapid-api-development-with-nodejs-and-loopback",
+            "url": "https://2016.render-conf.com/workshop/325/rapid-api-development-with-nodejs-and-loopback",
             "location": "Oxford, UK",
             "date": "Apr 20 2016",
             "topics": [
@@ -577,7 +577,7 @@
         },
         {
             "name": "Rochester JS Meetup",
-            "url": "https://plus.google.com/communities/111326506988884743140",
+            "url": null,
             "location": "Rochester, NY",
             "date": "May 17 2016",
             "topics": [
@@ -589,7 +589,7 @@
         },
         {
             "name": "TIY Crash Course",
-            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/230136390/",
+            "url": "https://www.meetup.com/The-Iron-Yard-DC/events/230136390/",
             "location": "Washington, DC",
             "date": "May 12 2016",
             "topics": [
@@ -607,7 +607,7 @@
         },
         {
             "name": "TIY Crash Course",
-            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/229968543/",
+            "url": "https://www.meetup.com/The-Iron-Yard-DC/events/229968543/",
             "location": "Washington, DC",
             "date": "Apr 12 2016",
             "topics": [
@@ -616,7 +616,7 @@
         },
         {
             "name": "TIY Crash Course",
-            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/230136390/",
+            "url": "https://www.meetup.com/The-Iron-Yard-DC/events/230136390/",
             "location": "Washington, DC",
             "date": "May 19 2016",
             "topics": [
@@ -625,7 +625,7 @@
         },
         {
             "name": "DC JavaScript",
-            "url": "http://www.meetup.com/DC-JavaScript/events/231380644/",
+            "url": "https://www.meetup.com/DC-JavaScript/events/231380644/",
             "location": "Washington, DC",
             "date": "Jun 16 2016",
             "topics": [
@@ -637,7 +637,7 @@
         },
         {
             "name": "TIY Crash Course",
-            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/231341704/",
+            "url": "https://www.meetup.com/The-Iron-Yard-DC/events/231341704/",
             "location": "Washington, DC",
             "date": "Jun 15 2016",
             "topics": [
@@ -658,7 +658,7 @@
         },
         {
             "name": "Madison PHP Conference",
-            "url": "http://2016.madisonphpconference.com/talks/A1/",
+            "url": null,
             "location": "Madison, WI",
             "date": "Oct 1 2016",
             "topics": [
@@ -670,7 +670,7 @@
         },
         {
             "name": "NoVa ColdFusion UG",
-            "url": "http://www.meetup.com/nvcfug/",
+            "url": "https://www.meetup.com/nvcfug/",
             "location": "Vienna, VA",
             "date": "July 19 2016",
             "topics": [
@@ -682,7 +682,7 @@
         },
         {
             "name": "node.dc",
-            "url": "http://www.meetup.com/node-dc/",
+            "url": "https://www.meetup.com/node-dc/",
             "location": "Washington, DC",
             "date": "Aug 18 2016",
             "topics": [
@@ -694,7 +694,7 @@
         },
         {
             "name": "Connect.Tech",
-            "url": "http://connect.tech/",
+            "url": "https://connect.tech/",
             "location": "Atlanta, GA",
             "date": "Oct 21 2016",
             "topics": [
@@ -706,7 +706,7 @@
         },
         {
             "name": "TIY Crash Course",
-            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/232736644/",
+            "url": "https://www.meetup.com/The-Iron-Yard-DC/events/232736644/",
             "location": "Washington, DC",
             "date": "Jul 27 2016",
             "topics": [
@@ -715,7 +715,7 @@
         },
         {
             "name": "TIY Crash Course",
-            "url": "http://www.meetup.com/The-Iron-Yard-DC/events/233157810",
+            "url": "https://www.meetup.com/The-Iron-Yard-DC/events/233157810",
             "location": "Washington, DC",
             "date": "Aug 15 2016",
             "topics": [
@@ -733,7 +733,7 @@
         },
         {
             "name": "Nodevember",
-            "url": "http://nodevember.org/",
+            "url": null,
             "location": "Nashville, TN",
             "date": "Nov 20 2016",
             "topics": [
@@ -808,7 +808,7 @@
         },
         {
             "name": "Connect.Tech",
-            "url": "http://connect.tech/",
+            "url": "https://connect.tech/",
             "location": "Atlanta, GA",
             "date": "Sep 21 2017",
             "topics": [
@@ -822,7 +822,7 @@
         },
         {
             "name": "Madison PHP Conference",
-            "url": "http://2017.madisonphpconference.com/",
+            "url": null,
             "location": "Madison, WI",
             "date": "Sep 22 2017",
             "topics": [
@@ -886,7 +886,7 @@
         },
         {
             "name": "Code for America Summit",
-            "url": "http://www.cvent.com/events/code-for-america-summit-2018/event-summary-e12d85b157b94d69b80d8911cc641d36.aspx",
+            "url": "https://www.cvent.com/events/code-for-america-summit-2018/event-summary-e12d85b157b94d69b80d8911cc641d36.aspx",
             "location": "Oakland, CA",
             "date": "May 31 2018",
             "topics": [
@@ -910,7 +910,7 @@
         },
         {
             "name": "OSEHRA Open Source Summit",
-            "url": "http://summit.osehra.org",
+            "url": "https://summit.osehra.org",
             "location": "Bethesda, MD",
             "date": "Jul 18 2018",
             "topics": [
@@ -1123,7 +1123,7 @@
         },
         {
             "name": "Confoo",
-            "url": "http://confoo.ca/en/2026/",
+            "url": "https://confoo.ca/en/2026/",
             "location": "Monteral, Canada",
             "date": "Feb 25 2026",
             "topics": [

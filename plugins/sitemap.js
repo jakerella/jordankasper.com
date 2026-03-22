@@ -13,8 +13,6 @@ module.exports = function sitemap(opts){
   opts.sitemapFilename = opts.sitemapFilename || 'sitemap.xml'
 
   return function (files, metalsmith, done){
-    logger.debug('Generating list of paths for sitemap')
-
     if (files[opts.sitemapFilename]) {
       logger.warn(`There is already an entry in Metalsmith\'s files for ${opts.sitemapFilename}!`)
       return
@@ -22,6 +20,8 @@ module.exports = function sitemap(opts){
 
     const metadata = metalsmith.metadata()
     const source = metalsmith.source()
+
+    logger.info(`Generating sitemap for ${metadata.url}`)
 
     const excludeRegex = new RegExp(opts.exclude, 'i')
     const keys = Object.keys(files).filter(f => !excludeRegex.test(f))
@@ -40,6 +40,7 @@ module.exports = function sitemap(opts){
           entry.path = '/' + files[k].path
         }
       }
+      logger.debug(`  Adding page to sitemap: ${entry.path}`)
       pages.push(entry)
     })
 
@@ -51,7 +52,7 @@ module.exports = function sitemap(opts){
       pages.push(...scannedPaths)
     })
     
-    logger.info(`Generating sitemap with ${pages.length} paths`)
+    logger.debug(`  Generating sitemap file with ${pages.length} paths`)
     
     const priorities = []
     Object.keys(opts.priorities).forEach(p => {
@@ -83,6 +84,8 @@ module.exports = function sitemap(opts){
       )
     })
     sitemapContent.push('</urlset>')
+
+    logger.debug(`  Added sitemap file to metalsmith contents as: ${opts.sitemapFilename}`)
 
     files[opts.sitemapFilename] = {
       title: 'Sitemap',

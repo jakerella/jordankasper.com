@@ -13,7 +13,7 @@ module.exports = function recentPosts(opts){
     data.posts.filter(function(post, i) {
       if (i < opts.limit) {
         post.shortDate = moment(post.date).format('M/d/Y');
-        logger.debug(`Added recentPost date to ${post.title}: ${post.shortDate}`);
+        logger.debug(`  Added recentPost date to ${post.title}: ${post.shortDate}`);
         data.recentPosts.push(post);
       }
     });

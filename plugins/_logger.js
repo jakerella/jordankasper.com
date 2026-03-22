@@ -11,7 +11,7 @@ const DEFAULT_LEVEL = 'INFO'
 const DEFAULT_MESSAGE_LEVEL = 'LOG'
 const LOG_METHDOS = [null, 'error', 'warn', 'info', 'log', 'debug']
 const COLORS = {
-    DEBUG: '\x1b[37m',
+    DEBUG: '\x1b[38;5;247m', // '\x1b[37m',
     LOG: '\x1b[37m',
     INFO: '\x1b[34m',
     WARN: '\x1b[33m',

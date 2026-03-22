@@ -11,7 +11,7 @@ module.exports = function excerpts(opts) {
         Object.keys(files).forEach(function(filename) {
             if (files[filename].collection !== 'posts') { return }
             
-            logger.debug('getting excerpt for file:', filename)
+            logger.debug('  Getting excerpt for file:', filename)
 
             let excerpt = getExcerptText(files[filename], length)
             files[filename].excerpt = excerpt && excerpt.length > 0 ? excerpt : null

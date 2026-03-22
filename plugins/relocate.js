@@ -20,7 +20,7 @@ module.exports = function relocate(opts){
           if (files[target].permalink && rw.re.test(files[target].permalink)) {
             files[target].permalink = files[target].permalink.replace(rw.re, rw.target)
           }
-          logger.debug(`Rewrote ${f} to ${target}`)
+          logger.debug(`  Rewrote ${f} >> to >> ${target}`)
           delete files[f]
         }
       })

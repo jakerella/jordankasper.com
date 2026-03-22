@@ -27,7 +27,7 @@ module.exports = function eventPlugin(opts){
     data.eventStats.byTopic = { JavaScript: 0, 'Node.js': 0, Git: 0, Testing: 0, DevOps: 0, HTML: 0, RegEx: 0, OpenSource: 0, Other: 0 };
 
     events.forEach(function(event) {
-      logger.debug(`Processing event ${event.name} on ${event.date}`);
+      logger.debug(`  Processing event ${event.name} on ${event.date}`);
       event.timestamp = (new Date(event.date)).getTime();
       event.monthDate = moment(event.timestamp).format('MMM Y');
       const year = moment(event.timestamp).format('Y');
@@ -114,7 +114,7 @@ module.exports = function eventPlugin(opts){
       return (a.timestamp - b.timestamp);
     })
 
-    logger.info(`Processed ${data[opts.targetFuture].length} upcoming and ${data[opts.targetPast].length} past events`);
+    logger.info(`  Processed ${data[opts.targetFuture].length} upcoming and ${data[opts.targetPast].length} past events`);
 
     done();
   };
