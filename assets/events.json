@@ -1129,6 +1129,10 @@
             "topics": [
                 "Regular Expressions",
                 "Advanced Git"
+            ],
+            "media": [
+                { "type": "slides", "href": "https://jordankasper.com/regex", "title": "Slides for RegEx talk" },
+                { "type": "slides", "href": "https://jordankasper.com/git", "title": "Slides for Git talk" }
             ]
         },
         {
