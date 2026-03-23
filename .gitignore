@@ -5,7 +5,7 @@ npm-debug.log*
 build/
 node_modules/
 
-link-check*
+link-check*.json
 
 # Netlify things
 .netlify

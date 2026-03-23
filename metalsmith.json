@@ -95,13 +95,6 @@
         { "from": "node_modules/chart.js/dist/chart.umd.js", "to": "build/js/vendor/chart.umd.js" },
         { "from": "node_modules/@fingerprintjs/fingerprintjs/dist/fp.min.js", "to": "build/js/vendor/fp.min.js" }
       ]
-    },
-    "./plugins/link-check": {
-      "exludeRefs": "^\/(?:$|mailto|tag\/|page\/)",
-      "checkBuildDir": true,
-      "followRedirects": true,
-      "cacheTTLDays": 14,
-      "outputFilename": "link-check-results.json"
     }
   }
 }

@@ -9,11 +9,11 @@
   "scripts": {
     "noop": "echo \"No Op!\"",
     "clean": "rm -rf build/",
-    "build": "npm run clean && DEBUGLEVEL=INFO SKIP_LINK_CHECK=true npx metalsmith && rm -rf build/static/ && npx pagefind",
-    "debug": "npm run clean && DEBUG=metalsmith:*,@metalsmith/*,metalsmith-* DEBUGLEVEL=DEBUG SKIP_LINK_CHECK=true npx metalsmith && cp -r build/presos/* build/ && rm -rf build/presos/ && rm -rf build/static/ && npx pagefind --verbose",
-    "debug:plugins": "npm run clean && DEBUGLEVEL=DEBUG SKIP_LINK_CHECK=true npx metalsmith && rm -rf build/static/ && npx pagefind",
-    "debug:check-links": "npm run clean && DEBUGLEVEL=DEBUG npx metalsmith && rm -rf build/static/ && npx pagefind",
-    "watch": "SKIP_LINK_CHECK=true npm-watch build"
+    "build": "npm run clean && DEBUGLEVEL=INFO npx metalsmith && rm -rf build/static/ && npx pagefind",
+    "debug": "npm run clean && DEBUG=metalsmith:*,@metalsmith/*,metalsmith-* DEBUGLEVEL=DEBUG npx metalsmith && cp -r build/presos/* build/ && rm -rf build/presos/ && rm -rf build/static/ && npx pagefind --verbose",
+    "debug:plugins": "npm run clean && DEBUGLEVEL=DEBUG npx metalsmith && rm -rf build/static/ && npx pagefind",
+    "check-links": "node link-check.js",
+    "watch": "npm-watch build"
   },
   "watch": {
     "build": {
@@ -51,6 +51,7 @@
     "handlebars": "^4.7.8",
     "jstransformer-handlebars": "^1.2.0",
     "jstransformer-markdown": "^1.2.1",
+    "klaw": "^4.1.0",
     "metalsmith": "^2.6.2",
     "metalsmith-date-formatter": "^1.0.2",
     "metalsmith-discover-partials": "^0.1.2",
