@@ -11,7 +11,7 @@
   "dependencies": {
     "@google/genai": "^1.40.0",
     "@netlify/blobs": "^10.0.5",
-    "happy-dom": "^20.0.11",
+    "happy-dom": "^20.8.9",
     "moment-timezone": "^0.6.0",
     "ua-parser-js": "^2.0.5"
   }
