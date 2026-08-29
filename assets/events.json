@@ -1134,15 +1134,6 @@
                 { "type": "slides", "href": "https://jordankasper.com/regex", "title": "Slides for RegEx talk" },
                 { "type": "slides", "href": "https://jordankasper.com/git", "title": "Slides for Git talk" }
             ]
-        },
-        {
-            "name": "DEF CON 34",
-            "url": "https://defcon.org/",
-            "location": "Las Vegas, NV",
-            "date": "Aug 6 2026",
-            "topics": [
-                "[Policy CTF]"
-            ]
         }
     ]
 }
